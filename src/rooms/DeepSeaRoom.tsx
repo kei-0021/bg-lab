@@ -4,9 +4,9 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import type { Player, PlayerWithResources } from "react-game-ui";
 import { Deck, PlayField, ScoreBoard, TokenStore } from "react-game-ui";
 import { useParams } from "react-router-dom";
+import DebugControlPanel from "../components/DebugControlPanel.js";
 import MyBoard from "../components/MyBoard.js";
 import { useSocket } from "../hooks/useSocket.js";
-import DebugControlPanel from "./DebugControlPanel.js";
 
 const SERVER_URL =
   import.meta.env.MODE === "development"
@@ -333,12 +333,16 @@ export default function GameRoom() {
               roomId={roomId}
               deckId="deepSeaAction"
               name="アクションカード"
+              players={players}
+              myPlayerId={myPlayerId}
             />
             <PlayField
               socket={socket}
               roomId={roomId}
               deckId="deepSeaSpecies"
               name="深海生物カード"
+              players={players}
+              myPlayerId={myPlayerId}
             />
           </div>
         </div>

@@ -1,7 +1,7 @@
 import type { DragEvent } from "react";
 import * as React from 'react';
 import type { CellId, PieceData, PlayerId } from 'react-game-ui';
-import { Board } from "react-game-ui";
+import { GridBoard } from "react-game-ui";
 import { Socket } from "socket.io-client";
 
 // マス目の基本データ型（Cell.tsxと統一）
@@ -49,7 +49,6 @@ const MyCustomCellRenderer = (celldata: CellData, row: number, col: number) => {
       <div style={{ 
         ...baseStyle, 
         clipPath: celldata.customClip as string, 
-        border: '2px dashed rgba(255,255,255,0.4)', 
         backgroundColor: celldata.backgroundColor === '#ff8a8a' ? '#ff3b3b' : celldata.backgroundColor,
         color: 'white'
       }}>
@@ -92,14 +91,16 @@ export default function GameBoardView({ socket, myPlayerId, roomId }: GameBoardV
   const rows = deepSeaCells.length;
   const cols = deepSeaCells[0]?.length || 0; 
 
-  const handleBoardClick = (celldata: CellData, row: number, col: number) => {
+  const handleBoardClick = (celldata: CellData, loc: { row: number, col: number }) => {
     if (!isBoardReady || !socket || !myPlayerId) return;
+    const { row, col } = loc; // locオブジェクトを分割代入
     console.log(`[Client] Sending EXPLORE request for player ${myPlayerId} to (${row},${col})`);
     socket.emit("game:explore-cell", { playerId: myPlayerId, targetPosition: { row, col }, roomId });
   };
 
-  const handleBoardDoubleClick = (celldata: CellData, row: number, col: number) => {
+  const handleBoardDoubleClick = (celldata: CellData, loc: { row: number, col: number }) => {
     if (!isBoardReady || !socket) return;
+    const { row, col } = loc; // locオブジェクトを分割代入
     console.log(`[Client] Sending UNEXPLORE request to (${row},${col})`);
     socket.emit("game:unexplore-cell", { targetPosition: { row, col }, roomId });
   };
@@ -191,7 +192,7 @@ export default function GameBoardView({ socket, myPlayerId, roomId }: GameBoardV
   return (
     <div style={{ textAlign: 'center' }}>
       {rows > 0 && cols > 0 ? (
-        <Board 
+        <GridBoard 
           rows={rows} 
           cols={cols} 
           boardData={deepSeaCells} 

@@ -1,28 +1,25 @@
 export const cellEffects = {
 // 探索者が見つけたレリックタイル (💎)
-    "Relic Site": ({ playerId, updateResource }) => {
+    "Relic Site": ({ updateResource, playerId }) => { // ✅ playerId を追加
         // プレイヤーのリソースID 'artifact' に +1 する
         if (playerId) {
             updateResource(playerId, 'ARTIFACT', 1);
-            console.log(`[EFFECT] ${playerId} が Relic Site に着地し、artifact を +1 獲得。`);
         }
     },
     
     // 資源（エネルギー）が豊富なタイル (🫧)
-    "Energy Vein": ({ playerId, updateResource }) => {
+    "Energy Vein": ({ updateResource, playerId }) => { // ✅ playerId を追加
         // プレイヤーのリソースID 'OXYGEN' に +2 する
         if (playerId) {
             updateResource(playerId, 'OXYGEN', 20);
-            console.log(`🫧 ${playerId} が Energy Vein に着地し、酸素 を 20 回復。`);
         }
     },
     
     // 危険な荒地タイル（🌋） (ペナルティ)
-    "Dangerous Zone": ({ playerId, updateResource }) => {
+    "特殊地形 (火山)": ({ updateResource, playerId }) => { // ✅ playerId を追加
         if (playerId) {
             updateResource(playerId, 'OXYGEN', -100);
             updateResource(playerId, 'BATTERY', -100);
-            console.log(`🌋 ${playerId} が Dangerous Zone OXYGEN と BATTERY を -100 損失。`);
         }
     },
     
@@ -33,10 +30,9 @@ export const cellEffects = {
     },
 
     // ランドマークタイル (🔱)
-    "Abyss Landmark": ({ playerId, updateResource }) => {
+    "Abyss Landmark": ({ updateResource, playerId }) => { // ✅ playerId を追加
         if (playerId) {
             updateResource(playerId, 'ARTIFACT', 5);
-            console.log(`[EFFECT] ${playerId} が Abyss Landmark に到達し、artifact を +5 獲得。`);
         }
     }
 };
