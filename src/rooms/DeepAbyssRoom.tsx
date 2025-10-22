@@ -3,7 +3,7 @@ import "react-game-ui/dist/react-game-ui.css";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import type { Player, PlayerWithResources } from "react-game-ui";
 import { Deck, PlayField, ScoreBoard, TokenStore } from "react-game-ui";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import DebugControlPanel from "../components/DebugControlPanel.js";
 import MyBoard from "../components/MyBoard.js";
 import { useSocket } from "../hooks/useSocket.js";
@@ -22,6 +22,7 @@ const RESOURCE_IDS = {
 export default function GameRoom() {
   const { roomId } = useParams<{ roomId: string }>();
   const socket = useSocket(SERVER_URL);
+  const navigate = useNavigate();
 
   // ★ 追加: プレイヤー名入力と参加状態
   const [userName, setUserName] = useState<string>('');
@@ -261,8 +262,49 @@ export default function GameRoom() {
   // --- ゲームUI本体 ---
   return (
     <div style={fullScreenBackgroundStyle}>
-      <h1 style={titleStyle}>ディープ・アビス (Deep Abyss) - Room ID: {roomId}</h1>
-      <p style={subtitleStyle}>深海を調査して眠れる資源を見つけ出せ！</p>
+      {/* ★ 固定ヘッダー追加 */}
+      <header
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          width: "100%",
+          backgroundColor: "rgba(10, 25, 47, 0.95)",
+          borderBottom: "1px solid rgba(139, 233, 253, 0.3)",
+          padding: "10px 20px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          zIndex: 1000,
+          boxSizing: "border-box",
+        }}
+      >
+        <div style={{ display: "flex", gap:40 }}>
+          <h1 style={{ ...titleStyle, margin: 0 }}>
+            ディープ・アビス (Deep Abyss)
+          </h1>
+          <p style={subtitleStyle}>深海を調査して眠れる資源を見つけ出せ！</p>
+        </div>
+        <button
+          onClick={() => navigate("/")}
+          style={{
+            backgroundColor: "#8be9fd",
+            color: "#0a192f",
+            border: "none",
+            borderRadius: "6px",
+            padding: "8px 16px",
+            fontWeight: "bold",
+            cursor: "pointer",
+          }}
+        >
+          🏠 ロビーへ戻る
+        </button>
+      </header>
+
+      {/* ヘッダー高さ分の余白を確保 */}
+      <div style={{ height: "80px" }} />
+
 
       <div style={boardWrapperStyle}>
         <MyBoard socket={socket} roomId={roomId} myPlayerId={myPlayerId} />
