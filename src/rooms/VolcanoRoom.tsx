@@ -14,7 +14,7 @@ export default function VolcanoRoom() {
         color: "#fff0e0",
       }}
     >
-      <h1>🔥 Volcano Run Room</h1>
+      <h1>🔥 Volcano Run</h1>
       <p>ルームID: {roomId}</p>
       <p>マグマから逃げ切れ！</p>
       <button

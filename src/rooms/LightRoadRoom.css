@@ -1,0 +1,100 @@
+/* src/rooms/LightRoadRoom.css */
+
+/* 部屋全体のスタイル (背景と配置) */
+.light-road-room {
+  /* 背景を星空のようなグラデーションに変更 */
+  background: linear-gradient(to bottom, #0a192f 0%, #1e2a4a 100%);
+  height: 100vh;
+  text-align: center;
+  /* fixedヘッダーの高さ分、コンテンツ全体を下にずらす */
+  padding-top: 15vh; 
+  color: white; /* 文字色を白に変更 */
+  position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* タイトル部分のセクション (ヘッダー化) */
+.title-section {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 0.5rem 2rem; 
+  text-align: left; 
+  z-index: 1000; 
+  display: flex;
+  align-items: center; 
+  justify-content: space-between; 
+  gap: 20px; 
+
+  background-color: rgba(10, 25, 47, 0.8);
+  backdrop-filter: blur(5px);
+  border-bottom: 2px solid rgba(70, 130, 180, 0.5); 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); 
+}
+
+/* タイトルと説明をグループ化するためのスタイル */
+.header-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* 💡 新規追加: アクションボタンのグループ化のためのスタイル */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* ボタン間のスペース */
+}
+
+/* タイトル */
+.light-road-room h1 {
+  color: #ffcc00; 
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  margin: 0; 
+}
+
+/* ルーム情報 */
+.light-road-room p {
+  color: #aee1f9;
+  margin: 0; 
+}
+
+/* ボードのコンテナ */
+.game-board-container {
+  position: absolute;
+  left: 50%;
+  top: 40%; 
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 500px;
+  display: grid;
+  grid-template-columns: repeat(5, 100px);
+  grid-template-rows: repeat(5, 100px);
+  border: 2px solid #aee1f9; 
+  background-image:
+    linear-gradient(to right, #4a6c9a 1px, transparent 1px),
+    linear-gradient(to bottom, #4a6c9a 1px, transparent 1px);
+  background-size: 100px 100px;
+  pointer-events: none;
+  box-shadow: 0 0 20px rgba(70, 130, 180, 0.5); 
+  z-index: 1; 
+}
+
+/* ロビーへ戻るボタン (リセットボタンにも流用) */
+.lobby-button {
+  margin: 0; 
+  padding: 0.75rem 1.5rem; 
+  border-radius: 8px;
+  border: none;
+  background-color: #1e90ff; 
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.lobby-button:hover {
+  background-color: #46a0ff;
+}

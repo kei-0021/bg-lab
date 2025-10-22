@@ -13,7 +13,7 @@ interface Room {
   playerCount: number;
   maxPlayers: number;
   createdAt: number;
-  gameType: "deepabyss" | "sky" | "volcano"; // 追加
+  gameType: "deepabyss" | "lightroad" | "volcano"; // 追加
 }
 
 export default function RoomLobby() {
@@ -67,7 +67,7 @@ export default function RoomLobby() {
 
   return (
     <div className="lobby-container">
-      <h1 className="lobby-title">🎮 ゲームロビー 🤝</h1>
+      <h1 className="lobby-title">🎮 ロビー 🤝</h1>
 
       {/* --- 新しいルームを作成 --- */}
       <div className="section create-room-section">
@@ -81,11 +81,11 @@ export default function RoomLobby() {
             🌊 DeepAbyss
           </button>
           <button
-            onClick={() => handleCreateRoom("sky")}
+            onClick={() => handleCreateRoom("lightroad")}
             className="button primary-button"
             disabled={!socket || !socket.connected}
           >
-            ☁️ SkyBattle
+            🌟 LightRoad
           </button>
           <button
             onClick={() => handleCreateRoom("volcano")}

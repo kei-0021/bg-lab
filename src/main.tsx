@@ -2,8 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import DeepAbyssRoom from "./rooms/DeepAbyssRoom.js";
+import LightRoadRoom from "./rooms/LightRoadRoom.js";
 import LobbyRoom from "./rooms/LobbyRoom.js";
-import SkyRoom from "./rooms/SkyRoom.js";
 import VolcanoRoom from "./rooms/VolcanoRoom.js";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -15,7 +15,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 
         {/* 各ゲームルーム */}
         <Route path="/deepabyss/:roomId" element={<DeepAbyssRoom />} />
-        <Route path="/sky/:roomId" element={<SkyRoom />} />
+        <Route path="/lightroad/:roomId" element={<LightRoadRoom />} />
         <Route path="/volcano/:roomId" element={<VolcanoRoom />} />
       </Routes>
     </BrowserRouter>
