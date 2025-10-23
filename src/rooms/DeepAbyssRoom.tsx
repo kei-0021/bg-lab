@@ -46,7 +46,7 @@ export default function GameRoom() {
     setIsJoining(true);
 
     // サーバーの `room:join` イベントのペイロードをオブジェクトに変更
-    socket.emit("room:join", { roomId, playerName: userName.trim() });
+    socket.emit("room:join", { roomId, roomName: "deepabyss", playerName: userName.trim() });
     console.log(`[CLIENT] Attempting to join room: ${roomId} as ${userName.trim()}`);
   }, [socket, roomId, userName, isJoining]);
 

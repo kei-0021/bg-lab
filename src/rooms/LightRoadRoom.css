@@ -6,8 +6,8 @@
   background: linear-gradient(to bottom, #0a192f 0%, #1e2a4a 100%);
   height: 100vh;
   text-align: center;
-  /* fixedヘッダーの高さ分、コンテンツ全体を下にずらす */
-  padding-top: 15vh; 
+  /* ★ 修正: fixedヘッダーの高さ分、コンテンツ全体を下にずらす */
+  padding-top: 100px; 
   color: white; /* 文字色を白に変更 */
   position: relative;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -27,6 +27,9 @@
   justify-content: space-between; 
   gap: 20px; 
 
+  /* ★ 修正: 最小高さを確保し、ボタンや文字を収める */
+  min-height: 80px; 
+  
   background-color: rgba(10, 25, 47, 0.8);
   backdrop-filter: blur(5px);
   border-bottom: 2px solid rgba(70, 130, 180, 0.5); 
@@ -37,7 +40,8 @@
 .header-info {
   display: flex;
   align-items: center;
-  gap: 20px;
+  /* ★ 修正: 情報間のスペースを広げる */
+  gap: 30px; 
 }
 
 /* 💡 新規追加: アクションボタンのグループ化のためのスタイル */
@@ -52,12 +56,16 @@
   color: #ffcc00; 
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
   margin: 0; 
+  /* ★ 修正: フォントサイズを大きく */
+  font-size: 2.2rem; 
 }
 
 /* ルーム情報 */
 .light-road-room p {
   color: #aee1f9;
   margin: 0; 
+  /* ★ 修正: フォントサイズを大きく */
+  font-size: 1.05rem; 
 }
 
 /* ボードのコンテナ */
@@ -78,7 +86,7 @@
   background-size: 100px 100px;
   pointer-events: none;
   box-shadow: 0 0 20px rgba(70, 130, 180, 0.5); 
-  z-index: 1; 
+  z-index: 0; 
 }
 
 /* ロビーへ戻るボタン (リセットボタンにも流用) */

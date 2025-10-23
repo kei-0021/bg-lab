@@ -4,6 +4,7 @@ import { GameServer } from "react-game-ui/server"; // サーバー専用
 import { fileURLToPath } from 'url';
 import { cardEffects } from "../public/data/cardEffects.js"; // サーバー専用
 import { cellEffects } from "../public/data/cellEffects.js"; // サーバー専用
+import { customEvents } from "../public/data/customEvents.js";
 
 // --- パスヘルパー関数 ---
 const __filename = fileURLToPath(import.meta.url);
@@ -108,7 +109,8 @@ async function startServer() {
     initialTokenStore:initTokenStores,
     initialHand:{deckId:"deepSeaAction",count:6},
     initialBoard:completeDeepSeaCells2D,
-    cellEffects, // cellEffects が未定義のため、一旦コメントアウトまたは定義を追加してください
+    cellEffects,
+    customEvents,
     initialLogCategories:{connection:false,deck:true,cell:false}
   });
 

@@ -53,10 +53,12 @@ export default function RoomLobby() {
   }, []);
 
   // ルーム参加（ゲームタイプに応じたパスで遷移）
-    const handleJoinRoom = (room: Room) => {
-    if (!room.id.trim()) return;
-    navigate(`/deepabyss/${room.id.trim()}`);
-    };
+  const handleJoinRoom = (room: Room) => {
+      if (!room.id.trim()) return;
+      
+      // ✅ room.gameType を使って動的なパスを生成する
+      navigate(`/${room.name}/${room.id.trim()}`);
+  };
 
   // 新規ルーム作成
   const handleCreateRoom = (gameType: Room["gameType"]) => {
