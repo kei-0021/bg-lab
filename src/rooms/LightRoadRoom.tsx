@@ -33,7 +33,7 @@ export default function LightRoadRoom() {
   const [hasJoined, setHasJoined] = useState<boolean>(false);
   
   // 💡 駒の初期位置リセット用カウンターを追加
-  const [resetCount, setResetCount] = useState(0);
+  const [resetCount, setResetCount] = useState(0); 
 
   const [myPlayerId, setMyPlayerId] = useState<string | null>(null);
   const [players, setPlayers] = useState<PlayerWithResources[]>([]);
@@ -54,7 +54,17 @@ export default function LightRoadRoom() {
         roomName: "lightroad", 
         playerName: userName.trim() 
     });
-  }, [socket, roomId, userName, isJoining, roomNameFromURL]);
+  }, [socket, roomId, userName, isJoining]);
+
+  const handleReset = useCallback(() => {
+    if (!socket || !roomId) return;
+    
+    // クリック元自身で強制再マウントをトリガー
+    setResetCount(prev => prev + 1); 
+    
+    // 他の全員にリセットを通知
+    socket.emit("reset:draggable", { roomId });
+  }, [socket, roomId]);
 
   // ★ 必須: サーバーからの応答リスナー
   useEffect(() => {
@@ -72,14 +82,22 @@ export default function LightRoadRoom() {
 
     const handleDraggableUpdate = (move: any) => { /* ロジックはDraggable内に移動 */ };
     
+    // ★ 修正: サーバーからリセット通知を受信した際のハンドラ
+    const handleRemoteReset = () => {
+        // リセットカウンターを更新し、すべての Draggable コンポーネントを再マウントさせる
+        setResetCount(prev => prev + 1);
+    };
+    
     socket.on("player:assign-id", handleAssignId);
     socket.on("players:update", handlePlayersUpdate);
     socket.on("draggable:update", handleDraggableUpdate);
+    socket.on("reset:draggable", handleRemoteReset); // ★ リスナー名変更
 
     return () => {
       socket.off("player:assign-id", handleAssignId);
       socket.off("players:update", handlePlayersUpdate);
       socket.off("draggable:update", handleDraggableUpdate);
+      socket.off("reset:draggable", handleRemoteReset); // ★ クリーンアップ名変更
     };
   }, [socket, roomId]);
 
@@ -95,10 +113,6 @@ export default function LightRoadRoom() {
     };
   }, []); // マウント時に一度だけ設定
 
-  // 💡 駒リセット処理
-  const handleReset = () => {
-    setResetCount(prev => prev + 1);
-  };
 
   // 💡 駒のレンダリングロジックをuseMemoで分離
   const { pieces, playerPiece } = useMemo(() => {
@@ -107,7 +121,7 @@ export default function LightRoadRoom() {
     // ★ 修正: 初期配置をパーセンテージで定義
     const baseInitialX_perc = 0.15; // 15% (駒の中心のX座標)
     const baseInitialY_perc = 0.25; // 25% (駒の中心のY座標)
-    const spacing_perc_x = 0.08; // X軸のスペーシング (8%)
+    const spacing_perc_x = 0.03; // X軸のスペーシング (3%)
     const spacing_perc_y = 0.09; // Y軸のスペーシング (9%)
 
     // タイルピース
@@ -128,6 +142,7 @@ export default function LightRoadRoom() {
 
       return (
         <Draggable
+          // ★ key に resetCount を含めることで、リセット時に強制的に再マウントさせる
           key={`piece-${i}-${resetCount}`} 
           pieceId={`piece-${i}`} 
           socket={socket}
@@ -169,7 +184,7 @@ export default function LightRoadRoom() {
     // プレイヤー駒 (スタイルをクリーンアップ)
     const singlePlayerPiece = (
       <Draggable
-        key={`player-${resetCount}`} 
+        key={`player-${resetCount}`} // ★ key に resetCount を含める
         pieceId={`player-${myPlayerId}`} 
         socket={socket}
         roomId={roomId}
@@ -302,7 +317,7 @@ export default function LightRoadRoom() {
 
         <div className="header-actions">
           <button
-            onClick={handleReset}
+            onClick={handleReset} 
             className="lobby-button reset-button"
           >
             🔄 タイル位置リセット
@@ -317,12 +332,16 @@ export default function LightRoadRoom() {
         </div>
       </div>
 
-      {/* 2. ゲームボード セクション (画面中央) */}
-      {/* CSSで位置を固定しているため、ここでは空のコンテナのみ */}
+      {/* ★ 新規追加: ゴール地点エリア */}
+      <div className="goal-area">
+        <h2>GOAL!</h2>
+        <p style={{ color: '#fde68a', fontSize: '1.2em', margin: '5px 0 0 0' }}></p>
+      </div>
+      
+      {/* 2. ゲームボード セクション (画面中央 - top: 50% に調整) */}
       <div className="game-board-container" />
       
       {/* 3. ピース/駒 セクション (絶対配置) */}
-      {/* Draggable が vw/vh で絶対位置を持つため、特別なラッパーは不要 */}
       <div className="pieces-layer">
         {playerPiece}
         {pieces}

@@ -6,7 +6,7 @@
   background: linear-gradient(to bottom, #0a192f 0%, #1e2a4a 100%);
   height: 100vh;
   text-align: center;
-  /* ★ 修正: fixedヘッダーの高さ分、コンテンツ全体を下にずらす */
+  /* fixedヘッダーの高さ分、コンテンツ全体を下にずらす */
   padding-top: 100px; 
   color: white; /* 文字色を白に変更 */
   position: relative;
@@ -27,7 +27,6 @@
   justify-content: space-between; 
   gap: 20px; 
 
-  /* ★ 修正: 最小高さを確保し、ボタンや文字を収める */
   min-height: 80px; 
   
   background-color: rgba(10, 25, 47, 0.8);
@@ -40,11 +39,10 @@
 .header-info {
   display: flex;
   align-items: center;
-  /* ★ 修正: 情報間のスペースを広げる */
   gap: 30px; 
 }
 
-/* 💡 新規追加: アクションボタンのグループ化のためのスタイル */
+/* アクションボタンのグループ化のためのスタイル */
 .header-actions {
     display: flex;
     align-items: center;
@@ -56,7 +54,6 @@
   color: #ffcc00; 
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
   margin: 0; 
-  /* ★ 修正: フォントサイズを大きく */
   font-size: 2.2rem; 
 }
 
@@ -64,16 +61,17 @@
 .light-road-room p {
   color: #aee1f9;
   margin: 0; 
-  /* ★ 修正: フォントサイズを大きく */
   font-size: 1.05rem; 
 }
 
 /* ボードのコンテナ */
 .game-board-container {
-  position: absolute;
+  /* ★ 修正: top の値を調整し、グリッドが画面の中心よりも下に配置されるようにする */
+  top: 50%; 
   left: 50%;
-  top: 40%; 
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); /* 中央寄せ */
+
+  position: absolute;
   width: 500px;
   height: 500px;
   display: grid;
@@ -88,6 +86,39 @@
   box-shadow: 0 0 20px rgba(70, 130, 180, 0.5); 
   z-index: 0; 
 }
+
+/* ★ 新規追加: ゴール地点のスタイル */
+.goal-area {
+    /* 座標は game-board-container の絶対位置を想定して調整 */
+    position: absolute;
+    left: 50%;
+    top: 28%; 
+    transform: translate(-50%, -50%); /* 中央寄せ */
+    
+    width: 550px; 
+    height: 80px; 
+    
+    /* 見た目 */
+    background: radial-gradient(circle, rgba(255,255,100,0.3) 0%, rgba(30,30,60,0.8) 70%);
+    border: 3px solid #fde68a; 
+    border-radius: 15px;
+    box-shadow: 0 0 15px 5px rgba(253, 230, 138, 0.7);
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none; 
+    z-index: 1; 
+}
+
+.goal-area h2 {
+    color: white;
+    font-size: 2.5em;
+    text-shadow: 0 0 10px #fde68a;
+    margin: 0;
+}
+
 
 /* ロビーへ戻るボタン (リセットボタンにも流用) */
 .lobby-button {
