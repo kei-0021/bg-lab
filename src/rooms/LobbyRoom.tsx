@@ -4,7 +4,10 @@ import io, { Socket } from "socket.io-client";
 import "./LobbyRoom.css";
 
 // 仮のSocket.IOサーバーURL
-const SERVER_URL = "http://127.0.0.1:4000"; 
+const SERVER_URL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:4000"
+    : "https://full-moon-night.onrender.com";
 
 // ルーム型定義に gameType を追加
 interface Room {
