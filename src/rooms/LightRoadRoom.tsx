@@ -140,8 +140,8 @@ export default function LightRoadRoom() {
       let color: string;
       let isTransparent = false;
       
-      if (i < 5) color = "yellow";
-      else if (i < 10) color = "black";
+      if (i < 5) color = "black";
+      else if (i < 10) color = "yellow";
       else { color = "yellow"; isTransparent = true; }
 
       const column = i % 4; 
@@ -193,7 +193,7 @@ export default function LightRoadRoom() {
     const playerPiece = (
       <Draggable
         key={`player-${resetCount}`} 
-        pieceId={`player-${myPlayerId}`} 
+        pieceId={`player`} 
         socket={socket}
         roomId={roomId}
         // 画面下部中央付近に配置 (fixed-container 基準)
