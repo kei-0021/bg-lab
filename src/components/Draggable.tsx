@@ -1,13 +1,21 @@
 // src/components/Draggable.tsx
 import type { CSSProperties, ReactNode } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Socket } from "socket.io-client";
 
+// GridBounds はピクセル座標のみで定義
+interface GridBounds {
+    left: number; // グリッドの左端 (px)
+    top: number;  // グリッドの上端 (px)
+    right: number; // グリッドの右端 (px)
+    bottom: number; // グリッドの下端 (px)
+    cellSize: number; // セルのサイズ (px)
+}
+
 interface DraggableProps {
-  // initialX/Y は 0.0 から 1.0 のパーセンテージで渡されることを想定
   initialX?: number; 
   initialY?: number;
-  size?: number; // size はピクセル値として扱う
+  size?: number;
   color?: string;
   isTransparent?: boolean;
   children?: ReactNode;
@@ -16,15 +24,13 @@ interface DraggableProps {
   roomId?: string;        
   pieceId?: string;       
   onDragEnd?: (x: number, y: number) => void; 
-  // ★ 親オフセットは不要になるため削除
-  // ★ 代わりに、現在のビューポートサイズを渡す（リサイズ対応のため）
-  viewPortW?: number;
-  viewPortH?: number;
+  gridBounds?: GridBounds; 
+  scale?: number; // ★ propsに追加
 }
 
 export default function Draggable({
-  initialX = 0.5, // 50%
-  initialY = 0.5, // 50%
+  initialX = 500, 
+  initialY = 500, 
   size = 100,
   color = "yellow",
   isTransparent = false,
@@ -34,12 +40,17 @@ export default function Draggable({
   roomId,
   pieceId,
   onDragEnd,
-  viewPortW = window.innerWidth, // デフォルト値は現在のウィンドウサイズ
-  viewPortH = window.innerHeight,
+  gridBounds,
+  scale = 1, // ★ propsから受け取る
 }: DraggableProps) {
-  // 駒の位置 State をパーセンテージ (0.0 〜 1.0) で管理
+  
   const [pos, setPos] = useState({ x: initialX, y: initialY });
   const [rotation, setRotation] = useState(0);
+  const posRef = useRef(pos); 
+
+  useEffect(() => { posRef.current = pos; }, [pos]);
+
+  // リモートからの移動を受信し、位置を更新するロジック (中略)
 
   // 1. リモートからの移動を受信し、位置を更新するロジック (同期)
   useEffect(() => {
@@ -61,46 +72,67 @@ export default function Draggable({
     };
   }, [socket, pieceId]); 
 
-  // 2. ローカルでのドラッグ処理
+  // ローカルでのドラッグ処理
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     
-    // 現在の駒の位置 (ピクセル)
-    const currentX_px = pos.x * viewPortW;
-    const currentY_px = pos.y * viewPortH;
+    // ★ 修正: fixed-container の画面上の絶対位置を取得
+    const fixedContainer = document.querySelector('.light-road-room-fixed-container') as HTMLElement | null;
+    const fixedContainerRect = fixedContainer?.getBoundingClientRect();
 
-    // マウスの絶対位置 (ピクセル) と駒の左上隅の差 (オフセット)
-    const offsetX = e.clientX - currentX_px;
-    const offsetY = e.clientY - currentY_px;
+    if (!fixedContainerRect) return; // コンテナが見つからなければ処理を中断
+
+    // 駒の中心のピクセル座標 (fixed-container内の相対座標)
+    const currentX_px = pos.x;
+    const currentY_px = pos.y;
+
+    // マウス位置を fixed-container の左上(0,0)基準の固定座標系に変換
+    const clientX_relative = (e.clientX - fixedContainerRect.left) / scale;
+    const clientY_relative = (e.clientY - fixedContainerRect.top) / scale;
+    
+    // オフセット計算 (fixed-container 内の固定座標系)
+    const offsetX = clientX_relative - currentX_px;
+    const offsetY = clientY_relative - currentY_px;
 
     const handleMouseMove = (e: MouseEvent) => {
-      // 新しいピクセル位置 = マウス絶対位置 - オフセット
-      const newX_px = e.clientX - offsetX;
-      const newY_px = e.clientY - offsetY;
+      // マウス位置を固定座標系に変換
+      const clientX_relative = (e.clientX - fixedContainerRect.left) / scale;
+      const clientY_relative = (e.clientY - fixedContainerRect.top) / scale;
       
-      // ★ 修正: ピクセル値をパーセンテージ (0.0〜1.0) に変換
-      const newX_perc = newX_px / viewPortW;
-      const newY_perc = newY_px / viewPortH;
+      // 新しい駒の中心のピクセル座標を直接計算
+      const newX_px = clientX_relative - offsetX;
+      const newY_px = clientY_relative - offsetY;
       
-      setPos({ x: newX_perc, y: newY_perc });
+      const newPos = { x: newX_px, y: newY_px };
 
-      // 駒移動をサーバーに通知 (パーセンテージで送信)
+      setPos(newPos);
+      posRef.current = newPos; 
+
       if (socket && roomId && pieceId) {
         socket.emit("draggable:moved", {
-          roomId,
-          pieceId,
-          x: newX_perc, // ★ パーセンテージを送信
-          y: newY_perc, // ★ パーセンテージを送信
+          roomId, pieceId, x: newX_px, y: newY_px,
         });
       }
     };
 
     document.addEventListener("mousemove", handleMouseMove);
+    
+    // ドラッグ終了処理 (スナップロジックは変更なし)
     document.onmouseup = () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.onmouseup = null;
-      // onDragEnd にはパーセンテージを渡す
-      onDragEnd?.(pos.x, pos.y);
+
+      const latestPos = posRef.current; 
+      let finalX_px = latestPos.x;
+      let finalY_px = latestPos.y;
+      
+      setPos({ x: finalX_px, y: finalY_px });
+      if (socket && roomId && pieceId) {
+        socket.emit("draggable:moved", {
+          roomId, pieceId, x: finalX_px, y: finalY_px,
+        });
+      }
+      onDragEnd?.(finalX_px, finalY_px);
     };
   };
 
@@ -112,16 +144,15 @@ export default function Draggable({
       onDoubleClick={handleDoubleClick}
       style={{
         position: "absolute",
-        // ★ 修正: パーセンテージをビューポート単位 (vw/vh) に変換して適用
-        left: `${pos.x * 100}vw`, 
-        top: `${pos.y * 100}vh`,  
+        left: `${pos.x}px`, 
+        top: `${pos.y}px`,  
         width: size,
         height: size,
         borderRadius: "8px",
         background: isTransparent ? "transparent" : color,
         cursor: "grab",
         boxShadow: "0 2px 5px rgba(0,0,0,0.3)",
-        transform: `translate(-50%, -50%) rotate(${rotation}deg)`, // ★ 駒の中心が pos.x/y に来るように調整
+        transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

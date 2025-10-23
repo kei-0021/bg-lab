@@ -11,12 +11,18 @@ const SERVER_URL =
     ? "http://localhost:4000"
     : "https://full-moon-night.onrender.com";
 
-// 💡 プレイヤー型を定義 (必要最低限)
 type PlayerWithResources = { 
   id: string; 
   name: string;
-  // 他のフィールド... 
 };
+
+// 💡 グリッド定数
+const GRID_SIZE = 500; // px
+const CELL_SIZE = 100; // px
+// ★ 修正: CSSと完全に同期
+const GAME_WIDTH = 1000; 
+const GAME_HEIGHT = 1200; 
+
 
 export default function LightRoadRoom() {
   const { roomId } = useParams<{ roomId: string }>();
@@ -27,24 +33,35 @@ export default function LightRoadRoom() {
   const queryParams = new URLSearchParams(location.search);
   const roomNameFromURL = queryParams.get('roomName') || 'Light Road Room';
 
-  // ★ 必須: プレイヤー名入力と参加状態の管理
   const [userName, setUserName] = useState<string>('');
   const [isJoining, setIsJoining] = useState<boolean>(false);
   const [hasJoined, setHasJoined] = useState<boolean>(false);
   
-  // 💡 駒の初期位置リセット用カウンターを追加
   const [resetCount, setResetCount] = useState(0); 
 
   const [myPlayerId, setMyPlayerId] = useState<string | null>(null);
   const [players, setPlayers] = useState<PlayerWithResources[]>([]);
 
-  // ★ 追加: 現在のビューポートサイズを管理する State
-  const [viewPortSize, setViewPortSize] = useState({
-    w: window.innerWidth,
-    h: window.innerHeight,
-  });
+  // 画面サイズに合わせてスケールを計算するロジック
+  const [scale, setScale] = useState(1);
+  const calculateScale = useCallback(() => {
+    // 画面サイズと固定サイズを比較
+    const scaleX = window.innerWidth / GAME_WIDTH;
+    const scaleY = window.innerHeight / GAME_HEIGHT;
+    const newScale = Math.min(scaleX, scaleY);
+    // 最大スケールは1.0 (画面より小さく表示されるのは許容)
+    setScale(Math.min(1.0, newScale));
+  }, []);
 
-  // ★ 必須: ルーム参加ハンドラ
+  useEffect(() => {
+    calculateScale();
+    window.addEventListener('resize', calculateScale);
+    return () => {
+      window.removeEventListener('resize', calculateScale);
+    };
+  }, [calculateScale]);
+
+
   const handleJoinRoom = useCallback(() => {
     if (!socket || !roomId || userName.trim() === '' || isJoining) return;
 
@@ -59,14 +76,10 @@ export default function LightRoadRoom() {
   const handleReset = useCallback(() => {
     if (!socket || !roomId) return;
     
-    // クリック元自身で強制再マウントをトリガー
     setResetCount(prev => prev + 1); 
-    
-    // 他の全員にリセットを通知
     socket.emit("reset:draggable", { roomId });
   }, [socket, roomId]);
 
-  // ★ 必須: サーバーからの応答リスナー
   useEffect(() => {
     if (!socket || !roomId) return; 
     
@@ -80,49 +93,47 @@ export default function LightRoadRoom() {
       setPlayers(updatedPlayers);
     };
 
-    const handleDraggableUpdate = (move: any) => { /* ロジックはDraggable内に移動 */ };
-    
-    // ★ 修正: サーバーからリセット通知を受信した際のハンドラ
     const handleRemoteReset = () => {
-        // リセットカウンターを更新し、すべての Draggable コンポーネントを再マウントさせる
         setResetCount(prev => prev + 1);
     };
     
     socket.on("player:assign-id", handleAssignId);
     socket.on("players:update", handlePlayersUpdate);
-    socket.on("draggable:update", handleDraggableUpdate);
-    socket.on("reset:draggable", handleRemoteReset); // ★ リスナー名変更
+    socket.on("draggable:update", () => { /* ロジックはDraggable内に移動 */ });
+    socket.on("reset:draggable", handleRemoteReset);
 
     return () => {
       socket.off("player:assign-id", handleAssignId);
       socket.off("players:update", handlePlayersUpdate);
-      socket.off("draggable:update", handleDraggableUpdate);
-      socket.off("reset:draggable", handleRemoteReset); // ★ クリーンアップ名変更
+      socket.off("draggable:update", () => { /* クリーンアップ */ });
+      socket.off("reset:draggable", handleRemoteReset);
     };
   }, [socket, roomId]);
+  
+  // グリッドのピクセル座標 (GAME_WIDTH/HEIGHT基準) を計算
+  const gridBounds = useMemo(() => {
+      // GRID_SIZE=500, GAME_WIDTH=1000, GAME_HEIGHT=1200 の場合
+      const left = (GAME_WIDTH / 2) - (GRID_SIZE / 2);  // 500 - 250 = 250px
+      const top = (GAME_HEIGHT / 2) - (GRID_SIZE / 2); // 600 - 250 = 350px 
 
-  // ★ 追加: ウィンドウリサイズハンドラ
-  useEffect(() => {
-    const handleResize = () => {
-      setViewPortSize({ w: window.innerWidth, h: window.innerHeight });
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []); // マウント時に一度だけ設定
+      return {
+          left,
+          top,
+          right: left + GRID_SIZE,
+          bottom: top + GRID_SIZE,
+          cellSize: CELL_SIZE,
+      };
+  }, []); 
 
 
-  // 💡 駒のレンダリングロジックをuseMemoで分離
   const { pieces, playerPiece } = useMemo(() => {
     const totalPieces = 20;
     
-    // ★ 修正: 初期配置をパーセンテージで定義
-    const baseInitialX_perc = 0.15; // 15% (駒の中心のX座標)
-    const baseInitialY_perc = 0.25; // 25% (駒の中心のY座標)
-    const spacing_perc_x = 0.03; // X軸のスペーシング (3%)
-    const spacing_perc_y = 0.09; // Y軸のスペーシング (9%)
+    // 初期配置の基準位置を fixed-container の比率で定義
+    const baseInitialX_perc = 0.05; 
+    const baseInitialY_perc = 0.40; 
+    const spacing_perc_x = 0.04; 
+    const spacing_perc_y = 0.04; 
 
     // タイルピース
     const tilePieces = Array.from({ length: totalPieces }).map((_, i) => {
@@ -136,25 +147,22 @@ export default function LightRoadRoom() {
       const column = i % 4; 
       const row = Math.floor(i / 4);
       
-      // ★ 初期位置をパーセンテージで計算
-      const initialX = baseInitialX_perc + column * spacing_perc_x;
-      const initialY = baseInitialY_perc + row * spacing_perc_y;
+      // 駒の中心のピクセル座標を計算 (GAME_WIDTH/HEIGHT 基準)
+      const initialX_px = (baseInitialX_perc + column * spacing_perc_x) * GAME_WIDTH;
+      const initialY_px = (baseInitialY_perc + row * spacing_perc_y) * GAME_HEIGHT;
 
       return (
         <Draggable
-          // ★ key に resetCount を含めることで、リセット時に強制的に再マウントさせる
           key={`piece-${i}-${resetCount}`} 
           pieceId={`piece-${i}`} 
           socket={socket}
           roomId={roomId}
-          // ★ パーセンテージ座標を渡す
-          initialX={initialX}
-          initialY={initialY}
+          initialX={initialX_px}
+          initialY={initialY_px}
           color={color}
           isTransparent={isTransparent}
-          // ★ ビューポートサイズを渡す
-          viewPortW={viewPortSize.w}
-          viewPortH={viewPortSize.h}
+          gridBounds={gridBounds}
+          scale={scale} 
         >
           {isTransparent && (
             <>
@@ -181,16 +189,16 @@ export default function LightRoadRoom() {
       );
     });
 
-    // プレイヤー駒 (スタイルをクリーンアップ)
-    const singlePlayerPiece = (
+    // プレイヤー駒
+    const playerPiece = (
       <Draggable
-        key={`player-${resetCount}`} // ★ key に resetCount を含める
+        key={`player-${resetCount}`} 
         pieceId={`player-${myPlayerId}`} 
         socket={socket}
         roomId={roomId}
-        // ★ 修正: 画面中央下のパーセンテージ座標を渡す
-        initialX={0.5} 
-        initialY={0.85} 
+        // 画面下部中央付近に配置 (fixed-container 基準)
+        initialX={0.5 * GAME_WIDTH} 
+        initialY={0.80 * GAME_HEIGHT} 
         color="white" 
         isTransparent={false}
         size={80} 
@@ -202,9 +210,8 @@ export default function LightRoadRoom() {
           boxShadow: "0 0 10px 4px rgba(255, 255, 255, 0.8), 0 0 20px 8px #1e90ff", 
           zIndex: 100, 
         }}
-        // ★ ビューポートサイズを渡す
-        viewPortW={viewPortSize.w}
-        viewPortH={viewPortSize.h}
+        gridBounds={gridBounds}
+        scale={scale} 
       >
         <div
           style={{
@@ -219,83 +226,37 @@ export default function LightRoadRoom() {
       </Draggable>
     );
 
-    return { pieces: tilePieces, playerPiece: singlePlayerPiece };
-  }, [resetCount, socket, roomId, myPlayerId, players, viewPortSize]); 
+    return { pieces: tilePieces, playerPiece };
+  }, [resetCount, socket, roomId, myPlayerId, players, gridBounds, scale]); 
 
 
-  // --- 参加フォームのスタイル ---
+  // --- UI表示ロジック (参加フォーム) ---
   const joinFormStyle: React.CSSProperties = {
-    position: 'fixed',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    backgroundColor: '#374151',
-    padding: '30px',
-    borderRadius: '10px',
-    boxShadow: '0 0 20px rgba(253, 230, 138, 0.5)',
-    zIndex: 1000,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '15px',
-    textAlign: 'center',
+    position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+    backgroundColor: '#374151', padding: '30px', borderRadius: '10px',
+    boxShadow: '0 0 20px rgba(253, 230, 138, 0.5)', zIndex: 1000,
+    display: 'flex', flexDirection: 'column', gap: '15px', textAlign: 'center',
   };
-
   const joinInputStyle: React.CSSProperties = {
-    padding: '10px',
-    borderRadius: '5px',
-    border: '1px solid #fde68a',
-    backgroundColor: '#111827',
-    color: 'white',
-    fontSize: '1em',
+    padding: '10px', borderRadius: '5px', border: '1px solid #fde68a',
+    backgroundColor: '#111827', color: 'white', fontSize: '1em',
   };
-
   const joinButtonStyle: React.CSSProperties = {
-    padding: '10px 20px',
-    borderRadius: '5px',
-    border: 'none',
-    backgroundColor: '#fde68a',
-    color: '#111827',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    fontSize: '1em',
-    transition: 'background-color 0.3s',
+    padding: '10px 20px', borderRadius: '5px', border: 'none',
+    backgroundColor: '#fde68a', color: '#111827', fontWeight: 'bold',
+    cursor: 'pointer', fontSize: '1em', transition: 'background-color 0.3s',
   };
-  // ------------------------------------------
 
-  // --- UI表示ロジック ---
-
-  if (!roomId || !socket)
-    return (
-      <div className="light-road-room">
-        <h1>🌟 Light Road</h1>
-        <p>⚠️ ルーム情報エラー / サーバー接続中...</p>
-      </div>
-    );
+  if (!roomId || !socket) return (<div className="light-road-room"><h1>🌟 Light Road</h1><p>⚠️ ルーム情報エラー / サーバー接続中...</p></div>);
     
-  // ★ 必須: ルーム参加フォームの表示
   if (!hasJoined) {
     return (
       <div className="light-road-room full-screen-background">
         <div style={joinFormStyle}>
           <h2 style={{ color: '#fde68a', marginBottom: '5px' }}>Light Road ルーム参加</h2>
           <p style={{ margin: '0 0 10px 0', color: 'white' }}>ルーム名: **{decodeURIComponent(roomNameFromURL)}**</p>
-          
-          <input
-            style={joinInputStyle}
-            type="text"
-            placeholder="あなたの名前を入力してください"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-            disabled={isJoining}
-            maxLength={12}
-            onKeyDown={(e) => e.key === 'Enter' && handleJoinRoom()}
-          />
-
-          <button
-            style={joinButtonStyle}
-            onClick={handleJoinRoom}
-            disabled={userName.trim() === '' || isJoining}
-          >
+          <input style={joinInputStyle} type="text" placeholder="あなたの名前を入力してください" value={userName} onChange={(e) => setUserName(e.target.value)} disabled={isJoining} maxLength={12} onKeyDown={(e) => e.key === 'Enter' && handleJoinRoom()} />
+          <button style={joinButtonStyle} onClick={handleJoinRoom} disabled={userName.trim() === '' || isJoining}>
             {isJoining ? '参加中...' : 'ルームに参加'}
           </button>
           {isJoining && <p style={{ margin: '5px 0 0 0 0', color: '#ffeb3b' }}>サーバーからの応答を待っています...</p>}
@@ -304,49 +265,48 @@ export default function LightRoadRoom() {
     );
   }
 
-  // --- ゲームUI本体 (ヘッダー構造を復元) ---
+  // --- UI表示ロジック (ゲーム画面) ---
   return (
     <div className="light-road-room">
-      {/* 1. タイトル/説明 セクション (ヘッダー化) */}
-      <div className="title-section">
-        <div className="header-info">
-          <h1>🌟 Light Road</h1>
-          <p>ルームID: {roomId} (My ID: {myPlayerId})</p>
-          <p>プレイヤー: {players.map(p => p.name).join(', ')}</p>
-        </div>
+      
+      {/* ★ 1. ヘッダーを固定コンテナの外へ移動 (レスポンシブ化) */}
+      <div className="title-section" style={{ zIndex: 1000 }}> 
+          <div className="header-info">
+              <h1>🌟 Light Road</h1>
+              <p>ルームID: {roomId} (My ID: {myPlayerId})</p>
+              <p>プレイヤー: {players.map(p => p.name).join(', ')}</p>
+          </div>
 
-        <div className="header-actions">
-          <button
-            onClick={handleReset} 
-            className="lobby-button reset-button"
-          >
-            🔄 タイル位置リセット
-          </button>
+          <div className="header-actions">
+              <button onClick={handleReset} className="lobby-button reset-button">
+                  🔄 タイル位置リセット
+              </button>
+              <button onClick={() => navigate("/")} className="lobby-button">
+                  🏠 ロビーへ戻る
+              </button>
+          </div>
+      </div>
+
+      <div 
+          className="light-road-room-fixed-container" 
+          // transform は Draggable.tsx の動作に不可欠
+          style={{ transform: `translate(-50%, -50%) scale(${scale})` }} 
+      >
+          {/* ゴール地点エリア */}
+          <div className="goal-area" style={{ zIndex: 10 }}> 
+              <h2>GOAL!</h2>
+              <p style={{ color: '#fde68a', fontSize: '1.2em', margin: '5px 0 0 0' }}></p>
+          </div>
           
-          <button
-            onClick={() => navigate("/")}
-            className="lobby-button"
-          >
-            🏠 ロビーへ戻る
-          </button>
-        </div>
+          {/* 2. ゲームボード セクション */}
+          <div className="game-board-container" style={{ zIndex: 5 }} /> 
+          
+          {/* 3. ピース/駒 セクション */}
+          <div className="pieces-layer" style={{ zIndex: 20 }}> 
+              {playerPiece}
+              {pieces}
+          </div>
       </div>
-
-      {/* ★ 新規追加: ゴール地点エリア */}
-      <div className="goal-area">
-        <h2>GOAL!</h2>
-        <p style={{ color: '#fde68a', fontSize: '1.2em', margin: '5px 0 0 0' }}></p>
-      </div>
-      
-      {/* 2. ゲームボード セクション (画面中央 - top: 50% に調整) */}
-      <div className="game-board-container" />
-      
-      {/* 3. ピース/駒 セクション (絶対配置) */}
-      <div className="pieces-layer">
-        {playerPiece}
-        {pieces}
-      </div>
-
     </div>
   );
 }
