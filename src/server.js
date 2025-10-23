@@ -111,7 +111,12 @@ async function startServer() {
     initialBoard:completeDeepSeaCells2D,
     cellEffects,
     customEvents,
-    initialLogCategories:{connection:false,deck:true,cell:false}
+    initialLogCategories:{
+      connection:false,
+      deck:true,
+      cell:false,
+      custom_event: false,
+    }
   });
 
   demoServer.start();
