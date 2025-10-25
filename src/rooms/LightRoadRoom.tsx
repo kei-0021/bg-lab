@@ -127,7 +127,7 @@ export default function LightRoadRoom() {
 
 
   const { pieces, playerPiece } = useMemo(() => {
-    const totalPieces = 20;
+    const totalPieces = 25;
     
     // 初期配置の基準位置を fixed-container の比率で定義
     const baseInitialX_perc = 0.05; 
@@ -140,8 +140,8 @@ export default function LightRoadRoom() {
       let color: string;
       let isTransparent = false;
       
-      if (i < 5) color = "black";
-      else if (i < 10) color = "yellow";
+      if (i < 8) color = "black";
+      else if (i < 16) color = "yellow";
       else { color = "yellow"; isTransparent = true; }
 
       const column = i % 4; 
