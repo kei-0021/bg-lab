@@ -72,67 +72,72 @@ export default function Draggable({
     };
   }, [socket, pieceId]); 
 
-  // ローカルでのドラッグ処理
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
-    
-    // ★ 修正: fixed-container の画面上の絶対位置を取得
+
+    // ドラッグ対象の固定コンテナ取得
     const fixedContainer = document.querySelector('.light-road-room-fixed-container') as HTMLElement | null;
     const fixedContainerRect = fixedContainer?.getBoundingClientRect();
+    if (!fixedContainerRect) return;
 
-    if (!fixedContainerRect) return; // コンテナが見つからなければ処理を中断
-
-    // 駒の中心のピクセル座標 (fixed-container内の相対座標)
     const currentX_px = pos.x;
     const currentY_px = pos.y;
 
-    // マウス位置を fixed-container の左上(0,0)基準の固定座標系に変換
+    // マウス座標を固定コンテナ内の相対座標に変換
     const clientX_relative = (e.clientX - fixedContainerRect.left) / scale;
     const clientY_relative = (e.clientY - fixedContainerRect.top) / scale;
-    
-    // オフセット計算 (fixed-container 内の固定座標系)
+
+    // ドラッグ開始時のオフセット計算
     const offsetX = clientX_relative - currentX_px;
     const offsetY = clientY_relative - currentY_px;
 
+    // FPS制限用の時間管理
+    let lastTime = 0;
+    const targetFPS = 50;          // 更新間隔を50fpsに設定
+    const interval = 1000 / targetFPS;
+
     const handleMouseMove = (e: MouseEvent) => {
-      // マウス位置を固定座標系に変換
+      const now = performance.now();
+
+      // FPS制限: 前回更新から間隔が短ければスキップ
+      if (now - lastTime < interval) return;
+      lastTime = now;
+
+      // マウス座標を固定コンテナ内の相対座標に変換
       const clientX_relative = (e.clientX - fixedContainerRect.left) / scale;
       const clientY_relative = (e.clientY - fixedContainerRect.top) / scale;
-      
-      // 新しい駒の中心のピクセル座標を直接計算
+
+      // 新しい駒の座標計算
       const newX_px = clientX_relative - offsetX;
       const newY_px = clientY_relative - offsetY;
-      
+
       const newPos = { x: newX_px, y: newY_px };
+      setPos(newPos);           // React state更新
+      posRef.current = newPos;  // Refに保持してmouseup時にも利用
 
-      setPos(newPos);
-      posRef.current = newPos; 
-
+      // Socket送信（間引きされて負荷軽減）
       if (socket && roomId && pieceId) {
-        socket.emit("draggable:moved", {
-          roomId, pieceId, x: newX_px, y: newY_px,
-        });
+        socket.emit("draggable:moved", { roomId, pieceId, x: newX_px, y: newY_px });
       }
     };
 
+    // マウス移動イベント登録
     document.addEventListener("mousemove", handleMouseMove);
-    
-    // ドラッグ終了処理 (スナップロジックは変更なし)
+
+    // ドラッグ終了処理
     document.onmouseup = () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.onmouseup = null;
 
-      const latestPos = posRef.current; 
-      let finalX_px = latestPos.x;
-      let finalY_px = latestPos.y;
-      
-      setPos({ x: finalX_px, y: finalY_px });
+      const latestPos = posRef.current;
+      const finalX_px = latestPos.x;
+      const finalY_px = latestPos.y;
+
+      setPos({ x: finalX_px, y: finalY_px }); // 最終座標反映
       if (socket && roomId && pieceId) {
-        socket.emit("draggable:moved", {
-          roomId, pieceId, x: finalX_px, y: finalY_px,
-        });
+        socket.emit("draggable:moved", { roomId, pieceId, x: finalX_px, y: finalY_px });
       }
-      onDragEnd?.(finalX_px, finalY_px);
+      onDragEnd?.(finalX_px, finalY_px);      // コールバック呼び出し
     };
   };
 
