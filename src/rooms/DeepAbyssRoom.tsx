@@ -11,7 +11,7 @@ import { useSocket } from "../hooks/useSocket.js";
 const SERVER_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:4000"
-    : "https://full-moon-night.onrender.com"; // ← Render URL
+    : "https://bg-lab.onrender.com"; // ← Render URL
 
 const RESOURCE_IDS = {
   OXYGEN: "OXYGEN",

@@ -7,7 +7,7 @@ import "./LobbyRoom.css";
 const SERVER_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:4000"
-    : "https://full-moon-night.onrender.com";
+    : "https://bg-lab.onrender.com";
 
 // ルーム型定義に gameType を追加
 interface Room {

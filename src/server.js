@@ -98,7 +98,7 @@ async function startServer() {
     corsOrigins: [
       "http://localhost:5173",
       "http://localhost:4000",
-      "https://full-moon-night.onrender.com" // ← これを追加！
+      "https://bg-lab.onrender.com" // ← これを追加！
     ],
     onServerStart: (url) => {
       console.log(`🎮 Demo server running at: ${url}`);

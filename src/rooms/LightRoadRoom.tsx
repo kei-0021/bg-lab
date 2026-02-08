@@ -9,7 +9,7 @@ import "./LightRoadRoom.css";
 const SERVER_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:4000"
-    : "https://full-moon-night.onrender.com";
+    : "https://bg-lab.onrender.com";
 
 type PlayerWithResources = { 
   id: string; 
