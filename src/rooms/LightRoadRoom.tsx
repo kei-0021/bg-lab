@@ -1,4 +1,4 @@
-// src/rooms/LightRoadRoom.tsx
+// src/rooms/LightRoadRoom.tsx (最終修正版: 指アイコンON/OFF機能追加)
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Draggable from "../components/Draggable";
@@ -14,14 +14,80 @@ const SERVER_URL =
 type PlayerWithResources = { 
   id: string; 
   name: string;
+  socketId: string; 
 };
+
+// --- カーソル同期のための型定義 ---
+type RemoteCursor = { 
+    x: number; 
+    y: number; 
+    name: string; 
+    color: string; 
+};
+// ---------------------------------
 
 // 💡 グリッド定数
 const GRID_SIZE = 500; // px
 const CELL_SIZE = 100; // px
-// ★ 修正: CSSと完全に同期
 const GAME_WIDTH = 1000; 
 const GAME_HEIGHT = 1200; 
+
+
+// 💡 プレイヤーIDに応じて色を決定するヘルパー関数
+const getPlayerColor = (playerId: string, index: number): string => {
+    const colors = ["#ff6b6b", "#4ecdc4", "#45b7d1", "#f9d423", "#a8dadc"];
+    return colors[index % colors.length] || "#999999";
+};
+
+// 💡 リモートカーソルを描画するコンポーネント 
+const RemoteCursorRenderer = React.memo(({ 
+    playerId, 
+    cursor, 
+    scale, 
+    fixedContainer 
+}: { 
+    playerId: string, 
+    cursor: RemoteCursor, 
+    scale: number,
+    fixedContainer: HTMLDivElement | null 
+}) => {
+    if (!scale) return null; 
+
+    const x_px = cursor.x; 
+    const y_px = cursor.y;
+
+    return (
+        <div 
+            key={playerId}
+            style={{
+                position: 'absolute',
+                left: x_px, 
+                top: y_px,  
+                pointerEvents: 'none', 
+                zIndex: 900,
+            }}
+        >
+            {/* カーソルアイコン (ポインター) */}
+            <div style={{ color: cursor.color, fontSize: '2em', position: 'absolute', transform: 'translate(-100%, -100%)' }}>
+                👆
+            </div>
+            {/* プレイヤー名 */}
+            <div style={{ 
+                backgroundColor: cursor.color, 
+                color: 'white', 
+                padding: '2px 5px', 
+                borderRadius: '5px',
+                whiteSpace: 'nowrap',
+                position: 'absolute',
+                transform: 'translate(5px, 0px)',
+                fontWeight: 'bold',
+                lineHeight: 1,
+            }}>
+                {cursor.name}
+            </div>
+        </div>
+    );
+});
 
 
 export default function LightRoadRoom() {
@@ -41,6 +107,21 @@ export default function LightRoadRoom() {
 
   const [myPlayerId, setMyPlayerId] = useState<string | null>(null);
   const [players, setPlayers] = useState<PlayerWithResources[]>([]);
+  // ★ カーソル同期用ステート
+  const [remoteCursors, setRemoteCursors] = useState<Record<string, RemoteCursor>>({});
+  
+  // ★ 追加 1: リモートカーソル表示のON/OFFステート
+  const [showRemoteCursors, setShowRemoteCursors] = useState(true);
+
+  // ★ DOM参照用Ref
+  const fixedContainerRef = React.useRef<HTMLDivElement>(null);
+  
+  // ★ players ステートの最新値を保持するためのRefを追加
+  const playersRef = React.useRef(players);
+  useEffect(() => {
+    // players が更新されるたびに Ref の current 値を更新
+    playersRef.current = players;
+  }, [players]);
 
   // 画面サイズに合わせてスケールを計算するロジック
   const [scale, setScale] = useState(1);
@@ -79,6 +160,38 @@ export default function LightRoadRoom() {
     setResetCount(prev => prev + 1); 
     socket.emit("reset:draggable", { roomId });
   }, [socket, roomId]);
+  
+  // ★ handleCursorUpdate のロジックを修正
+  const handleCursorUpdate = useCallback((data: { 
+      playerId: string, 
+      x: number, 
+      y: number 
+  }) => {
+    
+    if (data.playerId === myPlayerId) return; 
+    
+    const currentPlayers = playersRef.current;
+    
+    // p.socketId で検索
+    const playerIndex = currentPlayers.findIndex(p => p.socketId === data.playerId);
+    
+    const player = currentPlayers[playerIndex];
+    
+    // プレイヤー情報が見つからなかった場合の暫定値
+    const nameToDisplay = player ? player.name : `[待機中]`; 
+    const colorToUse = player ? getPlayerColor(data.playerId, playerIndex) : "#999999"; 
+    
+    setRemoteCursors(prev => ({
+        ...prev,
+        [data.playerId]: {
+            x: data.x, 
+            y: data.y,
+            name: nameToDisplay, 
+            color: colorToUse,   
+        }
+    }));
+  }, [myPlayerId]); 
+
 
   useEffect(() => {
     if (!socket || !roomId) return; 
@@ -92,7 +205,7 @@ export default function LightRoadRoom() {
     const handlePlayersUpdate = (updatedPlayers: PlayerWithResources[]) => {
       setPlayers(updatedPlayers);
     };
-
+    
     const handleRemoteReset = () => {
         setResetCount(prev => prev + 1);
     };
@@ -101,20 +214,65 @@ export default function LightRoadRoom() {
     socket.on("players:update", handlePlayersUpdate);
     socket.on("draggable:update", () => { /* ロジックはDraggable内に移動 */ });
     socket.on("reset:draggable", handleRemoteReset);
+    socket.on("cursor:update", handleCursorUpdate); 
 
     return () => {
       socket.off("player:assign-id", handleAssignId);
       socket.off("players:update", handlePlayersUpdate);
       socket.off("draggable:update", () => { /* クリーンアップ */ });
       socket.off("reset:draggable", handleRemoteReset);
+      socket.off("cursor:update", handleCursorUpdate); 
     };
-  }, [socket, roomId]);
+  }, [socket, roomId, myPlayerId, handleCursorUpdate]); 
+
+
+  // ★ カーソル位置をサーバーに送信するロジック (FPSダウン&相対座標化)
+  useEffect(() => {
+    if (!socket || !roomId || !hasJoined || !myPlayerId || !fixedContainerRef.current) return;
+    
+    const container = fixedContainerRef.current; 
+
+    const THROTTLE_INTERVAL = 100; // 100ms (最大 10 FPS)
+    let lastEmitTime = 0;
+    
+    const handleGlobalMouseMove = (event: MouseEvent) => {
+        const now = Date.now();
+        if (now - lastEmitTime < THROTTLE_INTERVAL) {
+            return;
+        }
+        lastEmitTime = now;
+
+        const { clientX, clientY } = event;
+        const rect = container.getBoundingClientRect(); 
+
+        // 1. 画面座標からコンテナの画面上の位置を引く 
+        const x_scaled = clientX - rect.left;
+        const y_scaled = clientY - rect.top;
+
+        // 2. スケールで割って、ゲーム内のピクセル座標 (GAME_WIDTH/HEIGHT基準) に戻す
+        const x_game = x_scaled / scale;
+        const y_game = y_scaled / scale;
+
+        // ゲーム内の相対ピクセル座標を送信
+        socket.emit("cursor:move", {
+            roomId,
+            x: x_game, 
+            y: y_game, 
+        });
+    };
+
+    window.addEventListener('mousemove', handleGlobalMouseMove);
+
+    return () => {
+        window.removeEventListener('mousemove', handleGlobalMouseMove);
+    };
+  }, [socket, roomId, hasJoined, myPlayerId, scale]); 
+  // ---------------------------------------------------
   
   // グリッドのピクセル座標 (GAME_WIDTH/HEIGHT基準) を計算
   const gridBounds = useMemo(() => {
-      // GRID_SIZE=500, GAME_WIDTH=1000, GAME_HEIGHT=1200 の場合
-      const left = (GAME_WIDTH / 2) - (GRID_SIZE / 2);  // 500 - 250 = 250px
-      const top = (GAME_HEIGHT / 2) - (GRID_SIZE / 2); // 600 - 250 = 350px 
+      const left = (GAME_WIDTH / 2) - (GRID_SIZE / 2); 
+      const top = (GAME_HEIGHT / 2) - (GRID_SIZE / 2); 
 
       return {
           left,
@@ -278,6 +436,15 @@ export default function LightRoadRoom() {
           </div>
 
           <div className="header-actions">
+              {/* ★ 追加 2: カーソル表示トグルボタン */}
+              <button 
+                  onClick={() => setShowRemoteCursors(prev => !prev)} 
+                  className="lobby-button reset-button"
+                  style={{backgroundColor: showRemoteCursors ? '#4ecdc4' : '#ff6b6b' }}
+              >
+                  {showRemoteCursors ? 'カーソル表示 ON' : 'カーソル表示 OFF'}
+              </button>
+
               <button onClick={handleReset} className="lobby-button reset-button">
                   🔄 タイル位置リセット
               </button>
@@ -288,8 +455,8 @@ export default function LightRoadRoom() {
       </div>
 
       <div 
+          ref={fixedContainerRef} 
           className="light-road-room-fixed-container" 
-          // transform は Draggable.tsx の動作に不可欠
           style={{ transform: `translate(-50%, -50%) scale(${scale})` }} 
       >
           {/* ゴール地点エリア */}
@@ -305,6 +472,19 @@ export default function LightRoadRoom() {
           <div className="pieces-layer" style={{ zIndex: 20 }}> 
               {playerPiece}
               {pieces}
+          </div>
+
+          {/* ★ 4. リモートカーソル描画セクション (showRemoteCursors で条件分岐) */}
+          <div className="remote-cursors-layer" style={{ zIndex: 900 }}>
+                {showRemoteCursors && Object.entries(remoteCursors).map(([playerId, cursor]) => (
+                    <RemoteCursorRenderer 
+                        key={playerId} 
+                        playerId={playerId} 
+                        cursor={cursor} 
+                        scale={scale} 
+                        fixedContainer={fixedContainerRef.current} 
+                    />
+                ))}
           </div>
       </div>
     </div>
