@@ -1,0 +1,47 @@
+[
+  {
+    "id": "card-A-01",
+    "name": "赤",
+    "type": "MOVE_EXPLORE",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "playBackLocation": "hand"
+  },
+  {
+    "id": "card-A-02",
+    "name": "青",
+    "type": "MOVE_EXPLORE",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "playBackLocation": "hand"
+  },
+  {
+    "id": "card-B-01",
+    "name": "黄",
+    "type": "MOVE_EXISTING",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "playBackLocation": "hand"
+  },
+  {
+    "id": "card-B-02",
+    "name": "緑",
+    "type": "MOVE_EXISTING",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "playBackLocation": "hand"
+  },
+  {
+    "id": "card-C-01",
+    "name": "白",
+    "type": "RECOVER_INFO",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "playBackLocation": "hand"
+  }
+]

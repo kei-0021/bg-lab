@@ -12,29 +12,29 @@
     "dev:multi": "concurrently \"npm run start\" \"vite --host\""
   },
   "devDependencies": {
-    "@rollup/plugin-replace": "^6.0.2",
-    "@rollup/rollup-linux-x64-gnu": "^4.52.5",
-    "@types/react": "^18.3.26",
+    "@rollup/plugin-replace": "^6.0.3",
+    "@rollup/rollup-linux-x64-gnu": "^4.57.1",
+    "@types/react": "^18.3.28",
     "@types/react-dom": "^18.3.7",
-    "@vitejs/plugin-react": "^5.0.4",
+    "@vitejs/plugin-react": "^5.1.3",
     "concurrently": "^9.2.1",
-    "express": "^5.1.0",
-    "rimraf": "^6.0.1",
+    "express": "^5.2.1",
+    "rimraf": "^6.1.2",
     "rollup": "4.20.0",
     "ts-node": "^10.9.2",
     "typescript": "~5.8.3",
-    "vite": "^7.1.12",
+    "vite": "^7.3.1",
     "vite-plugin-node-polyfills": "^0.24.0",
-    "vite-plugin-static-copy": "^3.1.4"
+    "vite-plugin-static-copy": "^3.2.0"
   },
   "dependencies": {
     "kei-0021@issue-12@latest": "link:github/kei-0021@issue-12@latest",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-game-ui": "github:kei-0021/react-game-ui#issue-12",
-    "react-router-dom": "^7.9.4",
-    "socket.io": "^4.8.1",
-    "socket.io-client": "^4.8.1"
+    "react-router-dom": "^7.13.0",
+    "socket.io": "^4.8.3",
+    "socket.io-client": "^4.8.3"
   },
   "resolutions": {
     "react": "18.2.0",

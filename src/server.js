@@ -32,11 +32,13 @@ async function startServer() {
   const [
     deepSeaActionCardsBaseJson,
     deepSeaCellsBaseJson,
-    deepSeaSpeciesDeckJson
+    deepSeaSpeciesDeckJson,
+    fireworksCardsJson
   ] = await Promise.all([
     loadJson("../public/data/deepSeaActionCards.json"),
     loadJson("../public/data/deepSeaCells.json"),
-    loadJson("../public/data/deepSeaSpeciesCards.json")
+    loadJson("../public/data/deepSeaSpeciesCards.json"),
+    loadJson("../public/data/fireworksCards.json")
   ]);
 
   // --- セル・カード・トークンの生成ロジック（そのまま使用） ---
@@ -82,13 +84,44 @@ async function startServer() {
   const DEEP_SEA_TOKENS_ARTIFACT=[{id:'ARTIFACT',name:'💰',color:'#D4AF37'}];
 
   const createUniqueTokens=(templates,count)=>templates.flatMap(t=>Array.from({length:count},(_,i)=>({...t,id:`${t.id}-${i+1}`,templateId:t.id})));
+  
+  const initTokenStoresDeepSea=[{tokenStoreId:"ARTIFACT",name:"遺物",tokens:createUniqueTokens(DEEP_SEA_TOKENS_ARTIFACT,10)}];
 
-  const initTokenStores=[{tokenStoreId:"ARTIFACT",name:"遺物",tokens:createUniqueTokens(DEEP_SEA_TOKENS_ARTIFACT,10)}];
-
-  const initialDecks=[
-    {deckId:"deepSeaSpecies",name:"深海生物カード",cards:deepSeaSpeciesDeckJson,backColor:"#0d3c99ff"},
-    {deckId:"deepSeaAction",name:"アクションカード",cards:deepSeaActionCardsThreeSets,backColor:"#0d8999ff"}
+  const initialDecksDeepSea = [
+    { deckId: "deepSeaSpecies", name: "深海生物カード", cards: deepSeaSpeciesDeckJson, backColor: "#0d3c99ff" },
+    { deckId: "deepSeaAction", name: "アクションカード", cards: deepSeaActionCardsThreeSets, backColor: "#0d8999ff" }
   ];
+
+  // --- プリセットオブジェクトの定義 ---
+  const gamePresets = {
+    fireworks: {
+      initialDecks: [
+        { deckId: "blueprint", name: "演目", cards: [], backColor: "#ff0000" },
+        { 
+          deckId: "firework", 
+          name: "花火カード", 
+          cards: fireworksCardsJson,
+          backColor: "#0000ff" 
+        }
+      ],
+      initialResources: [],
+      initialTokenStore: [
+        { tokenStoreId: "STAR_PARTS", name: "秘伝玉", tokens: [] }
+      ],
+      initialHand: { deckId: "firework", count: 5 },
+      initialBoard: []
+    },
+    deepsea: {
+      initialDecks: initialDecksDeepSea,
+      initialResources: DEEP_SEA_RESOURCES,
+      initialTokenStore: initTokenStoresDeepSea,
+      initialHand: { deckId: "deepSeaAction", count: 8 },
+      initialBoard: completeDeepSeaCells2D,
+    }
+  };
+
+  // 渡す前のデバッグログ
+  console.log("[Server] Loading presets:", Object.keys(gamePresets));
 
   // --- GameServer 初期化 ---
   const demoServer = new GameServer({
@@ -103,12 +136,15 @@ async function startServer() {
     onServerStart: (url) => {
       console.log(`🎮 Demo server running at: ${url}`);
     },
-    initialDecks,
+    // ★ 構築済みのオブジェクトを渡す
+    gamePresets: gamePresets,
+    // デフォルト設定（フォールバック用）
+    initialDecks: initialDecksDeepSea,
+    initialResources: DEEP_SEA_RESOURCES,
+    initialTokenStore: initTokenStoresDeepSea,
+    initialHand: { deckId: "deepSeaAction", count: 6 },
+    initialBoard: completeDeepSeaCells2D,
     cardEffects,
-    initialResources:DEEP_SEA_RESOURCES,
-    initialTokenStore:initTokenStores,
-    initialHand:{deckId:"deepSeaAction",count:6},
-    initialBoard:completeDeepSeaCells2D,
     cellEffects,
     customEvents,
     initialLogCategories:{
