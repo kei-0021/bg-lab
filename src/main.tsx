@@ -1,19 +1,22 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import GameRoom from "./rooms/GameDeepSea.js";
+import DeepAbyssRoom from "./rooms/DeepAbyssRoom.js";
+import LightRoadRoom from "./rooms/LightRoadRoom.js";
 import LobbyRoom from "./rooms/LobbyRoom.js";
+import VolcanoRoom from "./rooms/VolcanoRoom.js";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        {/* ルートパス (/) をロビーに設定 */}
-        <Route path="/" element={<LobbyRoom />} /> 
-        
-        {/* /room/:roomId にアクセスした時だけゲームルーム（Socket接続を含む）を表示 */}
-        <Route path="/room/:roomId" element={<GameRoom />} /> 
-        
+        {/* ロビー */}
+        <Route path="/" element={<LobbyRoom />} />
+
+        {/* 各ゲームルーム */}
+        <Route path="/deepabyss/:roomId" element={<DeepAbyssRoom />} />
+        <Route path="/lightroad/:roomId" element={<LightRoadRoom />} />
+        <Route path="/volcano/:roomId" element={<VolcanoRoom />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

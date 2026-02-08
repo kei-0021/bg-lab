@@ -4,6 +4,7 @@ import { GameServer } from "react-game-ui/server"; // サーバー専用
 import { fileURLToPath } from 'url';
 import { cardEffects } from "../public/data/cardEffects.js"; // サーバー専用
 import { cellEffects } from "../public/data/cellEffects.js"; // サーバー専用
+import { customEvents } from "../public/data/customEvents.js";
 
 // --- パスヘルパー関数 ---
 const __filename = fileURLToPath(import.meta.url);
@@ -97,7 +98,7 @@ async function startServer() {
     corsOrigins: [
       "http://localhost:5173",
       "http://localhost:4000",
-      "https://full-moon-night.onrender.com" // ← これを追加！
+      "https://bg-lab.onrender.com" // ← これを追加！
     ],
     onServerStart: (url) => {
       console.log(`🎮 Demo server running at: ${url}`);
@@ -108,8 +109,14 @@ async function startServer() {
     initialTokenStore:initTokenStores,
     initialHand:{deckId:"deepSeaAction",count:6},
     initialBoard:completeDeepSeaCells2D,
-    cellEffects, // cellEffects が未定義のため、一旦コメントアウトまたは定義を追加してください
-    initialLogCategories:{connection:false,deck:true}
+    cellEffects,
+    customEvents,
+    initialLogCategories:{
+      connection:false,
+      deck:true,
+      cell:false,
+      custom_event: false,
+    }
   });
 
   demoServer.start();
