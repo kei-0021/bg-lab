@@ -4,6 +4,7 @@ import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig({
   root: './src',
+  publicDir: '../public',
   plugins: [
     react(),
     viteStaticCopy({
@@ -14,7 +15,6 @@ export default defineConfig({
   ],
   build: {
     outDir: '../dist',
-    // 🚨 最後の修正: outDir がルート外でも強制的に空にする
     emptyOutDir: true, 
   },
   define: {
