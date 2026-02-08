@@ -16,7 +16,7 @@ interface Room {
   playerCount: number;
   maxPlayers: number;
   createdAt: number;
-  gameType: "deepabyss" | "lightroad" | "volcano"; // 追加
+  gameType: "fireworks" |"deepabyss" | "lightroad";
 }
 
 export default function RoomLobby() {
@@ -79,6 +79,13 @@ export default function RoomLobby() {
         <h2 className="section-title">新しいルームを作成</h2>
         <div className="button-group">
           <button
+            onClick={() => handleCreateRoom("fireworks")}
+            className="button primary-button"
+            disabled={!socket || !socket.connected}
+          >
+            🎆 FireWorks
+          </button>
+          <button
             onClick={() => handleCreateRoom("deepabyss")}
             className="button primary-button"
             disabled={!socket || !socket.connected}
@@ -91,13 +98,6 @@ export default function RoomLobby() {
             disabled={!socket || !socket.connected}
           >
             🌟 LightRoad
-          </button>
-          <button
-            onClick={() => handleCreateRoom("volcano")}
-            className="button primary-button"
-            disabled={!socket || !socket.connected}
-          >
-            🔥 VolcanoRun
           </button>
         </div>
         {!socket?.connected && (
