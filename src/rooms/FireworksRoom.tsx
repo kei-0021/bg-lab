@@ -4,6 +4,7 @@ import { Deck, PlayField, ScoreBoard, TokenStore } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSocket } from "../hooks/useSocket.js";
+import "./FireworksRoom.css";
 
 const SERVER_URL =
   import.meta.env.MODE === "development"
@@ -81,36 +82,6 @@ export default function FireworksRoom() {
 
   return (
     <div style={nightSkyStyle}>
-      <style>{`
-        /* ライブラリ内のテキストを強制的に黒くし、背景が暗くても浮き出るよう白系の微かな影を付与 */
-        .react-game-ui-playfield-title, 
-        .react-game-ui-deck-name, 
-        .react-game-ui-token-store-name,
-        .react-game-ui-scoreboard-title,
-        .react-game-ui-player-name {
-          color: #000 !important;
-          text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5), -1px -1px 2px rgba(255, 255, 255, 0.5) !important;
-          font-weight: 900 !important;
-        }
-
-        .react-game-ui-playfield, .react-game-ui-deck, .react-game-ui-token-store, .react-game-ui-scoreboard {
-          background: transparent !important;
-          border: none !important;
-          box-shadow: none !important;
-        }
-
-        /* カードの表面などは黒文字が映えるよう白基調にする等の調整を想定 */
-        .react-game-ui-card {
-          box-shadow: 0 0 15px rgba(255, 255, 255, 0.2) !important;
-          border: 1px solid rgba(0, 0, 0, 0.1) !important;
-        }
-
-        /* スコアの数値なども黒へ */
-        .react-game-ui-score-value {
-           color: #000 !important;
-        }
-      `}</style>
-
       {/* ヘッダー */}
       <header style={{ position: "absolute", top: 20, left: 40, zIndex: 10 }}>
         <h1 style={{ color: "#000", margin: 0, fontSize: "1.8rem", fontWeight: "bold", textShadow: "0 0 8px rgba(255,195,0,0.8)" }}>🎆 FIREWORKS</h1>

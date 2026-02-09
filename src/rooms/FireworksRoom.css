@@ -1,0 +1,44 @@
+/* src/rooms/FireworksRoom.css */
+
+/* ライブラリ内のテキストを黒字にし、白系の影で視認性を確保 */
+.react-game-ui-playfield-title, 
+.react-game-ui-deck-name, 
+.react-game-ui-token-store-name,
+.react-game-ui-scoreboard-title,
+.react-game-ui-player-name {
+  color: #000 !important;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5), -1px -1px 2px rgba(255, 255, 255, 0.5) !important;
+  font-weight: 900 !important;
+}
+
+/* 各コンポーネントの背景や枠線を透過・削除 */
+.react-game-ui-playfield, 
+.react-game-ui-deck, 
+.react-game-ui-token-store, 
+.react-game-ui-scoreboard {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* カードのスタイル調整 */
+.react-game-ui-card {
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.2) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+/* スコア数値の色の黒化 */
+.react-game-ui-score-value {
+  color: #000 !important;
+}
+
+/* 前回の要望：PlayField自体のサイズを固定し中央に寄せる */
+.react-game-ui-playfield {
+  width: 800px !important;  /* 固定幅 */
+  height: 500px !important; /* 固定高さ */
+  margin: 0 auto !important;
+  overflow: hidden !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
