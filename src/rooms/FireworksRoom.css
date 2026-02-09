@@ -1,44 +1,74 @@
-/* src/rooms/FireworksRoom.css */
-
-/* ライブラリ内のテキストを黒字にし、白系の影で視認性を確保 */
-.react-game-ui-playfield-title, 
-.react-game-ui-deck-name, 
-.react-game-ui-token-store-name,
-.react-game-ui-scoreboard-title,
-.react-game-ui-player-name {
+.fireworks-container {
+  min-height: 100vh;
+  background: radial-gradient(
+    circle at center,
+    #1b1e4e 0%,
+    #0c0b2e 50%,
+    #05010a 100%
+  ) !important;
+  font-family: "Shippori Mincho", serif;
   color: #000 !important;
-  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5), -1px -1px 2px rgba(255, 255, 255, 0.5) !important;
-  font-weight: 900 !important;
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
 }
 
-/* 各コンポーネントの背景や枠線を透過・削除 */
-.react-game-ui-playfield, 
-.react-game-ui-deck, 
-.react-game-ui-token-store, 
-.react-game-ui-scoreboard {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
+.fireworks-container h1,
+.fireworks-container h2 {
+  color: #000;
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
 }
 
-/* カードのスタイル調整 */
-.react-game-ui-card {
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.2) !important;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
-}
-
-/* スコア数値の色の黒化 */
-.react-game-ui-score-value {
-  color: #000 !important;
-}
-
-/* 前回の要望：PlayField自体のサイズを固定し中央に寄せる */
-.react-game-ui-playfield {
-  width: 800px !important;  /* 固定幅 */
-  height: 500px !important; /* 固定高さ */
+.rg-playfield {
+  width: 1000px !important;
+  height: 1000px !important;
   margin: 0 auto !important;
+  background-color: black !important;
+  border-color: white;
+  border-style: solid;
   overflow: hidden !important;
   display: flex !important;
-  justify-content: center !important;
+  flex-direction: column !important;
   align-items: center !important;
+  padding: 40px !important;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.rg-playfield-title {
+  color: #ffffff !important;
+  font-size: 30px !important;
+  margin-bottom: 30px !important;
+  flex-shrink: 0 !important;
+  z-index: 5;
+}
+
+.rg-playfield-container {
+  width: 100% !important;
+  flex-grow: 1 !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-content: flex-start !important;
+  gap: 20px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.rg-playfield-card-wrapper {
+  position: relative !important;
+  width: 126px !important;
+  height: 175px !important;
+  flex-shrink: 0 !important;
+  transition: transform 0.2s ease-in-out !important;
+}
+
+.rg-card-text-content {
+  font-size: 25px;
+}
+
+.rg-playfield-empty {
+  color: #555 !important;
+  margin-top: 100px;
 }
