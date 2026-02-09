@@ -59,54 +59,31 @@ export default function FireworksRoom() {
   if (!hasJoined) {
     return (
       <div className="fireworks-container">
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            textAlign: "center",
-          }}
-        >
-          <h2
-            style={{
-              color: "#000",
-              letterSpacing: "0.5em",
-              textShadow: "0 0 10px rgba(255,195,0,0.5)",
-            }}
-          >
-            伝統花火競技会
-          </h2>
-          <input
-            style={{
-              padding: "10px",
-              background: "rgba(255,255,255,0.2)",
-              border: "none",
-              borderBottom: "2px solid #000",
-              color: "#000",
-              textAlign: "center",
-              outline: "none",
-            }}
-            type="text"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-            placeholder="名乗る"
-            onKeyDown={(e) => e.key === "Enter" && handleJoinRoom()}
-          />
-          <button
-            onClick={handleJoinRoom}
-            style={{
-              marginLeft: "20px",
-              background: "#000",
-              color: "#ffc300",
-              border: "none",
-              padding: "10px 20px",
-              cursor: "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            入場
-          </button>
+        <div className="fireworks-entrance-wrapper">
+          <h2 className="fireworks-title">XX花火大会</h2>
+
+          <div className="fireworks-form-group">
+            <input
+              className="fireworks-input"
+              type="text"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              placeholder="お名前"
+              autoFocus // 自動フォーカス
+              onKeyDown={(e) => e.key === "Enter" && handleJoinRoom()}
+            />
+            <button
+              className="fireworks-join-button"
+              onClick={handleJoinRoom}
+              disabled={isJoining}
+            >
+              {isJoining ? "入場中" : "入場"}
+            </button>
+          </div>
+
+          {isJoining && (
+            <p className="fireworks-loading-text">門を潜っています...</p>
+          )}
         </div>
       </div>
     );
@@ -196,7 +173,7 @@ export default function FireworksRoom() {
         />
 
         {/* 右側：スコアボード（固定幅） */}
-        <div style={{ width: "250px", flexShrink: 0 }}>
+        <div style={{ width: "480px", flexShrink: 0 }}>
           <ScoreBoard
             socket={socket!}
             roomId={roomId}
