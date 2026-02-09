@@ -156,21 +156,37 @@ export default function FireworksRoom() {
           <Deck
             socket={socket!}
             roomId={roomId}
-            deckId="blueprint"
+            deckId="theme"
             name="[ 演目カード ]"
             playerId={currentPlayerId}
           />
+          {/* 演目カードのPlayField：ここにはスタイルをかけない（そのまま） */}
+          <div className="fireworks-theme-field">
+            <PlayField
+              socket={socket}
+              roomId={roomId}
+              deckId="theme"
+              name="演目カード"
+              players={players}
+              myPlayerId={myPlayerId}
+            />
+          </div>
         </div>
 
-        {/* 中央：プレイフィールド（flex: 1 で残りの幅をすべて使う） */}
-        <PlayField
-          socket={socket}
-          roomId={roomId}
-          deckId="firework"
-          name="花火カード"
-          players={players}
-          myPlayerId={myPlayerId}
-        />
+        {/* 中央：花火カードのPlayField：ここだけに特定のクラスを当てる */}
+        <div
+          className="fireworks-main-field"
+          style={{ flex: 1, height: "100%" }}
+        >
+          <PlayField
+            socket={socket}
+            roomId={roomId}
+            deckId="firework"
+            name="花火カード"
+            players={players}
+            myPlayerId={myPlayerId}
+          />
+        </div>
 
         {/* 右側：スコアボード（固定幅） */}
         <div style={{ width: "480px", flexShrink: 0 }}>

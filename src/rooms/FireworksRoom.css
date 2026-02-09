@@ -1,3 +1,4 @@
+/* --- Common Layout & Background --- */
 .fireworks-container {
   min-height: 100vh;
   background: radial-gradient(
@@ -12,6 +13,7 @@
   padding: 20px;
 }
 
+/* --- Entrance Screen --- */
 .fireworks-entrance-wrapper {
   position: absolute;
   top: 50%;
@@ -76,8 +78,9 @@
   box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
 }
 
-.rg-playfield {
-  width: 1000px !important;
+/* --- Playfield Layout (花火カード専用) --- */
+.fireworks-main-field .rg-playfield {
+  width: 100% !important; /* 中央のエリアいっぱいに広がるよう 100% に変更 */
   height: 1000px !important;
   margin: 0 auto !important;
   background-color: black !important;
@@ -90,7 +93,7 @@
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
 }
 
-.rg-playfield-title {
+.fireworks-main-field .rg-playfield-title {
   color: #ffffff !important;
   font-size: 30px !important;
   margin-bottom: 30px !important;
@@ -98,7 +101,7 @@
   z-index: 5;
 }
 
-.rg-playfield-container {
+.fireworks-main-field .rg-playfield-container {
   width: 100% !important;
   flex-grow: 1 !important;
   display: flex !important;
@@ -110,7 +113,12 @@
   padding: 10px;
 }
 
-.rg-playfield-card-wrapper {
+.fireworks-theme-field .rg-playfield-title {
+  color: black;
+}
+
+/* --- Card Styles (花火カード専用) --- */
+.fireworks-main-field .rg-playfield-card-wrapper {
   position: relative !important;
   width: 126px !important;
   height: 175px !important;
@@ -118,6 +126,6 @@
   transition: transform 0.2s ease-in-out !important;
 }
 
-.rg-card-text-content {
+.fireworks-main-field .rg-card-text-content {
   font-size: 25px;
 }

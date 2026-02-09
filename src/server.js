@@ -34,11 +34,13 @@ async function startServer() {
     deepSeaCellsBaseJson,
     deepSeaSpeciesDeckJson,
     fireworksCardsJson,
+    fireworksThemeCardsJson,
   ] = await Promise.all([
     loadJson("../public/data/deepSeaActionCards.json"),
     loadJson("../public/data/deepSeaCells.json"),
     loadJson("../public/data/deepSeaSpeciesCards.json"),
     loadJson("../public/data/fireworksCards.json"),
+    loadJson("../public/data/fireworksThemeCards.json"),
   ]);
 
   // --- ヘルパー関数群 ---
@@ -164,7 +166,12 @@ async function startServer() {
   const gamePresets = {
     fireworks: {
       initialDecks: [
-        { deckId: "blueprint", name: "演目", cards: [], backColor: "#ff0000" },
+        {
+          deckId: "theme",
+          name: "演目カード",
+          cards: fireworksThemeCardsJson,
+          backColor: "#ff0000",
+        },
         {
           deckId: "firework",
           name: "花火カード",
