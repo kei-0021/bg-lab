@@ -41,10 +41,7 @@ async function startServer() {
     loadJson("../public/data/fireworksCards.json")
   ]);
 
-  // --- セル・カード・トークンの生成ロジック（そのまま使用） ---
-  const CELL_COUNTS = { RA:5,RB:10,B_NORM:4,B_TRACK:3,T_VOL:7,T_CRF:6,N_A:12,N_B:17 };
-  const ROWS = 8, COLS = 8;
-
+  // --- ヘルパー関数群 ---
   const createUniqueCards = (cards, numSets) => {
     const allCards = [];
     for (let i = 1; i <= numSets; i++) {
@@ -53,6 +50,16 @@ async function startServer() {
     return allCards;
   };
 
+  const createUniqueTokens = (templates, count) => 
+    templates.flatMap(t => Array.from({ length: count }, (_, i) => ({
+      ...t, 
+      id: `${t.id}-${i + 1}`, 
+      templateId: t.id 
+    })));
+
+  // --- DeepSea 設定 ---
+  const CELL_COUNTS = { RA:5, RB:10, B_NORM:4, B_TRACK:3, T_VOL:7, T_CRF:6, N_A:12, N_B:17 };
+  const ROWS = 8, COLS = 8;
   const deepSeaActionCardsThreeSets = createUniqueCards(deepSeaActionCardsBaseJson, 3);
 
   const createBoardCells = (baseCells, counts) => {
@@ -81,15 +88,26 @@ async function startServer() {
     { id:'BATTERY', name:'バッテリー', icon:'🔋', currentValue:6, maxValue:6, type:'CONSUMABLE'}
   ];
 
-  const DEEP_SEA_TOKENS_ARTIFACT=[{id:'ARTIFACT',name:'💰',color:'#D4AF37'}];
-
-  const createUniqueTokens=(templates,count)=>templates.flatMap(t=>Array.from({length:count},(_,i)=>({...t,id:`${t.id}-${i+1}`,templateId:t.id})));
-  
-  const initTokenStoresDeepSea=[{tokenStoreId:"ARTIFACT",name:"遺物",tokens:createUniqueTokens(DEEP_SEA_TOKENS_ARTIFACT,10)}];
+  const DEEP_SEA_TOKENS_ARTIFACT = [{ id: 'ARTIFACT', name: '💰', color: '#D4AF37' }];
+  const initTokenStoresDeepSea = [{ 
+    tokenStoreId: "ARTIFACT", 
+    name: "遺物", 
+    tokens: createUniqueTokens(DEEP_SEA_TOKENS_ARTIFACT, 10) 
+  }];
 
   const initialDecksDeepSea = [
     { deckId: "deepSeaSpecies", name: "深海生物カード", cards: deepSeaSpeciesDeckJson, backColor: "#0d3c99ff" },
     { deckId: "deepSeaAction", name: "アクションカード", cards: deepSeaActionCardsThreeSets, backColor: "#0d8999ff" }
+  ];
+
+  // --- Fireworks 設定 (トークン追加) ---
+  const FIREWORKS_TOKENS = [{ id: 'STAR_PART', name: '秘伝玉', color: '#FFD700' }];
+  const initTokenStoresFireworks = [
+    { 
+      tokenStoreId: "STAR_PARTS", 
+      name: "秘伝玉", 
+      tokens: createUniqueTokens(FIREWORKS_TOKENS, 20) // 20個のトークンを生成
+    }
   ];
 
   // --- プリセットオブジェクトの定義 ---
@@ -105,9 +123,7 @@ async function startServer() {
         }
       ],
       initialResources: [],
-      initialTokenStore: [
-        { tokenStoreId: "STAR_PARTS", name: "秘伝玉", tokens: [] }
-      ],
+      initialTokenStore: initTokenStoresFireworks,
       initialHand: { deckId: "firework", count: 5 },
       initialBoard: []
     },
@@ -131,7 +147,7 @@ async function startServer() {
     corsOrigins: [
       "http://localhost:5173",
       "http://localhost:4000",
-      "https://bg-lab.onrender.com" // ← これを追加！
+      "https://bg-lab.onrender.com"
     ],
     onServerStart: (url) => {
       console.log(`🎮 Demo server running at: ${url}`);
