@@ -4,13 +4,14 @@
     "name": "スターマイン",
     "location": "deck",
     "drawLocation": "field",
-    "playLocation": "field"
+    "playLocation": "discard",
+    "frontImage": "/images/species_1.png"
   },
   {
     "id": "card-A-02",
     "name": "大輪",
     "location": "deck",
     "drawLocation": "field",
-    "playLocation": "field"
+    "playLocation": "discard"
   }
 ]

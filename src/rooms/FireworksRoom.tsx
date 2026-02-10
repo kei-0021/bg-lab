@@ -23,6 +23,9 @@ export default function FireworksRoom() {
   const [players, setPlayers] = useState<PlayerWithResources[]>([]);
   const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
 
+  // --- ルール説明タブ用のステート ---
+  const [showRules, setShowRules] = useState<boolean>(false);
+
   if (!roomId) return null;
 
   const handleJoinRoom = useCallback(() => {
@@ -56,6 +59,7 @@ export default function FireworksRoom() {
     };
   }, [socket]);
 
+  // --- 入場前の画面 ---
   if (!hasJoined) {
     return (
       <div className="fireworks-container">
@@ -69,7 +73,7 @@ export default function FireworksRoom() {
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
               placeholder="お名前"
-              autoFocus // 自動フォーカス
+              autoFocus
               onKeyDown={(e) => e.key === "Enter" && handleJoinRoom()}
             />
             <button
@@ -89,6 +93,7 @@ export default function FireworksRoom() {
     );
   }
 
+  // --- ゲーム本編画面 ---
   return (
     <div className="fireworks-container">
       {/* ヘッダー */}
@@ -106,38 +111,167 @@ export default function FireworksRoom() {
         </h1>
       </header>
 
-      {/* ロビーへ戻る */}
-      <button
-        onClick={() => navigate("/")}
+      {/* 右上のコントロール群 */}
+      <div
         style={{
           position: "absolute",
           top: 20,
           right: 40,
-          background: "#000",
-          color: "#ffc300",
-          border: "1px solid #ffc300",
-          padding: "8px 16px",
-          cursor: "pointer",
           zIndex: 10,
-          fontWeight: "bold",
-          fontSize: "15px",
+          display: "flex",
+          gap: "12px",
         }}
       >
-        ロビーへ
-      </button>
+        <button
+          onClick={() => setShowRules(true)}
+          style={{
+            background: "#ffc300",
+            color: "#000",
+            border: "none",
+            padding: "8px 16px",
+            cursor: "pointer",
+            fontWeight: "bold",
+            fontSize: "15px",
+            boxShadow: "0 0 10px rgba(255,195,0,0.4)",
+          }}
+        >
+          📖 遊び方
+        </button>
+        <button
+          onClick={() => navigate("/")}
+          style={{
+            background: "#000",
+            color: "#ffc300",
+            border: "1px solid #ffc300",
+            padding: "8px 16px",
+            cursor: "pointer",
+            fontWeight: "bold",
+            fontSize: "15px",
+          }}
+        >
+          ロビーへ
+        </button>
+      </div>
 
-      {/* 修正ポイント：position: relative から Flexレイアウトへ変更 */}
+      {/* ルール説明オーバーレイ */}
+      {showRules && (
+        <div
+          className="rules-overlay"
+          onClick={() => setShowRules(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            backgroundColor: "rgba(0,0,0,0.85)",
+            zIndex: 100,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "40px",
+          }}
+        >
+          <div
+            className="rules-content"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: "#1a1a1a",
+              border: "2px solid #ffc300",
+              padding: "40px",
+              maxWidth: "640px",
+              width: "100%",
+              maxHeight: "80vh",
+              overflowY: "auto",
+              color: "#fff",
+              borderRadius: "12px",
+              position: "relative",
+            }}
+          >
+            <button
+              onClick={() => setShowRules(false)}
+              style={{
+                position: "absolute",
+                top: 15,
+                right: 20,
+                background: "none",
+                border: "none",
+                color: "#ffc300",
+                fontSize: "28px",
+                cursor: "pointer",
+              }}
+            >
+              ×
+            </button>
+
+            <h2 style={{ color: "#ffc300", marginTop: 0, fontSize: "24px" }}>
+              🎆 花火大会 遊び方
+            </h2>
+            <hr style={{ borderColor: "#333", margin: "20px 0" }} />
+
+            <div style={{ lineHeight: "1.8", fontSize: "16px" }}>
+              <section>
+                <h3 style={{ color: "#ffc300" }}>1. 勝利条件</h3>
+                <p>
+                  「演目カード」の条件に合わせて「花火カード」を場に並べ、
+                  最も高いスコアを獲得した職人が勝者となります。
+                </p>
+              </section>
+
+              <section style={{ marginTop: "20px" }}>
+                <h3 style={{ color: "#ffc300" }}>2. 手番のアクション</h3>
+                <p>自分の番では以下のことができます：</p>
+                <ul>
+                  <li>
+                    <strong>ドロー：</strong> 山札（花火カード）を引く。
+                  </li>
+                  <li>
+                    <strong>プレイ：</strong>
+                    手札からカードを出し、演目を完成させる。
+                  </li>
+                  <li>
+                    <strong>リセット：</strong>
+                    場のカードを戻し、新たな演目を目指す。
+                  </li>
+                </ul>
+              </section>
+
+              <section style={{ marginTop: "20px" }}>
+                <h3 style={{ color: "#ffc300" }}>3. 秘伝玉（トークン）</h3>
+                <p>
+                  左下の「秘伝玉」は職人の魂です。
+                  特別な演目の達成や、得点のブーストに使用できます。
+                </p>
+              </section>
+            </div>
+
+            <button
+              onClick={() => setShowRules(false)}
+              style={{
+                width: "100%",
+                marginTop: "30px",
+                padding: "12px",
+                background: "#ffc300",
+                border: "none",
+                fontWeight: "bold",
+                cursor: "pointer",
+                fontSize: "16px",
+              }}
+            >
+              了解
+            </button>
+          </div>
+        </div>
+      )}
+
       <main
         style={{
           width: "100vw",
           height: "100vh",
           display: "flex",
-          padding: "100px 40px 40px 40px", // 上部にヘッダー分の余白
+          padding: "100px 40px 40px 40px",
           boxSizing: "border-box",
           gap: "20px",
         }}
       >
-        {/* 左側：山札（固定幅） */}
+        {/* 左側：山札・演目フィールド */}
         <div
           style={{
             display: "flex",
@@ -160,7 +294,6 @@ export default function FireworksRoom() {
             name="[ 演目カード ]"
             playerId={currentPlayerId}
           />
-          {/* 演目カードのPlayField：ここにはスタイルをかけない（そのまま） */}
           <div className="fireworks-theme-field">
             <PlayField
               socket={socket}
@@ -173,7 +306,7 @@ export default function FireworksRoom() {
           </div>
         </div>
 
-        {/* 中央：花火カードのPlayField：ここだけに特定のクラスを当てる */}
+        {/* 中央：メイン打ち上げフィールド */}
         <div
           className="fireworks-main-field"
           style={{ flex: 1, height: "100%" }}
@@ -188,7 +321,7 @@ export default function FireworksRoom() {
           />
         </div>
 
-        {/* 右側：スコアボード（固定幅） */}
+        {/* 右側：スコアボード */}
         <div style={{ width: "480px", flexShrink: 0 }}>
           <ScoreBoard
             socket={socket!}
@@ -199,7 +332,7 @@ export default function FireworksRoom() {
           />
         </div>
 
-        {/* トインストア（これだけは左下に浮かせる） */}
+        {/* トインストア */}
         <div
           style={{
             position: "absolute",
