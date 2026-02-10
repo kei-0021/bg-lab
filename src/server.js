@@ -1,9 +1,9 @@
 import * as fs from "fs/promises";
 import path from "path";
-import { GameServer } from "react-game-ui/server"; // サーバー専用
+import { GameServer } from "react-game-ui/server";
 import { fileURLToPath } from "url";
-import { cardEffects } from "../public/data/cardEffects.js"; // サーバー専用
-import { cellEffects } from "../public/data/cellEffects.js"; // サーバー専用
+import { cardEffects } from "../public/data/cardEffects.js";
+import { cellEffects } from "../public/data/cellEffects.js";
 import { customEvents } from "../public/data/customEvents.js";
 
 // --- パスヘルパー関数 ---
@@ -43,6 +43,35 @@ async function startServer() {
     loadJson("../public/data/fireworksThemeCards.json"),
   ]);
 
+  /**
+   * JSONバリデーション
+   */
+  const assertCards = (cards, deckId) => {
+    cards.forEach((c, i) => {
+      const validLocations = ["hand", "field", "drawn"];
+      if (!validLocations.includes(c.drawLocation)) {
+        throw new Error(
+          `[ASSERT FAILED] デッキ: ${deckId}, インデックス: ${i}, ID: ${c.id}\n` +
+            `不正な drawLocation です: "${c.drawLocation}". 許容値: ${validLocations.join(", ")}`,
+        );
+      }
+    });
+    // deckId の紐付けだけはシステム実行用に適用して返す
+    return cards.map((c) => ({ ...c, deckId }));
+  };
+
+  // すべてのカードセットにバリデーションを適用
+  const fireworksCards = assertCards(fireworksCardsJson, "firework");
+  const fireworksThemeCards = assertCards(fireworksThemeCardsJson, "theme");
+  const deepSeaSpeciesCards = assertCards(
+    deepSeaSpeciesDeckJson,
+    "deepSeaSpecies",
+  );
+  const deepSeaActionCardsRaw = assertCards(
+    deepSeaActionCardsBaseJson,
+    "deepSeaAction",
+  );
+
   // --- ヘルパー関数群 ---
   const createUniqueCards = (cards, numSets) => {
     const allCards = [];
@@ -77,7 +106,7 @@ async function startServer() {
   const ROWS = 8,
     COLS = 8;
   const deepSeaActionCardsThreeSets = createUniqueCards(
-    deepSeaActionCardsBaseJson,
+    deepSeaActionCardsRaw,
     3,
   );
 
@@ -89,6 +118,7 @@ async function startServer() {
     const finalCells = [];
     for (const templateId in counts) {
       const template = templateMap[templateId];
+      if (!template) continue;
       for (let i = 1; i <= counts[templateId]; i++) {
         finalCells.push({ ...template, id: `${templateId}-${i}` });
       }
@@ -139,7 +169,7 @@ async function startServer() {
     {
       deckId: "deepSeaSpecies",
       name: "深海生物カード",
-      cards: deepSeaSpeciesDeckJson,
+      cards: deepSeaSpeciesCards,
       backColor: "#0d3c99ff",
     },
     {
@@ -150,7 +180,7 @@ async function startServer() {
     },
   ];
 
-  // --- Fireworks 設定 (トークン追加) ---
+  // --- Fireworks 設定 ---
   const FIREWORKS_TOKENS = [
     { id: "STAR_PART", name: "秘伝玉", color: "#FFD700" },
   ];
@@ -158,7 +188,7 @@ async function startServer() {
     {
       tokenStoreId: "STAR_PARTS",
       name: "秘伝玉",
-      tokens: createUniqueTokens(FIREWORKS_TOKENS, 20), // 20個のトークンを生成
+      tokens: createUniqueTokens(FIREWORKS_TOKENS, 20),
     },
   ];
 
@@ -169,13 +199,13 @@ async function startServer() {
         {
           deckId: "theme",
           name: "演目カード",
-          cards: fireworksThemeCardsJson,
+          cards: fireworksThemeCards,
           backColor: "#ff0000",
         },
         {
           deckId: "firework",
           name: "花火カード",
-          cards: fireworksCardsJson,
+          cards: fireworksCards,
           backColor: "#000000",
         },
       ],

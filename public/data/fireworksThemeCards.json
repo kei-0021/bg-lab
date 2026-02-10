@@ -3,16 +3,14 @@
     "id": "card-A-01",
     "name": "スターマイン",
     "location": "deck",
-    "drawLocation": "playfield",
-    "playLocation": "field",
-    "playBackLocation": "deck"
+    "drawLocation": "field",
+    "playLocation": "field"
   },
   {
     "id": "card-A-02",
     "name": "大輪",
     "location": "deck",
-    "drawLocation": "playfield",
-    "playLocation": "field",
-    "playBackLocation": "deck"
+    "drawLocation": "field",
+    "playLocation": "field"
   }
 ]
