@@ -1,18 +1,104 @@
 [
   {
-    "id": "card-A-01",
-    "name": "スターマイン",
+    "id": "play-01",
+    "name": "三色同刻（さんしょくどうこく）",
     "location": "deck",
     "drawLocation": "field",
     "playLocation": "discard",
-    "description": "同じ数字のカードを3枚並べる"
+    "description": "異なる3色で同じ数字を3枚揃える",
+    "condition": { "count": 3, "uniqueColors": true, "sameNumber": true }
   },
   {
-    "id": "card-A-02",
-    "name": "大輪",
+    "id": "play-02",
+    "name": "光の三原色",
     "location": "deck",
     "drawLocation": "field",
     "playLocation": "discard",
-    "description": "3のカードを3枚並べる"
+    "description": "赤・緑・青の3色を1枚ずつ揃える（数字不問）",
+    "condition": { "count": 3, "requiredColors": ["赤", "緑", "青"] }
+  },
+  {
+    "id": "play-03",
+    "name": "白菊（しらぎく）",
+    "location": "deck",
+    "drawLocation": "field",
+    "playLocation": "discard",
+    "description": "白のカードだけで「1-2-3」の連番を作る",
+    "condition": { "count": 3, "color": "白", "sequential": true }
+  },
+  {
+    "id": "play-04",
+    "name": "五色乱舞（ごしきらんぶ）",
+    "location": "deck",
+    "drawLocation": "field",
+    "playLocation": "discard",
+    "description": "全5色（赤・青・黄・緑・白）を各1枚ずつ出す",
+    "condition": { "count": 5, "allColors": true }
+  },
+  {
+    "id": "play-05",
+    "name": "信号機",
+    "location": "deck",
+    "drawLocation": "field",
+    "playLocation": "discard",
+    "description": "赤(1)・黄(2)・緑(3)の順で連番かつ指定色で揃える",
+    "condition": {
+      "exactMatch": [
+        { "color": "赤", "num": 1 },
+        { "color": "黄", "num": 2 },
+        { "color": "緑", "num": 3 }
+      ]
+    }
+  },
+  {
+    "id": "play-06",
+    "name": "対空砲火",
+    "location": "deck",
+    "drawLocation": "field",
+    "playLocation": "discard",
+    "description": "「同じ色かつ同じ数字」のペアを2組（計4枚）出す",
+    "condition": { "count": 4, "pairs": 2, "identicalPair": true }
+  },
+  {
+    "id": "play-07",
+    "name": "銀河（ぎんが）",
+    "location": "deck",
+    "drawLocation": "field",
+    "playLocation": "discard",
+    "description": "すべて違う色で、合計値をちょうど6にする",
+    "condition": { "uniqueColors": true, "sum": 6 }
+  },
+  {
+    "id": "play-08",
+    "name": "閃光（せんこう）",
+    "location": "deck",
+    "drawLocation": "field",
+    "playLocation": "discard",
+    "description": "数字「3」のカードを色を問わず4枚以上出す",
+    "condition": { "minCount": 4, "number": 3 }
+  },
+  {
+    "id": "play-09",
+    "name": "紅蓮（ぐれん）",
+    "location": "deck",
+    "drawLocation": "field",
+    "playLocation": "discard",
+    "description": "赤のカードだけで、合計値を5にする",
+    "condition": { "color": "赤", "sum": 5 }
+  },
+  {
+    "id": "play-10",
+    "name": "打ち止め",
+    "location": "deck",
+    "drawLocation": "field",
+    "playLocation": "discard",
+    "description": "異なる3色の「1-2-3」連番セットを2組（計6枚）出す",
+    "condition": {
+      "count": 6,
+      "sets": [
+        { "type": "sequential", "uniqueColors": true },
+        { "type": "sequential", "uniqueColors": true }
+      ]
+    }
   }
 ]

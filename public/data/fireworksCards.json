@@ -5,7 +5,7 @@
     "location": "deck",
     "drawLocation": "hand",
     "playLocation": "field",
-    "playBackLocation": "hand",
+    "fieldBackLocation": "discard",
     "frontImage": "/images/firework_blue_1.png"
   },
   {
@@ -14,7 +14,7 @@
     "location": "deck",
     "drawLocation": "hand",
     "playLocation": "field",
-    "playBackLocation": "hand",
+    "fieldBackLocation": "discard",
     "frontImage": "/images/firework_red_1.png"
   },
   {
@@ -23,7 +23,7 @@
     "location": "deck",
     "drawLocation": "hand",
     "playLocation": "field",
-    "playBackLocation": "hand",
+    "fieldBackLocation": "discard",
     "frontImage": "/images/firework_orange_1.png"
   },
   {
@@ -32,7 +32,7 @@
     "location": "deck",
     "drawLocation": "hand",
     "playLocation": "field",
-    "playBackLocation": "hand",
+    "fieldBackLocation": "discard",
     "frontImage": "/images/firework_green_1.png"
   },
   {
@@ -41,7 +41,7 @@
     "location": "deck",
     "drawLocation": "hand",
     "playLocation": "field",
-    "playBackLocation": "hand",
+    "fieldBackLocation": "discard",
     "frontImage": "/images/firework_white_1.png"
   },
   {
@@ -50,7 +50,7 @@
     "location": "deck",
     "drawLocation": "hand",
     "playLocation": "field",
-    "playBackLocation": "hand",
+    "fieldBackLocation": "discard",
     "frontImage": "/images/firework_blue_2.png"
   },
   {
@@ -59,7 +59,7 @@
     "location": "deck",
     "drawLocation": "hand",
     "playLocation": "field",
-    "playBackLocation": "hand",
+    "fieldBackLocation": "discard",
     "frontImage": "/images/firework_red_2.png"
   },
   {
@@ -68,7 +68,7 @@
     "location": "deck",
     "drawLocation": "hand",
     "playLocation": "field",
-    "playBackLocation": "hand",
+    "fieldBackLocation": "discard",
     "frontImage": "/images/firework_orange_2.png"
   },
   {
@@ -77,7 +77,7 @@
     "location": "deck",
     "drawLocation": "hand",
     "playLocation": "field",
-    "playBackLocation": "hand",
+    "fieldBackLocation": "discard",
     "frontImage": "/images/firework_green_2.png"
   },
   {
@@ -86,7 +86,7 @@
     "location": "deck",
     "drawLocation": "hand",
     "playLocation": "field",
-    "playBackLocation": "hand",
+    "fieldBackLocation": "discard",
     "frontImage": "/images/firework_white_2.png"
   },
   {
@@ -95,7 +95,7 @@
     "location": "deck",
     "drawLocation": "hand",
     "playLocation": "field",
-    "playBackLocation": "hand",
+    "fieldBackLocation": "discard",
     "frontImage": "/images/firework_blue_3.png"
   },
   {
@@ -104,7 +104,7 @@
     "location": "deck",
     "drawLocation": "hand",
     "playLocation": "field",
-    "playBackLocation": "hand",
+    "fieldBackLocation": "discard",
     "frontImage": "/images/firework_red_3.png"
   },
   {
@@ -113,7 +113,7 @@
     "location": "deck",
     "drawLocation": "hand",
     "playLocation": "field",
-    "playBackLocation": "hand",
+    "fieldBackLocation": "discard",
     "frontImage": "/images/firework_orange_3.png"
   },
   {
@@ -122,7 +122,7 @@
     "location": "deck",
     "drawLocation": "hand",
     "playLocation": "field",
-    "playBackLocation": "hand",
+    "fieldBackLocation": "discard",
     "frontImage": "/images/firework_green_3.png"
   },
   {
@@ -131,7 +131,7 @@
     "location": "deck",
     "drawLocation": "hand",
     "playLocation": "field",
-    "playBackLocation": "hand",
+    "fieldBackLocation": "discard",
     "frontImage": "/images/firework_white_3.png"
   }
 ]
