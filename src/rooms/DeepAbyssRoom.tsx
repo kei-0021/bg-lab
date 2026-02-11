@@ -12,20 +12,26 @@ import "./DeepAbyssRoom.css";
 const SERVER_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:4000"
-    : "https://bg-lab.onrender.com"; // ← Render URL
+    : "https://bg-lab.onrender.com";
 
 const RESOURCE_IDS = {
   OXYGEN: "OXYGEN",
   BATTERY: "BATTERY",
-  HULL: "HULL", // 船体耐久度
+  HULL: "HULL",
 };
+
+// サーバーから送られてくるターン情報の型定義
+interface TurnUpdatePayload {
+  playerId: string;
+  currentRound: number;
+  currentTurnIndex: number;
+}
 
 export default function GameRoom() {
   const { roomId } = useParams<{ roomId: string }>();
   const socket = useSocket(SERVER_URL);
   const navigate = useNavigate();
 
-  // ★ 追加: プレイヤー名入力と参加状態
   const [userName, setUserName] = useState<string>("");
   const [isJoining, setIsJoining] = useState<boolean>(false);
   const [hasJoined, setHasJoined] = useState<boolean>(false);
@@ -34,19 +40,18 @@ export default function GameRoom() {
   const [players, setPlayers] = useState<PlayerWithResources[]>([]);
   const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
 
-  // --- デバッグ用 ---
+  // ラウンドの状態を追加
+  const [currentRound, setCurrentRound] = useState<number>(1);
+
   const [debugTargetId, setDebugTargetId] = useState<string | null>(null);
   const [debugScoreAmount, setDebugScoreAmount] = useState<number>(10);
   const [debugResourceAmount, setDebugResourceAmount] = useState<number>(1);
-  // ------------------
 
-  // ★ 新しい参加ハンドラ
   const handleJoinRoom = useCallback(() => {
     if (!socket || !roomId || userName.trim() === "" || isJoining) return;
 
     setIsJoining(true);
 
-    // サーバーの `room:join` イベントのペイロードをオブジェクトに変更
     socket.emit("room:join", {
       roomId,
       gamePresetId: "deepabyss",
@@ -57,16 +62,15 @@ export default function GameRoom() {
     );
   }, [socket, roomId, userName, isJoining]);
 
-  // ★ useEffectのロジックを変更
   useEffect(() => {
-    if (!socket || !roomId) return; // hasJoinedがtrueになってからリスナーを設定
+    if (!socket || !roomId) return;
 
     const handleAssignId = (id: Player["id"]) => {
       console.log("[CLIENT] Assigned player ID:", id);
       setMyPlayerId(id);
       setDebugTargetId(id);
-      setHasJoined(true); // サーバーからIDを受け取った時点で「参加完了」とする
-      setIsJoining(false); // 参加処理完了
+      setHasJoined(true);
+      setIsJoining(false);
     };
 
     const handlePlayersUpdate = (updatedPlayers: PlayerWithResources[]) => {
@@ -74,26 +78,31 @@ export default function GameRoom() {
       setPlayers(updatedPlayers);
     };
 
-    const handleGameTurn = (id: string) => {
-      console.log("[CLIENT] game:turn:", id);
-      setCurrentPlayerId(id);
+    // オブジェクト形式と文字列形式の両方に対応
+    const handleGameTurn = (data: TurnUpdatePayload | string) => {
+      console.log("[CLIENT] game:turn received:", data);
+
+      if (typeof data === "string") {
+        setCurrentPlayerId(data);
+      } else {
+        setCurrentPlayerId(data.playerId);
+        setCurrentRound(data.currentRound);
+        console.log(`[CLIENT] Round Updated to: ${data.currentRound}`);
+      }
     };
 
-    // イベントリスナーの設定
     socket.on("player:assign-id", handleAssignId);
     socket.on("players:update", handlePlayersUpdate);
     socket.on("game:turn", handleGameTurn);
 
     return () => {
-      // 離脱処理（ここはユーザーが手動でページ遷移した場合に実行される）
       socket.off("player:assign-id", handleAssignId);
       socket.off("players:update", handlePlayersUpdate);
       socket.off("game:turn", handleGameTurn);
-      // socket.emit("room:leave", roomId); // 現在、サーバー側でdisconnect時に処理しているため不要だが、明示的に追加しても良い
     };
   }, [socket, roomId]);
 
-  // --- デバッグ用操作 (変更なし) ---
+  // デバッグ用操作
   const handleDebugScore = (amount: number) => {
     if (!socket || !debugTargetId || !roomId) return;
     socket.emit("room:player:add-score", {
@@ -114,7 +123,6 @@ export default function GameRoom() {
     });
   };
 
-  // --- 接続前の状態 ---
   if (!roomId)
     return (
       <div className="deepsea-container">
@@ -176,18 +184,34 @@ export default function GameRoom() {
   return (
     <div className="deepsea-container">
       <header className="deepsea-header">
-        <div style={{ display: "flex", gap: 40 }}>
-          <h1 className="deepsea-title">ディープ・アビス</h1>
-          <p className="deepsea-subtitle">
-            深海を調査して眠れる資源を見つけ出せ！
-          </p>
+        <div style={{ display: "flex", gap: 40, alignItems: "center" }}>
+          <div>
+            <h1 className="deepsea-title">ディープ・アビス</h1>
+            <p className="deepsea-subtitle">
+              深海を調査して眠れる資源を見つけ出せ！
+            </p>
+          </div>
+          {/* ラウンド表示 */}
+          <div
+            className="round-badge"
+            style={{
+              background: "rgba(0, 212, 255, 0.2)",
+              border: "1px solid #00d4ff",
+              color: "#00d4ff",
+              padding: "5px 15px",
+              borderRadius: "20px",
+              fontWeight: "bold",
+              fontSize: "1.1rem",
+            }}
+          >
+            ROUND: {currentRound}
+          </div>
         </div>
         <button className="join-button" onClick={() => navigate("/")}>
           🏠 ロビーへ戻る
         </button>
       </header>
 
-      {/* ヘッダー高さ分の余白を確保 */}
       <div style={{ height: "80px" }} />
 
       <div className="board-wrapper">
@@ -213,8 +237,6 @@ export default function GameRoom() {
         setDebugResourceAmount={setDebugResourceAmount}
         handleDebugResource={handleDebugResource}
         RESOURCE_IDS={RESOURCE_IDS}
-        // ★ オブジェクトを渡すのをやめ、空にするか削除し、
-        // 内部でクラスを参照するように変更（または className props を追加）
         debugPanelClassName="debug-control-panel"
         debugInputClassName="debug-input"
       />
