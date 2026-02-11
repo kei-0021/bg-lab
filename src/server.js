@@ -181,6 +181,10 @@ async function startServer() {
   ];
 
   // --- Fireworks 設定 ---
+  const fireworksCardsThreeSets = createUniqueCards(
+    assertCards(fireworksCardsJson, "firework"),
+    3,
+  );
   const FIREWORKS_TOKENS = [
     { id: "STAR_PART", name: "秘伝玉", color: "#FFD700" },
   ];
@@ -197,16 +201,16 @@ async function startServer() {
     fireworks: {
       initialDecks: [
         {
+          deckId: "firework",
+          name: "花火カード",
+          cards: fireworksCardsThreeSets,
+          backColor: "#000000",
+        },
+        {
           deckId: "theme",
           name: "演目カード",
           cards: fireworksThemeCards,
           backColor: "#ff0000",
-        },
-        {
-          deckId: "firework",
-          name: "花火カード",
-          cards: fireworksCards,
-          backColor: "#000000",
         },
       ],
       initialResources: [],
