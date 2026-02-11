@@ -31,6 +31,7 @@ export default function FireworksRoom() {
   const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
   const [currentRound, setCurrentRound] = useState<number>(1);
   const [showRules, setShowRules] = useState<boolean>(false);
+  const [gameResult, setGameResult] = useState<any>(null);
 
   if (!roomId) return null;
 
@@ -46,13 +47,16 @@ export default function FireworksRoom() {
 
   useEffect(() => {
     if (!socket) return;
+
     const handleAssignId = (id: Player["id"]) => {
       setMyPlayerId(id);
       setHasJoined(true);
       setIsJoining(false);
     };
+
     const handlePlayersUpdate = (updatedPlayers: PlayerWithResources[]) =>
       setPlayers(updatedPlayers);
+
     const handleGameTurn = (data: TurnUpdatePayload | string) => {
       if (typeof data === "string") {
         setCurrentPlayerId(data);
@@ -62,14 +66,20 @@ export default function FireworksRoom() {
       }
     };
 
+    const handleGameEnd = (result: any) => {
+      setGameResult(result);
+    };
+
     socket.on("player:assign-id", handleAssignId);
     socket.on("players:update", handlePlayersUpdate);
     socket.on("game:turn", handleGameTurn);
+    socket.on("game:end", handleGameEnd);
 
     return () => {
       socket.off("player:assign-id", handleAssignId);
       socket.off("players:update", handlePlayersUpdate);
       socket.off("game:turn", handleGameTurn);
+      socket.off("game:end", handleGameEnd);
     };
   }, [socket]);
 
@@ -107,6 +117,36 @@ export default function FireworksRoom() {
   // --- ゲーム本編画面 ---
   return (
     <div className="fireworks-container">
+      {/* リザルトオーバーレイ */}
+      {gameResult && (
+        <div className="fireworks-result-overlay">
+          <div className="fireworks-result-modal">
+            <div className="fw-result-header">
+              <span className="fw-icon">🎇</span>
+              <h2>花火大会終了!!</h2>
+              <span className="fw-icon">🎇</span>
+            </div>
+            <p className="fw-result-message">{gameResult.message}</p>
+            <div className="fw-ranking-list">
+              {gameResult.rankings?.map((res: any) => (
+                <div key={res.rank} className={`fw-rank-item rank-${res.rank}`}>
+                  <div className="fw-rank-num">{res.rank}位</div>
+                  <div className="fw-player-info">
+                    <span className="fw-player-name">{res.name}</span>
+                    <span className="fw-player-score">
+                      {res.tokens} <small>点</small>
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button className="fw-exit-button" onClick={() => navigate("/")}>
+              ロビーへ戻る
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* ヘッダー */}
       <header className="fireworks-header">
         <div className="header-logo">
@@ -115,8 +155,6 @@ export default function FireworksRoom() {
         <div className="header-tracker">
           <RoundProgressTracker currentRound={currentRound} maxRound={5} />
         </div>
-
-        {/* 右上のコントロール群 */}
         <div className="header-nav">
           <button onClick={() => setShowRules(true)} className="nav-btn-rules">
             📖 遊び方
@@ -204,7 +242,6 @@ export default function FireworksRoom() {
             />
           </div>
         </div>
-        {/* 中央：メイン打ち上げフィールド */}
         <div className="fireworks-main-field">
           <PlayField
             socket={socket}
@@ -215,7 +252,6 @@ export default function FireworksRoom() {
             myPlayerId={myPlayerId}
           />
         </div>
-        {/* 右側：スコアボード */}
         <div className="sidebar-right">
           <ScoreBoard
             socket={socket!}
@@ -226,8 +262,6 @@ export default function FireworksRoom() {
             autoNextTurnOnCardPlay={true}
           />
         </div>
-
-        {/* トインストア */}
         <div className="token-pos">
           <TokenStore
             socket={socket!}

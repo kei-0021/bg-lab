@@ -217,6 +217,30 @@ async function startServer() {
       initialTokenStore: initTokenStoresFireworks,
       initialHand: { deckId: "firework", count: 5 },
       initialBoard: [],
+      // ゲーム終了条件の定義
+      checkGameEnd: (gameState) => {
+        const MAX_ROUNDS = 5; // 5ラウンド終了で完結
+        // 現在のラウンドが最大ラウンドに達し、かつ全員のターンが終わっているかチェック
+        return gameState.currentRoundIndex >= MAX_ROUNDS;
+      },
+
+      // 終了時の結果表示ロジック
+      onGameEnd: (gameState) => {
+        // スコアの高い順にソートしてランキング作成
+        const rankings = [...gameState.gameStateInstance.players]
+          .sort((a, b) => b.tokens.length - a.tokens.length)
+          .map((player, index) => ({
+            rank: index + 1,
+            name: player.name,
+            tokens: player.tokens.length,
+          }));
+
+        return {
+          message: "全演目の打ち上げが終了しました。本日の最優秀職人は…",
+          rankings: rankings,
+          finalRound: gameState.currentRound,
+        };
+      },
     },
     deepabyss: {
       initialDecks: initialDecksDeepSea,

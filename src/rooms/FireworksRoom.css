@@ -278,3 +278,117 @@
     opacity: 1;
   }
 }
+
+/* ==========================================
+   リザルト（打ち上げ終了）画面
+   ========================================== */
+.fireworks-result-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  backdrop-filter: blur(10px);
+}
+
+.fireworks-result-modal {
+  background: #1a1a2e;
+  border: 3px double #e94560;
+  border-radius: 15px;
+  padding: 40px;
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(233, 69, 96, 0.4);
+}
+
+.fw-result-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.fw-result-header h2 {
+  color: #f9ed69;
+  font-size: 2.2rem;
+  margin: 0;
+  text-shadow: 0 0 10px rgba(249, 237, 105, 0.6);
+}
+
+.fw-icon {
+  font-size: 1.8rem;
+}
+
+.fw-result-message {
+  color: #fff;
+  opacity: 0.9;
+  margin-bottom: 30px;
+}
+
+.fw-ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fw-rank-item {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px 20px;
+  border-radius: 10px;
+  gap: 20px; /* 順位と名前の間の空白 */
+}
+
+.rank-1 {
+  background: rgba(249, 237, 105, 0.15);
+  border: 1px solid #f9ed69;
+}
+
+.fw-rank-num {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #e94560;
+  width: 50px; /* 固定幅で名前の開始位置を揃える */
+  flex-shrink: 0;
+  margin-right: 15px; /* 追加の空白 */
+}
+
+.rank-1 .fw-rank-num {
+  color: #f9ed69;
+}
+
+.fw-player-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.fw-player-name {
+  font-size: 1.2rem;
+  color: #eee;
+}
+.fw-player-score {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.fw-exit-button {
+  margin-top: 30px;
+  padding: 12px 40px;
+  background: transparent;
+  border: 2px solid #e94560;
+  color: #e94560;
+  border-radius: 50px;
+  font-weight: bold;
+  cursor: pointer;
+}
