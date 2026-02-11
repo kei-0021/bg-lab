@@ -223,6 +223,7 @@ export default function FireworksRoom() {
             players={players}
             currentPlayerId={currentPlayerId}
             myPlayerId={myPlayerId}
+            autoNextTurnOnCardPlay={true}
           />
         </div>
 
