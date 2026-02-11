@@ -58,7 +58,7 @@ export default function FireworksRoom() {
         setCurrentPlayerId(data);
       } else {
         setCurrentPlayerId(data.playerId);
-        setCurrentRound(data.currentRound);
+        setCurrentRound(data.currentRound + 1);
       }
     };
 
