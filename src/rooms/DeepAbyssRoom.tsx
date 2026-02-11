@@ -26,7 +26,7 @@ export default function GameRoom() {
   const navigate = useNavigate();
 
   // ★ 追加: プレイヤー名入力と参加状態
-  const [userName, setUserName] = useState<string>('');
+  const [userName, setUserName] = useState<string>("");
   const [isJoining, setIsJoining] = useState<boolean>(false);
   const [hasJoined, setHasJoined] = useState<boolean>(false);
 
@@ -42,13 +42,19 @@ export default function GameRoom() {
 
   // ★ 新しい参加ハンドラ
   const handleJoinRoom = useCallback(() => {
-    if (!socket || !roomId || userName.trim() === '' || isJoining) return;
+    if (!socket || !roomId || userName.trim() === "" || isJoining) return;
 
     setIsJoining(true);
 
     // サーバーの `room:join` イベントのペイロードをオブジェクトに変更
-    socket.emit("room:join", { roomId, roomName: "deepabyss", playerName: userName.trim() });
-    console.log(`[CLIENT] Attempting to join room: ${roomId} as ${userName.trim()}`);
+    socket.emit("room:join", {
+      roomId,
+      gamePresetId: "deepabyss",
+      playerName: userName.trim(),
+    });
+    console.log(
+      `[CLIENT] Attempting to join room: ${roomId} as ${userName.trim()}`,
+    );
   }, [socket, roomId, userName, isJoining]);
 
   // ★ useEffectのロジックを変更
@@ -72,7 +78,7 @@ export default function GameRoom() {
       console.log("[CLIENT] game:turn:", id);
       setCurrentPlayerId(id);
     };
-    
+
     // イベントリスナーの設定
     socket.on("player:assign-id", handleAssignId);
     socket.on("players:update", handlePlayersUpdate);
@@ -98,14 +104,14 @@ export default function GameRoom() {
   };
 
   const handleDebugResource = (resourceId: string, amount: number) => {
-      if (!socket || !debugTargetId || !roomId) return;
-      console.log("ここを通った")
-      socket.emit("room:player:update-resource", {
-          roomId,
-          playerId: debugTargetId,
-          resourceId,
-          amount,
-      });
+    if (!socket || !debugTargetId || !roomId) return;
+    console.log("ここを通った");
+    socket.emit("room:player:update-resource", {
+      roomId,
+      playerId: debugTargetId,
+      resourceId,
+      amount,
+    });
   };
 
   // --- 接続前の状態 ---
@@ -135,8 +141,10 @@ export default function GameRoom() {
       <div className="deepsea-container">
         <div className="join-form-wrapper">
           <h2 className="deepsea-title">ルーム参加</h2>
-          <p style={{ margin: '0 0 10px 0', color: 'white' }}>Room ID: {roomId}</p>
-          
+          <p style={{ margin: "0 0 10px 0", color: "white" }}>
+            Room ID: {roomId}
+          </p>
+
           <input
             className="join-form-input"
             type="text"
@@ -145,17 +153,17 @@ export default function GameRoom() {
             onChange={(e) => setUserName(e.target.value)}
             disabled={isJoining}
             maxLength={12}
-            onKeyDown={(e) => e.key === 'Enter' && handleJoinRoom()}
+            onKeyDown={(e) => e.key === "Enter" && handleJoinRoom()}
           />
 
           <button
             className="join-form-button"
             onClick={handleJoinRoom}
-            disabled={userName.trim() === '' || isJoining}
+            disabled={userName.trim() === "" || isJoining}
           >
-            {isJoining ? '参加中...' : 'ルームに参加'}
+            {isJoining ? "参加中..." : "ルームに参加"}
           </button>
-          
+
           {isJoining && (
             <p className="waiting-text">サーバーからの応答を待っています...</p>
           )}
@@ -170,9 +178,13 @@ export default function GameRoom() {
       <header className="deepsea-header">
         <div style={{ display: "flex", gap: 40 }}>
           <h1 className="deepsea-title">ディープ・アビス</h1>
-          <p className="deepsea-subtitle">深海を調査して眠れる資源を見つけ出せ！</p>
+          <p className="deepsea-subtitle">
+            深海を調査して眠れる資源を見つけ出せ！
+          </p>
         </div>
-        <button className="join-button" onClick={() => navigate("/")}>🏠 ロビーへ戻る</button>
+        <button className="join-button" onClick={() => navigate("/")}>
+          🏠 ロビーへ戻る
+        </button>
       </header>
 
       {/* ヘッダー高さ分の余白を確保 */}
@@ -182,7 +194,12 @@ export default function GameRoom() {
         <MyBoard socket={socket} roomId={roomId} myPlayerId={myPlayerId} />
       </div>
 
-      <TokenStore socket={socket} roomId={roomId} tokenStoreId="ARTIFACT" name="遺物" />
+      <TokenStore
+        socket={socket}
+        roomId={roomId}
+        tokenStoreId="ARTIFACT"
+        name="遺物"
+      />
 
       <DebugControlPanel
         players={players}
@@ -204,20 +221,66 @@ export default function GameRoom() {
 
       <div className="game-main-layout">
         {/* デッキカラム */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "20px", flex: "0 0 220px" }}>
-          <Deck socket={socket} roomId={roomId} deckId="deepSeaAction" name="アクション" playerId={currentPlayerId} />
-          <Deck socket={socket} roomId={roomId} deckId="deepSeaSpecies" name="深海生物" playerId={currentPlayerId} />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+            flex: "0 0 220px",
+          }}
+        >
+          <Deck
+            socket={socket}
+            roomId={roomId}
+            deckId="deepSeaAction"
+            name="アクション"
+            playerId={currentPlayerId}
+          />
+          <Deck
+            socket={socket}
+            roomId={roomId}
+            deckId="deepSeaSpecies"
+            name="深海生物"
+            playerId={currentPlayerId}
+          />
         </div>
 
         {/* フィールドカラム */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "20px", flex: "0 0 320px" }}>
-          <PlayField socket={socket} roomId={roomId} deckId="deepSeaAction" name="アクション" players={players} myPlayerId={myPlayerId} />
-          <PlayField socket={socket} roomId={roomId} deckId="deepSeaSpecies" name="深海生物" players={players} myPlayerId={myPlayerId} />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+            flex: "0 0 320px",
+          }}
+        >
+          <PlayField
+            socket={socket}
+            roomId={roomId}
+            deckId="deepSeaAction"
+            name="アクション"
+            players={players}
+            myPlayerId={myPlayerId}
+          />
+          <PlayField
+            socket={socket}
+            roomId={roomId}
+            deckId="deepSeaSpecies"
+            name="深海生物"
+            players={players}
+            myPlayerId={myPlayerId}
+          />
         </div>
 
         {/* スコアボード（右端） */}
         <div style={{ flex: "1 1 auto", minWidth: "250px" }}>
-          <ScoreBoard socket={socket} roomId={roomId} players={players} currentPlayerId={currentPlayerId} myPlayerId={myPlayerId} />
+          <ScoreBoard
+            socket={socket}
+            roomId={roomId}
+            players={players}
+            currentPlayerId={currentPlayerId}
+            myPlayerId={myPlayerId}
+          />
         </div>
       </div>
     </div>

@@ -214,7 +214,7 @@ async function startServer() {
       initialHand: { deckId: "firework", count: 5 },
       initialBoard: [],
     },
-    deepsea: {
+    deepabyss: {
       initialDecks: initialDecksDeepSea,
       initialResources: DEEP_SEA_RESOURCES,
       initialTokenStore: initTokenStoresDeepSea,
