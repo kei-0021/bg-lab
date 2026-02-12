@@ -1,0 +1,137 @@
+[
+  {
+    "id": "card-A-01",
+    "name": "青1",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard",
+    "frontImage": "/images/firework_blue_1.png"
+  },
+  {
+    "id": "card-A-02",
+    "name": "赤1",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard",
+    "frontImage": "/images/firework_red_1.png"
+  },
+  {
+    "id": "card-B-01",
+    "name": "黄1",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard",
+    "frontImage": "/images/firework_orange_1.png"
+  },
+  {
+    "id": "card-B-02",
+    "name": "緑1",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard",
+    "frontImage": "/images/firework_green_1.png"
+  },
+  {
+    "id": "card-C-01",
+    "name": "白1",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard",
+    "frontImage": "/images/firework_white_1.png"
+  },
+  {
+    "id": "card-A-03",
+    "name": "青2",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard",
+    "frontImage": "/images/firework_blue_2.png"
+  },
+  {
+    "id": "card-A-04",
+    "name": "赤2",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard",
+    "frontImage": "/images/firework_red_2.png"
+  },
+  {
+    "id": "card-B-03",
+    "name": "黄2",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard",
+    "frontImage": "/images/firework_orange_2.png"
+  },
+  {
+    "id": "card-B-04",
+    "name": "緑2",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard",
+    "frontImage": "/images/firework_green_2.png"
+  },
+  {
+    "id": "card-C-02",
+    "name": "白2",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard",
+    "frontImage": "/images/firework_white_2.png"
+  },
+  {
+    "id": "card-A-05",
+    "name": "青3",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard",
+    "frontImage": "/images/firework_blue_3.png"
+  },
+  {
+    "id": "card-A-06",
+    "name": "赤3",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard",
+    "frontImage": "/images/firework_red_3.png"
+  },
+  {
+    "id": "card-B-05",
+    "name": "黄3",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard",
+    "frontImage": "/images/firework_orange_3.png"
+  },
+  {
+    "id": "card-B-06",
+    "name": "緑3",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard",
+    "frontImage": "/images/firework_green_3.png"
+  },
+  {
+    "id": "card-C-03",
+    "name": "白3",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard",
+    "frontImage": "/images/firework_white_3.png"
+  }
+]

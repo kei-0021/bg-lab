@@ -3,21 +3,25 @@ import { useNavigate } from "react-router-dom";
 import io, { Socket } from "socket.io-client";
 import "./LobbyRoom.css";
 
-// 仮のSocket.IOサーバーURL
 const SERVER_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:4000"
     : "https://bg-lab.onrender.com";
 
-// ルーム型定義に gameType を追加
 interface Room {
   id: string;
-  name: string;
+  gameName: string;
   playerCount: number;
   maxPlayers: number;
   createdAt: number;
-  gameType: "deepabyss" | "lightroad" | "volcano"; // 追加
 }
+
+// 表示用のマッピング（これならフロントだけで完結する）
+const GAME_DISPLAY_NAMES: Record<string, string> = {
+  fireworks: "🎆 FireWorks",
+  deepabyss: "🌊 DeepAbyss",
+  lightroad: "🌟 LightRoad",
+};
 
 export default function RoomLobby() {
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -57,58 +61,44 @@ export default function RoomLobby() {
 
   // ルーム参加（ゲームタイプに応じたパスで遷移）
   const handleJoinRoom = (room: Room) => {
-      if (!room.id.trim()) return;
-      
-      // ✅ room.gameType を使って動的なパスを生成する
-      navigate(`/${room.name}/${room.id.trim()}`);
+    if (!room.id.trim()) return;
+
+    // room.gameType を使って動的なパスを生成する
+    navigate(`/${room.gameName}/${room.id.trim()}`);
   };
 
   // 新規ルーム作成
-  const handleCreateRoom = (gameType: Room["gameType"]) => {
+  const handleCreateRoom = (gameId: string) => {
     const newRoomId = Math.random().toString(36).substring(2, 8);
-    console.log(`新しい${gameType}ルームを作成: ${newRoomId}`);
-    navigate(`/${gameType}/${newRoomId}`);
+    console.log(`新しい${gameId}ルームを作成: ${newRoomId}`);
+    navigate(`/${gameId}/${newRoomId}`);
   };
 
   return (
     <div className="lobby-container">
-      <h1 className="lobby-title">🎮 ロビー 🤝</h1>
+      <h1 className="lobby-title">ロビー</h1>
 
-      {/* --- 新しいルームを作成 --- */}
       <div className="section create-room-section">
-        <h2 className="section-title">新しいルームを作成</h2>
-        <div className="button-group">
-          <button
-            onClick={() => handleCreateRoom("deepabyss")}
-            className="button primary-button"
-            disabled={!socket || !socket.connected}
-          >
-            🌊 DeepAbyss
-          </button>
-          <button
-            onClick={() => handleCreateRoom("lightroad")}
-            className="button primary-button"
-            disabled={!socket || !socket.connected}
-          >
-            🌟 LightRoad
-          </button>
-          <button
-            onClick={() => handleCreateRoom("volcano")}
-            className="button primary-button"
-            disabled={!socket || !socket.connected}
-          >
-            🔥 VolcanoRun
-          </button>
+        <h2 className="section-title">新しいゲームを始める</h2>
+        <div
+          className="button-group"
+          style={{ display: "flex", gap: "15px", justifyContent: "center" }}
+        >
+          {Object.entries(GAME_DISPLAY_NAMES).map(([id, displayName]) => (
+            <button
+              key={id}
+              onClick={() => handleCreateRoom(id)}
+              className="button primary-button"
+              disabled={!socket?.connected}
+            >
+              {displayName}
+            </button>
+          ))}
         </div>
-        {!socket?.connected && (
-          <p className="status-message loading">サーバー接続中...</p>
-        )}
       </div>
 
-      {/* --- 公開ルーム一覧 --- */}
       <div className="section room-list-section">
         <h2 className="section-title list-header">公開ルーム一覧</h2>
-
         {isLoading ? (
           <p className="status-message">ルームリストを読み込み中...</p>
         ) : rooms.length === 0 ? (
@@ -130,7 +120,10 @@ export default function RoomLobby() {
                 }
               >
                 <div className="room-info">
-                  <p className="room-name">{room.name}</p>
+                  {/* 💡 room.name から日本語名に変換して表示 */}
+                  <p className="room-game-label">
+                    {GAME_DISPLAY_NAMES[room.gameName] || `🎲 ${room.gameName}`}
+                  </p>
                   <p className="room-id">ID: {room.id}</p>
                 </div>
                 <div className="room-status">
@@ -144,9 +137,8 @@ export default function RoomLobby() {
                     {room.playerCount}/{room.maxPlayers}
                   </span>
                   <p className="created-at">
-                    {new Date(room.createdAt).toLocaleTimeString("ja-JP")} 作成
+                    {new Date(room.createdAt).toLocaleTimeString("ja-JP")}
                   </p>
-                  <p className="game-type">ゲーム: {room.gameType}</p>
                 </div>
               </li>
             ))}

@@ -1,11 +1,8 @@
-// src/components/DebugControlPanel.jsx (または .tsx)
+// src/components/DebugControlPanel.tsx
 
-import React from 'react';
-
-// propsの型定義 (TypeScriptの場合)
 
 interface DebugControlPanelProps {
-    players: any[]; // Playerの型を適切に指定してください
+    players: any[];
     myPlayerId: string | null;
     debugTargetId: string | null;
     setDebugTargetId: (id: string) => void;
@@ -16,18 +13,13 @@ interface DebugControlPanelProps {
     setDebugResourceAmount: (amount: number) => void;
     handleDebugResource: (resourceId: string, amount: number) => void;
     RESOURCE_IDS: { OXYGEN: string; BATTERY: string };
-    debugPanelStyle: React.CSSProperties; // 親から受け取るスタイル
-    inputStyle: React.CSSProperties; // 親から受け取るスタイル
+    debugPanelClassName?: string;
+    debugInputClassName?: string;
 }
 
-React;
-
-// TypeScriptを使用しない場合の関数コンポーネント
 export default function DebugControlPanel({ 
     players, 
     myPlayerId,
-    debugTargetId, 
-    setDebugTargetId, 
     debugScoreAmount, 
     setDebugScoreAmount,
     handleDebugScore,
@@ -35,24 +27,19 @@ export default function DebugControlPanel({
     setDebugResourceAmount,
     handleDebugResource,
     RESOURCE_IDS,
-    debugPanelStyle,
-    inputStyle
+    debugPanelClassName,
+    debugInputClassName
 }: DebugControlPanelProps) {
     
-    // 💡 変更: 自分のプレイヤーのみをフィルタリング
     const myPlayer = players.find(p => p.id === myPlayerId);
-    // <select>でマップするための配列。myPlayerが存在すればそれを含む配列にする
-    const selectablePlayers = myPlayer ? [myPlayer] : [];
 
     return (
-        // 5. 🛠️ デバッグコントロールパネル
-        <div style={debugPanelStyle}>
+        <div className={debugPanelClassName}>
             <p style={{ color: '#FFEB3B', fontSize: '1.1em', marginBottom: '8px' }}>🛠️ デバッグ/テストコントロール</p>
             
-            {/* ターゲットプレイヤー表示（選択肢は自分だけ、固定表示） */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
             {myPlayer ? (
-                <span style={{ ...inputStyle, display: 'inline-block', width: '180px', backgroundColor: 'rgba(0, 188, 212, 0.2)', padding: '4px 8px' }}>
+                <span className={debugInputClassName} style={{ display: 'inline-block', width: '220px', backgroundColor: 'rgba(0, 188, 212, 0.2)', padding: '4px 8px' }}>
                 {myPlayer.name} (自分: {myPlayer.id.substring(0, 4)})
                 </span>
             ) : (
@@ -60,13 +47,12 @@ export default function DebugControlPanel({
             )}
             </div>
             
-            {/* スコア更新 (以下変更なし) */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <input 
                     type="number" 
                     value={debugScoreAmount} 
                     onChange={(e) => setDebugScoreAmount(parseInt(e.target.value) || 0)}
-                    style={inputStyle}
+                    className={debugInputClassName}
                 />
                 <button 
                     onClick={() => handleDebugScore(debugScoreAmount)}>
@@ -78,16 +64,14 @@ export default function DebugControlPanel({
                 </button>
             </div>
 
-            {/* リソース更新 (以下変更なし) */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <input 
                     type="number" 
                     value={debugResourceAmount} 
                     onChange={(e) => setDebugResourceAmount(parseInt(e.target.value) || 0)}
-                    style={inputStyle}
+                    className={debugInputClassName}
                 />
                 
-                {/* 酸素 (Oxygen) */}
                 <button 
                     onClick={() => handleDebugResource(RESOURCE_IDS.OXYGEN, debugResourceAmount)}>
                     酸素 +
@@ -97,7 +81,6 @@ export default function DebugControlPanel({
                     酸素 -
                 </button>
 
-                {/* バッテリー (Battery) */}
                 <button 
                     onClick={() => handleDebugResource(RESOURCE_IDS.BATTERY, debugResourceAmount)}>
                     バッテリー +
