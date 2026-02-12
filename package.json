@@ -31,7 +31,7 @@
     "kei-0021@issue-12@latest": "link:github/kei-0021@issue-12@latest",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-game-ui": "github:kei-0021/react-game-ui#issue-12",
+    "react-game-ui": "github:kei-0021/react-game-ui#issue-17",
     "react-router-dom": "^7.13.0",
     "socket.io": "^4.8.3",
     "socket.io-client": "^4.8.3"
