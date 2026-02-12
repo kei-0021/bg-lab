@@ -12,8 +12,7 @@
       },
       "extensions": [
         "ms-vscode-remote.remote-containers",
-        "mhutchie.git-graph",
-        "esbenp.prettier-vscode"
+        "mhutchie.git-graph"
       ]
     }
   },
