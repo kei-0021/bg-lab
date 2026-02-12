@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { RoundProgressTracker } from "../components/RoundProgressTracker";
 import { useSocket } from "../hooks/useSocket.js";
 import "./FireworksRoom.css";
+import { FireWorksRule } from "./FireworksRule";
 
 const SERVER_URL =
   import.meta.env.MODE === "development"
@@ -166,54 +167,7 @@ export default function FireworksRoom() {
       </header>
 
       {/* ルール説明オーバーレイ */}
-      {showRules && (
-        <div className="rules-overlay" onClick={() => setShowRules(false)}>
-          <div className="rules-content" onClick={(e) => e.stopPropagation()}>
-            <button className="rules-close" onClick={() => setShowRules(false)}>
-              ×
-            </button>
-            <h2 className="rules-title">🎆 花火大会 遊び方</h2>
-            <hr className="rules-hr" />
-            <div className="rules-body">
-              <section>
-                <h3>1. 勝利条件</h3>
-                <p>
-                  「演目カード」の条件に合わせて「花火カード」を場に並べ、最も高いスコアを獲得した職人が勝者となります。
-                </p>
-              </section>
-              <section className="section-mt">
-                <h3>2. 手番のアクション</h3>
-                <p>自分の番では以下のことができます：</p>
-                <ul>
-                  <li>
-                    <strong>ドロー：</strong> 山札（花火カード）を引く。
-                  </li>
-                  <li>
-                    <strong>プレイ：</strong>{" "}
-                    手札からカードを出し、演目を完成させる。
-                  </li>
-                  <li>
-                    <strong>リセット：</strong>{" "}
-                    場のカードを戻し、新たな演目を目指す。
-                  </li>
-                </ul>
-              </section>
-              <section className="section-mt">
-                <h3>3. 秘伝玉（トークン）</h3>
-                <p>
-                  左下の「秘伝玉」は職人の魂です。特別な演目の達成や、得点のブーストに使用できます。
-                </p>
-              </section>
-            </div>
-            <button
-              onClick={() => setShowRules(false)}
-              className="rules-ok-btn"
-            >
-              了解
-            </button>
-          </div>
-        </div>
-      )}
+      <FireWorksRule isOpen={showRules} onClose={() => setShowRules(false)} />
 
       <main className="fireworks-main">
         <div className="sidebar-left">

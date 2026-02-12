@@ -1,7 +1,7 @@
 [
   {
     "id": "play-01",
-    "name": "三色同刻（さんしょくどうこく）",
+    "name": "三色同刻 🎨[?]x3(🔢=)",
     "location": "deck",
     "drawLocation": "field",
     "playLocation": "discard",
@@ -10,7 +10,7 @@
   },
   {
     "id": "play-02",
-    "name": "光の三原色",
+    "name": "光の三原色 🔴🟢🔵",
     "location": "deck",
     "drawLocation": "field",
     "playLocation": "discard",
@@ -19,7 +19,7 @@
   },
   {
     "id": "play-03",
-    "name": "白菊（しらぎく）",
+    "name": "白菊 ⚪[1][2][3]",
     "location": "deck",
     "drawLocation": "field",
     "playLocation": "discard",
@@ -28,7 +28,7 @@
   },
   {
     "id": "play-04",
-    "name": "五色乱舞（ごしきらんぶ）",
+    "name": "五色乱舞 🔴🟡🟢🔵⚪",
     "location": "deck",
     "drawLocation": "field",
     "playLocation": "discard",
@@ -37,7 +37,7 @@
   },
   {
     "id": "play-05",
-    "name": "信号機",
+    "name": "信号機 🔴1🟡2🟢3",
     "location": "deck",
     "drawLocation": "field",
     "playLocation": "discard",
@@ -52,7 +52,7 @@
   },
   {
     "id": "play-06",
-    "name": "対空砲火",
+    "name": "対空砲火 🎨[A][A]🎨[B][B]",
     "location": "deck",
     "drawLocation": "field",
     "playLocation": "discard",
@@ -61,7 +61,7 @@
   },
   {
     "id": "play-07",
-    "name": "銀河（ぎんが）",
+    "name": "銀河 🎨≠Σ6",
     "location": "deck",
     "drawLocation": "field",
     "playLocation": "discard",
@@ -70,7 +70,7 @@
   },
   {
     "id": "play-08",
-    "name": "閃光（せんこう）",
+    "name": "閃光 🎨[3]x4↑",
     "location": "deck",
     "drawLocation": "field",
     "playLocation": "discard",
@@ -79,7 +79,7 @@
   },
   {
     "id": "play-09",
-    "name": "紅蓮（ぐれん）",
+    "name": "紅蓮 🔴Σ5",
     "location": "deck",
     "drawLocation": "field",
     "playLocation": "discard",
@@ -88,7 +88,7 @@
   },
   {
     "id": "play-10",
-    "name": "打ち止め",
+    "name": "打ち止め 🎨123+🎨123",
     "location": "deck",
     "drawLocation": "field",
     "playLocation": "discard",
