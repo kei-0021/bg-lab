@@ -178,7 +178,7 @@ export default function FireworksRoom() {
             name="[ 花火カード ]"
             playerId={currentPlayerId}
           />
-          <Deck
+          {/* <Deck
             socket={socket!}
             roomId={roomId}
             deckId="theme"
@@ -194,7 +194,7 @@ export default function FireworksRoom() {
               players={players}
               myPlayerId={myPlayerId}
             />
-          </div>
+          </div> */}
         </div>
         <div className="fireworks-main-field">
           <PlayField
@@ -213,8 +213,6 @@ export default function FireworksRoom() {
             players={players}
             currentPlayerId={currentPlayerId}
             myPlayerId={myPlayerId}
-            playCardLimit={1}
-            autoNextTurnOnCardPlay={true}
           />
         </div>
         <div className="token-pos">
