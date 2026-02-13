@@ -33,7 +33,7 @@ const GAME_WIDTH = 1000;
 const GAME_HEIGHT = 1200;
 
 // 💡 プレイヤーIDに応じて色を決定するヘルパー関数
-const getPlayerColor = (playerId: string, index: number): string => {
+const getPlayerColor = (index: number): string => {
   const colors = ["#ff6b6b", "#4ecdc4", "#45b7d1", "#f9d423", "#a8dadc"];
   return colors[index % colors.length] || "#999999";
 };
@@ -44,12 +44,10 @@ const RemoteCursorRenderer = React.memo(
     playerId,
     cursor,
     scale,
-    fixedContainer,
   }: {
     playerId: string;
     cursor: RemoteCursor;
     scale: number;
-    fixedContainer: HTMLDivElement | null;
   }) => {
     if (!scale) return null;
 
@@ -187,9 +185,7 @@ export default function LightRoadRoom() {
 
       // プレイヤー情報が見つからなかった場合の暫定値
       const nameToDisplay = player ? player.name : `[待機中]`;
-      const colorToUse = player
-        ? getPlayerColor(data.playerId, playerIndex)
-        : "#999999";
+      const colorToUse = player ? getPlayerColor(playerIndex) : "#999999";
 
       setRemoteCursors((prev) => ({
         ...prev,
@@ -424,42 +420,6 @@ export default function LightRoadRoom() {
     return { pieces: tilePieces, playerPiece };
   }, [resetCount, socket, roomId, myPlayerId, players, gridBounds, scale]);
 
-  // --- UI表示ロジック (参加フォーム) ---
-  const joinFormStyle: React.CSSProperties = {
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    backgroundColor: "#374151",
-    padding: "30px",
-    borderRadius: "10px",
-    boxShadow: "0 0 20px rgba(253, 230, 138, 0.5)",
-    zIndex: 1000,
-    display: "flex",
-    flexDirection: "column",
-    gap: "15px",
-    textAlign: "center",
-  };
-  const joinInputStyle: React.CSSProperties = {
-    padding: "10px",
-    borderRadius: "5px",
-    border: "1px solid #fde68a",
-    backgroundColor: "#111827",
-    color: "white",
-    fontSize: "1em",
-  };
-  const joinButtonStyle: React.CSSProperties = {
-    padding: "10px 20px",
-    borderRadius: "5px",
-    border: "none",
-    backgroundColor: "#fde68a",
-    color: "#111827",
-    fontWeight: "bold",
-    cursor: "pointer",
-    fontSize: "1em",
-    transition: "background-color 0.3s",
-  };
-
   if (!roomId || !socket)
     return (
       <div className="light-road-room">
@@ -471,7 +431,7 @@ export default function LightRoadRoom() {
   if (!hasJoined) {
     return (
       <div className="light-road-room full-screen-background">
-        <div style={joinFormStyle}>
+        <div className="join-form">
           <h2 style={{ color: "#fde68a", marginBottom: "5px" }}>
             Light Road ルーム参加
           </h2>
@@ -479,7 +439,7 @@ export default function LightRoadRoom() {
             ルーム名: **{decodeURIComponent(roomNameFromURL)}**
           </p>
           <input
-            style={joinInputStyle}
+            className="join-input"
             type="text"
             placeholder="あなたの名前を入力してください"
             value={userName}
@@ -487,9 +447,10 @@ export default function LightRoadRoom() {
             disabled={isJoining}
             maxLength={12}
             onKeyDown={(e) => e.key === "Enter" && handleJoinRoom()}
+            autoFocus={true}
           />
           <button
-            style={joinButtonStyle}
+            className="join-button"
             onClick={handleJoinRoom}
             disabled={userName.trim() === "" || isJoining}
           >
@@ -570,7 +531,6 @@ export default function LightRoadRoom() {
                 playerId={playerId}
                 cursor={cursor}
                 scale={scale}
-                fixedContainer={fixedContainerRef.current}
               />
             ))}
         </div>
