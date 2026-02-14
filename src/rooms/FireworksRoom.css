@@ -44,6 +44,7 @@
   align-items: center;
   gap: 24px;
 }
+
 .fireworks-input {
   padding: 18px 24px;
   font-size: 24px;
@@ -120,17 +121,33 @@
   width: 126px !important;
   height: 175px !important;
   flex-shrink: 0 !important;
-  transition: transform 0.2s ease-in-out !important;
+
+  /* 遅延の原因となる transition を切る */
+  transition: none !important;
+
   cursor: grab;
+  /* 文字選択を禁止 */
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .fireworks-main-field .rg-playfield-card-wrapper:active {
   cursor: grabbing;
 }
 
+/* 画像の標準ドラッグを殺す */
+.fireworks-main-field .rg-playfield-card-wrapper img {
+  pointer-events: none; /* 画像へのクリックを透過させて親(wrapper)に届ける */
+  user-select: none;
+  -webkit-user-drag: none; /* Safari/Chrome用：画像のドラッグ禁止 */
+}
+
 .fireworks-main-field .rg-card-text-content {
   font-size: 25px;
+  pointer-events: none;
 }
+
+/* --- 以下、レイアウトパーツ（変更なし） --- */
 
 .fireworks-header {
   position: absolute;
@@ -146,26 +163,31 @@
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent);
   box-sizing: border-box;
 }
+
 .logo-text {
   color: #ebebeb;
   margin: 0;
   font-size: 35px;
   text-shadow: 0 0 10px rgba(255, 195, 0, 0.8);
 }
+
 .header-logo {
   flex: 0 0 300px;
 }
+
 .header-tracker {
   flex: 1;
   display: flex;
   justify-content: center;
 }
+
 .header-nav {
   flex: 0 0 250px;
   display: flex;
   gap: 12px;
   justify-content: flex-end;
 }
+
 .nav-btn-rules {
   background: #ffc300;
   color: #000;
@@ -176,6 +198,7 @@
   font-size: 15px;
   box-shadow: 0 0 10px rgba(255, 195, 0, 0.4);
 }
+
 .nav-btn-lobby {
   background: #000;
   color: #ffc300;
@@ -194,6 +217,7 @@
   box-sizing: border-box;
   gap: 20px;
 }
+
 .sidebar-left {
   display: flex;
   flex-direction: column;
@@ -210,6 +234,7 @@
   width: 480px;
   flex-shrink: 0;
 }
+
 .token-pos {
   position: absolute;
   bottom: 40px;
@@ -226,6 +251,7 @@
   justify-content: center;
   align-items: center;
 }
+
 .rules-content {
   background: #1a1a1a;
   border: 2px solid #ffc300;
@@ -235,6 +261,7 @@
   border-radius: 12px;
   position: relative;
 }
+
 .rules-close {
   position: absolute;
   top: 15px;
@@ -245,21 +272,26 @@
   font-size: 28px;
   cursor: pointer;
 }
+
 .rules-title {
   color: #ffc300;
   margin-top: 0;
 }
+
 .rules-hr {
   border-color: #333;
   margin: 20px 0;
 }
+
 .rules-body {
   line-height: 1.8;
   font-size: 16px;
 }
+
 .section-mt {
   margin-top: 20px;
 }
+
 .rules-ok-btn {
   width: 100%;
   margin-top: 30px;
@@ -376,6 +408,7 @@
   font-size: 1.2rem;
   color: #eee;
 }
+
 .fw-player-score {
   font-size: 1.4rem;
   font-weight: bold;

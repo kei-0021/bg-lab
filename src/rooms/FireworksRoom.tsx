@@ -176,7 +176,6 @@ export default function FireworksRoom() {
           fixedContainerRef={containerRef}
           visible={true}
         />
-
         <div className="sidebar-left">
           <Deck
             socket={socket!}
