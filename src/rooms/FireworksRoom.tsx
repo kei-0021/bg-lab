@@ -194,6 +194,7 @@ export default function FireworksRoom() {
             name="花火カード"
             players={players}
             myPlayerId={myPlayerId}
+            layoutMode="free"
           />
         </div>
         <div className="sidebar-right">

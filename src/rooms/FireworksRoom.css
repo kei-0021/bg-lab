@@ -1,4 +1,5 @@
-/* --- Common Layout & Background --- */
+/* src/components/PlayField.css */
+
 .fireworks-container {
   min-height: 100vh;
   background: radial-gradient(
@@ -13,7 +14,6 @@
   padding: 20px;
 }
 
-/* --- Entrance Screen --- */
 .fireworks-entrance-wrapper {
   position: absolute;
   top: 50%;
@@ -77,10 +77,11 @@
   box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
 }
 
-/* --- Playfield Layout (花火カード専用) --- */
 .fireworks-main-field .rg-playfield {
   width: 100% !important;
-  height: 1000px !important;
+  height: auto !important;
+  aspect-ratio: 16 / 9;
+  max-height: 85vh;
   margin: 0 auto !important;
   background-color: black !important;
   border: 1px solid white;
@@ -88,45 +89,49 @@
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  padding: 40px !important;
+  padding: 0 !important;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
 }
+
 .fireworks-main-field .rg-playfield-title {
   color: #ffffff !important;
   font-size: 30px !important;
-  margin-bottom: 30px !important;
+  margin: 20px 0 !important;
   flex-shrink: 0 !important;
   z-index: 5;
 }
+
 .fireworks-main-field .rg-playfield-container {
   width: 100% !important;
   flex-grow: 1 !important;
-  display: flex !important;
-  flex-wrap: wrap !important;
-  justify-content: center !important;
-  align-content: flex-start !important;
-  gap: 20px;
-  overflow-y: auto;
-  padding: 10px;
+  display: block !important;
+  position: relative !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .fireworks-theme-field .rg-playfield-title {
   color: black;
 }
 
-/* --- Card Styles (花火カード専用) --- */
 .fireworks-main-field .rg-playfield-card-wrapper {
-  position: relative !important;
+  position: absolute !important;
   width: 126px !important;
   height: 175px !important;
   flex-shrink: 0 !important;
   transition: transform 0.2s ease-in-out !important;
+  cursor: grab;
 }
+
+.fireworks-main-field .rg-playfield-card-wrapper:active {
+  cursor: grabbing;
+}
+
 .fireworks-main-field .rg-card-text-content {
   font-size: 25px;
 }
 
-/* 最小限のレイアウト整理用追記 */
 .fireworks-header {
   position: absolute;
   top: 0;
@@ -196,7 +201,6 @@
   flex-shrink: 0;
 }
 
-/* メインフィールドを広げてスコアボードを右端に追いやる */
 .fireworks-main-field {
   flex: 1;
   height: 100%;
@@ -213,7 +217,6 @@
   z-index: 5;
 }
 
-/* ルール用最小設定 */
 .rules-overlay {
   position: fixed;
   inset: 0;
@@ -279,9 +282,6 @@
   }
 }
 
-/* ==========================================
-   リザルト（打ち上げ終了）画面
-   ========================================== */
 .fireworks-result-overlay {
   position: fixed;
   top: 0;
@@ -344,7 +344,7 @@
   background: rgba(255, 255, 255, 0.1);
   padding: 15px 20px;
   border-radius: 10px;
-  gap: 20px; /* 順位と名前の間の空白 */
+  gap: 20px;
 }
 
 .rank-1 {
@@ -356,9 +356,9 @@
   font-size: 1.2rem;
   font-weight: bold;
   color: #e94560;
-  width: 50px; /* 固定幅で名前の開始位置を揃える */
+  width: 50px;
   flex-shrink: 0;
-  margin-right: 15px; /* 追加の空白 */
+  margin-right: 15px;
 }
 
 .rank-1 .fw-rank-num {
