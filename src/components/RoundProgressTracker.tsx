@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./RoundProgressTracker.module.css";
 
 interface RoundProgressTrackerProps {
   currentRound: number;
@@ -9,114 +10,43 @@ export const RoundProgressTracker: React.FC<RoundProgressTrackerProps> = ({
   currentRound,
   maxRound = 5,
 }) => {
+  const progressWidth = `${((currentRound - 1) / (maxRound - 1)) * 100}%`;
+
   return (
-    <div
-      style={{
-        width: "100%",
-        maxWidth: "500px",
-        padding: "12px 25px",
-        background: "rgba(255, 255, 255, 0.05)",
-        borderRadius: "40px",
-        border: "1px solid rgba(255, 195, 0, 0.2)",
-        display: "flex",
-        alignItems: "center",
-        gap: "20px",
-      }}
-    >
-      <div
-        style={{
-          color: "#ffc300",
-          fontSize: "11px",
-          fontWeight: "bold",
-          whiteSpace: "nowrap",
-          letterSpacing: "1px",
-        }}
-      >
-        ROUND TRACK
-      </div>
+    <div className={styles.container}>
+      <div className={styles.label}>ROUND TRACK</div>
 
-      <div
-        style={{
-          flex: 1,
-          height: "4px",
-          background: "#222",
-          borderRadius: "2px",
-          position: "relative",
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        {/* 進捗ゲージ */}
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            top: 0,
-            height: "100%",
-            width: `${((currentRound - 1) / (maxRound - 1)) * 100}%`,
-            background: "linear-gradient(90deg, #ff5733, #ffc300)",
-            borderRadius: "2px",
-            transition: "width 1s cubic-bezier(0.4, 0, 0.2, 1)",
-            boxShadow: "0 0 15px #ffc300",
-          }}
-        />
+      <div className={styles.barBase}>
+        <div className={styles.gauge} style={{ width: progressWidth }} />
 
-        {/* 各ラウンドのポイント */}
-        {[...Array(maxRound)].map((_, i) => (
-          <div
-            key={i}
-            style={{
-              width: "10px",
-              height: "10px",
-              borderRadius: "50%",
-              background: i + 1 <= currentRound ? "#ffc300" : "#444",
-              marginTop: "-3px",
-              zIndex: 2,
-              position: "relative",
-              transition: "background 0.5s ease",
-            }}
-          >
-            <span
-              style={{
-                position: "absolute",
-                top: "16px",
-                left: "50%",
-                transform: "translateX(-50%)",
-                fontSize: "10px",
-                fontWeight: i + 1 === currentRound ? "bold" : "normal",
-                color: i + 1 <= currentRound ? "#ffc300" : "#666",
-              }}
+        {[...Array(maxRound)].map((_, i) => {
+          const roundNum = i + 1;
+          const isActive = roundNum <= currentRound;
+          const isCurrent = roundNum === currentRound;
+
+          return (
+            <div
+              key={i}
+              className={styles.point}
+              style={{ background: isActive ? "#ffc300" : "#444" }}
             >
-              R{i + 1}
-            </span>
-
-            {i + 1 === currentRound && (
-              <div
+              <span
+                className={styles.number}
                 style={{
-                  position: "absolute",
-                  top: "-28px",
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  fontSize: "20px",
-                  animation: "pulse 1.5s infinite",
+                  fontWeight: isCurrent ? "bold" : "normal",
+                  color: isActive ? "#ffc300" : "#666",
                 }}
               >
-                🎇
-              </div>
-            )}
-          </div>
-        ))}
+                R{roundNum}
+              </span>
+
+              {isCurrent && <div className={styles.emoji}>🎇</div>}
+            </div>
+          );
+        })}
       </div>
-      <div
-        style={{
-          color: "#ffc300",
-          fontSize: "11px",
-          fontWeight: "bold",
-          letterSpacing: "1px",
-        }}
-      >
-        FINISH
-      </div>
+
+      <div className={styles.label}>FINISH</div>
     </div>
   );
 };
