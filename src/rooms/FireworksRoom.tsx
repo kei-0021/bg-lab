@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Player, PlayerWithResources } from "react-game-ui";
 import { Deck, PlayField, ScoreBoard, TokenStore } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
+import { RemoteCursor } from "../components/RemoteCursor";
 import { RoundProgressTracker } from "../components/RoundProgressTracker";
 import { useSocket } from "../hooks/useSocket.js";
 import "./FireworksRoom.css";
@@ -23,6 +24,7 @@ export default function FireworksRoom() {
   const { roomId } = useParams<{ roomId: string }>();
   const socket = useSocket(SERVER_URL);
   const navigate = useNavigate();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const [userName, setUserName] = useState<string>("");
   const [isJoining, setIsJoining] = useState<boolean>(false);
@@ -67,9 +69,7 @@ export default function FireworksRoom() {
       }
     };
 
-    const handleGameEnd = (result: any) => {
-      setGameResult(result);
-    };
+    const handleGameEnd = (result: any) => setGameResult(result);
 
     socket.on("player:assign-id", handleAssignId);
     socket.on("players:update", handlePlayersUpdate);
@@ -107,40 +107,17 @@ export default function FireworksRoom() {
               {isJoining ? "入場中" : "入場"}
             </button>
           </div>
-          {isJoining && (
-            <p className="fireworks-loading-text">門を潜っています...</p>
-          )}
         </div>
       </div>
     );
   }
 
-  // --- ゲーム本編画面 ---
   return (
-    <div className="fireworks-container">
-      {/* リザルトオーバーレイ */}
+    <div className="fireworks-container" ref={containerRef}>
       {gameResult && (
         <div className="fireworks-result-overlay">
           <div className="fireworks-result-modal">
-            <div className="fw-result-header">
-              <span className="fw-icon">🎇</span>
-              <h2>花火大会終了!!</h2>
-              <span className="fw-icon">🎇</span>
-            </div>
-            <p className="fw-result-message">{gameResult.message}</p>
-            <div className="fw-ranking-list">
-              {gameResult.rankings?.map((res: any) => (
-                <div key={res.rank} className={`fw-rank-item rank-${res.rank}`}>
-                  <div className="fw-rank-num">{res.rank}位</div>
-                  <div className="fw-player-info">
-                    <span className="fw-player-name">{res.name}</span>
-                    <span className="fw-player-score">
-                      {res.tokens} <small>点</small>
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <h2>花火大会終了!!</h2>
             <button className="fw-exit-button" onClick={() => navigate("/")}>
               ロビーへ戻る
             </button>
@@ -148,7 +125,6 @@ export default function FireworksRoom() {
         </div>
       )}
 
-      {/* ヘッダー */}
       <header className="fireworks-header">
         <div className="header-logo">
           <h1 className="logo-text">🎆 FIREWORKS</h1>
@@ -166,10 +142,23 @@ export default function FireworksRoom() {
         </div>
       </header>
 
-      {/* ルール説明オーバーレイ */}
       <FireWorksRule isOpen={showRules} onClose={() => setShowRules(false)} />
 
       <main className="fireworks-main">
+        <RemoteCursor
+          socket={socket!}
+          roomId={roomId}
+          myPlayerId={myPlayerId}
+          players={players.map((p) => ({
+            name: p.name || "Unknown",
+            socketId: String(p.id),
+            color: p.color,
+          }))}
+          scale={1.0}
+          fixedContainerRef={containerRef}
+          visible={true}
+        />
+
         <div className="sidebar-left">
           <Deck
             socket={socket!}
@@ -178,23 +167,6 @@ export default function FireworksRoom() {
             name="[ 花火カード ]"
             playerId={currentPlayerId}
           />
-          {/* <Deck
-            socket={socket!}
-            roomId={roomId}
-            deckId="theme"
-            name="[ 演目カード ]"
-            playerId={currentPlayerId}
-          />
-          <div className="fireworks-theme-field">
-            <PlayField
-              socket={socket}
-              roomId={roomId}
-              deckId="theme"
-              name="演目カード"
-              players={players}
-              myPlayerId={myPlayerId}
-            />
-          </div> */}
         </div>
         <div className="fireworks-main-field">
           <PlayField

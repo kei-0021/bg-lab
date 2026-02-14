@@ -1,23 +1,17 @@
-// src/components/RemoteCursor.tsx
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { Socket } from "socket.io-client";
 
-type RemoteCursor = { x: number; y: number; name: string; color: string };
+type RemoteCursorCoords = { x: number; y: number };
 
 interface Props {
   socket: Socket | null;
   roomId: string | undefined;
   myPlayerId: string | null;
-  players: { name: string; socketId: string }[];
+  players: { name: string; socketId: string; color?: string }[];
   scale: number;
   fixedContainerRef: React.RefObject<HTMLDivElement>;
   visible: boolean;
 }
-
-const getPlayerColor = (index: number): string => {
-  const colors = ["#ff6b6b", "#4ecdc4", "#45b7d1", "#f9d423", "#a8dadc"];
-  return colors[index % colors.length] || "#999999";
-};
 
 export const RemoteCursor = React.memo(
   ({
@@ -30,15 +24,9 @@ export const RemoteCursor = React.memo(
     visible,
   }: Props) => {
     const [remoteCursors, setRemoteCursors] = useState<
-      Record<string, RemoteCursor>
+      Record<string, RemoteCursorCoords>
     >({});
-    const playersRef = useRef(players);
 
-    useEffect(() => {
-      playersRef.current = players;
-    }, [players]);
-
-    // リモートカーソルの受信
     useEffect(() => {
       if (!socket) return;
 
@@ -47,21 +35,11 @@ export const RemoteCursor = React.memo(
         x: number;
         y: number;
       }) => {
-        if (data.playerId === myPlayerId) return;
-
-        const idx = playersRef.current.findIndex(
-          (p) => p.socketId === data.playerId,
-        );
-        const player = playersRef.current[idx];
+        if (data.playerId === socket.id || data.playerId === myPlayerId) return;
 
         setRemoteCursors((prev) => ({
           ...prev,
-          [data.playerId]: {
-            x: data.x,
-            y: data.y,
-            name: player ? player.name : "[待機中]",
-            color: player ? getPlayerColor(idx) : "#999999",
-          },
+          [data.playerId]: { x: data.x, y: data.y },
         }));
       };
 
@@ -71,12 +49,11 @@ export const RemoteCursor = React.memo(
       };
     }, [socket, myPlayerId]);
 
-    // 自カーソルの送信
     useEffect(() => {
       if (!socket || !roomId || !myPlayerId || !fixedContainerRef.current)
         return;
 
-      const THROTTLE = 100;
+      const THROTTLE = 50;
       let lastTime = 0;
 
       const handleMove = (e: MouseEvent) => {
@@ -85,8 +62,10 @@ export const RemoteCursor = React.memo(
         lastTime = now;
 
         const rect = fixedContainerRef.current!.getBoundingClientRect();
+
         socket.emit("cursor:move", {
           roomId,
+          playerId: myPlayerId,
           x: (e.clientX - rect.left) / scale,
           y: (e.clientY - rect.top) / scale,
         });
@@ -110,38 +89,63 @@ export const RemoteCursor = React.memo(
           zIndex: 900,
         }}
       >
-        {Object.entries(remoteCursors).map(([id, cursor]) => (
-          <div
-            key={id}
-            style={{ position: "absolute", left: cursor.x, top: cursor.y }}
-          >
+        {Object.entries(remoteCursors).map(([id, coords]) => {
+          let playerIdx = players.findIndex(
+            (p) => String(p.socketId) === String(id),
+          );
+
+          if (playerIdx === -1 && players.length > 0) {
+            const otherIdx = players.findIndex(
+              (p) => p.socketId !== myPlayerId,
+            );
+            if (otherIdx !== -1) playerIdx = otherIdx;
+          }
+
+          const player = players[playerIdx];
+          const name = player ? player.name : "接続中...";
+          const color = player?.color || "#000000";
+
+          return (
             <div
+              key={id}
               style={{
-                color: cursor.color,
-                fontSize: "2em",
                 position: "absolute",
-                transform: "translate(-100%, -100%)",
+                left: coords.x,
+                top: coords.y,
+                transition: "left 0.1s ease-out, top 0.1s ease-out",
               }}
             >
-              👆
+              <div
+                style={{
+                  color: color,
+                  fontSize: "2em",
+                  position: "absolute",
+                  transform: "translate(-20%, -20%)",
+                  zIndex: 1000,
+                }}
+              >
+                👆
+              </div>
+              <div
+                style={{
+                  backgroundColor: color,
+                  color: "white",
+                  padding: "2px 8px",
+                  borderRadius: "12px",
+                  whiteSpace: "nowrap",
+                  position: "absolute",
+                  transform: "translate(15px, 15px)",
+                  fontWeight: "bold",
+                  fontSize: "12px",
+                  boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                  lineHeight: 1.2,
+                }}
+              >
+                {name}
+              </div>
             </div>
-            <div
-              style={{
-                backgroundColor: cursor.color,
-                color: "white",
-                padding: "2px 5px",
-                borderRadius: "5px",
-                whiteSpace: "nowrap",
-                position: "absolute",
-                transform: "translate(5px, 0px)",
-                fontWeight: "bold",
-                lineHeight: 1,
-              }}
-            >
-              {cursor.name}
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     );
   },
