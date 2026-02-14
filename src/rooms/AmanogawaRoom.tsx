@@ -99,7 +99,7 @@ export function AmanogawaRoom() {
           roomId={roomId}
           initialX={initialX}
           initialY={initialY}
-          color={i < 8 ? "black" : "yellow"}
+          color={i < 8 ? "#0a192f" : " #94ceee"}
           isTransparent={isTransparent}
           gridBounds={gridBounds}
           scale={scale}
@@ -126,7 +126,7 @@ export function AmanogawaRoom() {
                   transform: "translate(-50%, -50%)",
                   fontSize: 24,
                   fontWeight: "bold",
-                  color: "yellow",
+                  color: "#94ceee",
                   pointerEvents: "none",
                 }}
               >
@@ -164,8 +164,8 @@ export function AmanogawaRoom() {
           style={{
             fontSize: 30,
             fontWeight: "bold",
-            color: "#1e90ff",
-            textShadow: "0 0 5px white",
+            color: "#ffffff",
+            textShadow: "0 0 10px #fff9c4",
           }}
         >
           ⭐️
@@ -180,7 +180,13 @@ export function AmanogawaRoom() {
     return (
       <div className="light-road-room full-screen-background">
         <div className="join-form">
-          <h2 style={{ color: "#fde68a", marginBottom: "5px" }}>
+          <h2
+            style={{
+              color: "#94ceee",
+              marginBottom: "5px",
+              textShadow: "0 0 10px rgba(148,206,238,0.5)",
+            }}
+          >
             天の川・ルーム参加
           </h2>
           <input
