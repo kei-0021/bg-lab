@@ -1,233 +1,209 @@
 :root {
-    --color-background-deep: #01041d; /* 非常に深い紺/黒 */
-    --color-background-dark: #070c38; /* ダークなセクション背景 */
-    --color-background-mid: #0d1657; /* ルームアイテム背景 */
-    --color-text-light: #ffffff; /* 通常の文字色 */
-    --color-text-secondary: #9aa8c4; /* 補助的な文字色 */
-    --color-cyan-accent: #00bcd4; /* シアン（ネオン）アクセント */
-    --color-cyan-hover: #0097a7; /* シアン（ネオン）ホバー */
-    --color-green-success: #4caf50; /* 参加ボタン色 */
-    --color-green-hover: #388e3c;
-    --color-red-full: #b71c1c; /* ルーム満室色 */
-    --color-yellow-status: #ffeb3b; /* 接続中などのステータス色 */
+  --color-bg-canvas: #d7d2c4; /* キャンバス・マットな地の色 */
+  --color-wood-dark: #2c3e50; /* 高級ボードゲームの深い紺 */
+  --color-accent-orange: #d35400; /* 木駒風のテラコッタ */
+  --color-box-shadow: #a04000; /* 箱の厚みの色 */
+  --color-text-main: #2c3e50;
+  --color-text-sub: #7f8c8d;
 }
 
 /* ページ全体のスタイル */
 body {
-    background-color: var(--color-background-deep);
-    color: var(--color-text-light);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
+  background-color: var(--color-bg-canvas);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+  color: var(--color-text-main);
+  font-family: "Georgia", "Hiragino Mincho ProN", serif;
+  margin: 0;
+  padding: 0;
 }
 
 /* ロビーコンテナ */
 .lobby-container {
-    padding: 30px; /* パディングを増やす */
-    max-width: 768px; /* 512px から 768px へ拡張 */
-    margin: 40px auto; /* マージンを増やして中央配置 */
-    background-color: var(--color-background-dark);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 50px var(--color-cyan-accent) inset;
-    border-radius: 16px; /* 角を少し丸く */
+  padding: 60px 40px;
+  max-width: 1000px; /* 全体の幅を広げて余裕を持たせる */
+  margin: 40px auto;
 }
 
 /* ヘッダータイトル */
 .lobby-title {
-    font-size: 36px; /* 30px から 36px へ拡大 */
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 30px; /* 24px から 30px へ拡大 */
-    color: var(--color-cyan-accent);
-    text-shadow: 0 0 8px rgba(0, 188, 212, 0.6); /* ネオン効果を強調 */
+  font-size: 36px;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 60px;
+  letter-spacing: 0.2em;
+  color: var(--color-wood-dark);
 }
 
-/* セクション（枠で囲まれた部分） */
-.section {
-    margin-bottom: 28px; /* 24px から 28px へ拡大 */
-    padding: 20px; /* 16px から 20px へ拡大 */
-    background-color: var(--color-background-dark);
-    border-radius: 10px; /* 角を少し丸く */
-    border: 1px solid #1f3a93;
-}
-
+/* --- ルーム作成セクション --- */
 .create-room-section {
-    border-color: var(--color-cyan-accent);
-    box-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 40px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  margin-bottom: 80px;
 }
 
-/* セクションタイトル */
-.section-title {
-    font-size: 24px; /* 20px から 24px へ拡大 */
-    font-weight: 600;
-    margin-bottom: 16px; /* 12px から 16px へ拡大 */
+/* ボタン同士の間隔を 40px に広げる */
+.button-group {
+  display: flex;
+  flex-direction: row;
+  gap: 25px;
+  justify-content: center;
+  width: 100%;
 }
 
-.list-header {
-    color: var(--color-cyan-accent);
+/* パッケージ風ボタン */
+.primary-button {
+  appearance: none;
+  background: linear-gradient(135deg, #e67e22, #d35400);
+  color: white;
+  width: 200px;
+  flex-shrink: 0;
+  aspect-ratio: 3 / 4;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 800;
+  padding: 20px;
+  box-shadow: 6px 6px 0px var(--color-box-shadow);
+  transition: filter 0.1s ease;
+}
+
+.primary-button::before {
+  content: "NEW GAME";
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  margin-bottom: 8px;
+  opacity: 0.8;
+}
+
+.primary-button:hover {
+  filter: brightness(1.1);
+}
+
+.primary-button:active {
+  transform: translate(4px, 4px);
+  box-shadow: 2px 2px 0px var(--color-box-shadow);
 }
 
 /* 入力フィールド */
 .input-field {
-    width: 100%;
-    padding: 12px 16px; /* 8px 12px から 12px 16px へ拡大 */
-    margin-bottom: 16px; /* 12px から 16px へ拡大 */
-    background-color: #121f6a;
-    border: 1px solid #283593;
-    border-radius: 6px;
-    color: var(--color-text-light);
-    transition: border-color 0.2s;
-    font-size: 16px; /* フォントサイズを確保 */
-}
-.input-field::placeholder {
-    color: var(--color-text-secondary);
+  width: 320px;
+  padding: 12px;
+  margin-bottom: 50px;
+  border: none;
+  border-bottom: 2px solid var(--color-wood-dark);
+  background: transparent;
+  font-size: 18px;
+  text-align: center;
+  font-weight: bold;
 }
 .input-field:focus {
-    outline: none;
-    border-color: var(--color-cyan-accent);
+  outline: none;
 }
 
-/* ボタンの共通スタイル */
-.button {
-    /* 修正: 横並びで均等幅にするため width: 100% を削除 */
-    /* width: 100%; */
-    flex: 1; /* 均等に幅を分割 */
-    /* 修正: 縦幅をさらに拡大 (22px -> 30px) */
-    padding: 90px 20px; 
-    border-radius: 6px;
-    font-weight: 700;
-    font-size: 1.1em; /* ボタンの文字を拡大 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* シャドウを強調 */
-    transition: background-color 0.2s, transform 0.1s;
-    border: none;
-    cursor: pointer;
-    color: var(--color-text-light);
-    text-align: center; /* 横並びになった際に文字を中央揃えに */
-}
-.button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    filter: saturate(0.5);
-}
-.button:not(:disabled):active {
-    transform: translateY(2px); /* 押下時の沈み込みを強調 */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+/* --- 公開ルーム一覧（縦並び） --- */
+.section-title {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 30px;
+  color: var(--color-wood-dark);
 }
 
-/* ボタンをグループ化するコンテナの間隔 */
-.button-group {
-    display: flex;
-    /* 修正: 縦並びから横並びに変更 */
-    flex-direction: row; 
-    gap: 20px; /* ボタン間の水平方向の間隔を 20px に設定 */
-}
-
-/* プライマリーボタン (作成) */
-.primary-button {
-    background-color: var(--color-cyan-accent);
-}
-.primary-button:not(:disabled):hover {
-    background-color: var(--color-cyan-hover);
-}
-
-/* サクセスボタン (IDで参加) */
-.success-button {
-    background-color: var(--color-green-success);
-    /* 修正: ID参加ボタンの縦幅とフォントサイズを小さくする */
-    padding: 12px 20px; /* ゲーム選択ボタンより小さく */
-    font-size: 1em; /* 1.1em から 1.0em へ縮小 */
-    width: 100%; /* ID参加ボタンは横幅いっぱいに戻す */
-    flex: initial; /* flex設定をリセット */
-}
-.success-button:not(:disabled):hover {
-    background-color: var(--color-green-hover);
-}
-
-/* ステータスメッセージ */
-.status-message {
-    color: var(--color-text-secondary);
-    text-align: center;
-    font-size: 16px; /* 14px から 16px へ拡大 */
-    margin-top: 10px; /* 8px から 10px へ拡大 */
-}
-.status-message.loading {
-    color: var(--color-yellow-status);
-}
-
-/* ルームリスト */
 .room-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 16px; /* 12px から 16px へ拡大 */
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* リストアイテム間の余白 */
 }
 
-/* ルームアイテム */
+/* ルームアイテムの構造整理 */
 .room-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px; /* 12px から 16px へ拡大 */
-    border-radius: 8px; /* 角を少し丸く */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    transition: background-color 0.2s, opacity 0.2s;
-    cursor: pointer;
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 4px 0px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  height: 100px;
+  transition: border-color 0.2s;
 }
 
-/* 参加可能なルーム */
-.room-item-available {
-    background-color: var(--color-background-mid);
-}
 .room-item-available:hover {
-    background-color: #1a237e;
+  border-color: var(--color-accent-orange);
 }
 
-/* 満室のルーム */
-.room-item-full {
-    background-color: var(--color-red-full);
-    opacity: 0.5;
-    cursor: not-allowed;
+/* 左側ラベル */
+.room-game-label {
+  width: 140px;
+  background-color: var(--color-wood-dark);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: bold;
+  padding: 10px;
+  flex-shrink: 0;
 }
 
-/* ルーム情報 */
-.room-info {
-    flex-grow: 1;
+/* メインコンテンツエリア */
+.room-info-content {
+  flex: 1;
+  padding: 0 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ルーム名とID */
+.room-main-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .room-name {
-    font-size: 18px; /* 16px から 18px へ拡大 */
-    font-weight: 500;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-wood-dark);
 }
 
 .room-id {
-    font-size: 15px; /* 14px から 15px へ拡大 */
-    color: var(--color-text-secondary);
+  font-size: 12px;
+  color: var(--color-text-sub);
+  font-family: monospace;
 }
 
-/* ルームのステータス（人数、作成時刻） */
-.room-status {
-    text-align: right;
-    margin-left: 20px;
+/* 人数と時刻 */
+.room-meta-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
 }
 
 .player-count {
-    font-size: 16px; /* 14px から 16px へ拡大 */
-    font-weight: 700;
-    display: block;
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--color-wood-dark);
+  border: 2px solid var(--color-wood-dark);
+  padding: 4px 16px;
+  border-radius: 20px;
 }
 
-/* 人数OK */
-.status-ok {
-    color: var(--color-green-success);
-}
-
-/* 人数FULL */
-.status-full {
-    color: var(--color-red-full);
-}
-
-.created-at {
-    font-size: 13px; /* 12px から 13px へ拡大 */
-    color: #4a629b;
+.room-created-at {
+  font-size: 12px;
+  color: var(--color-text-sub);
 }

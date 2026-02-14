@@ -16,11 +16,17 @@ interface Room {
   createdAt: number;
 }
 
-// 表示用のマッピング（これならフロントだけで完結する）
 const GAME_DISPLAY_NAMES: Record<string, string> = {
-  fireworks: "🎆 FireWorks",
-  deepabyss: "🌊 DeepAbyss",
-  lightroad: "🌟 LightRoad",
+  fireworks: "FireWorks",
+  deepabyss: "DeepAbyss",
+  lightroad: "LightRoad",
+};
+
+// アイコン用のマッピング
+const GAME_ICONS: Record<string, string> = {
+  fireworks: "🎆",
+  deepabyss: "🌊",
+  lightroad: "🌟",
 };
 
 export default function RoomLobby() {
@@ -29,13 +35,11 @@ export default function RoomLobby() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const navigate = useNavigate();
 
-  // Socket.IO ロビー接続
   useEffect(() => {
     const lobbySocket = io(SERVER_URL);
     setSocket(lobbySocket);
 
     lobbySocket.on("connect", () => {
-      console.log("Lobby connected. Requesting room list.");
       lobbySocket.emit("lobby:get-rooms");
     });
 
@@ -59,46 +63,43 @@ export default function RoomLobby() {
     };
   }, []);
 
-  // ルーム参加（ゲームタイプに応じたパスで遷移）
   const handleJoinRoom = (room: Room) => {
     if (!room.id.trim()) return;
-
-    // room.gameType を使って動的なパスを生成する
     navigate(`/${room.gameName}/${room.id.trim()}`);
   };
 
-  // 新規ルーム作成
   const handleCreateRoom = (gameId: string) => {
     const newRoomId = Math.random().toString(36).substring(2, 8);
-    console.log(`新しい${gameId}ルームを作成: ${newRoomId}`);
     navigate(`/${gameId}/${newRoomId}`);
   };
 
   return (
     <div className="lobby-container">
-      <h1 className="lobby-title">ロビー</h1>
+      <h1 className="lobby-title">ボードゲーム・ラボ</h1>
 
+      {/* ルーム作成セクション */}
       <div className="section create-room-section">
         <h2 className="section-title">新しいゲームを始める</h2>
-        <div
-          className="button-group"
-          style={{ display: "flex", gap: "15px", justifyContent: "center" }}
-        >
-          {Object.entries(GAME_DISPLAY_NAMES).map(([id, displayName]) => (
+        <div className="button-group">
+          {Object.entries(GAME_DISPLAY_NAMES).map(([id, name]) => (
             <button
               key={id}
               onClick={() => handleCreateRoom(id)}
               className="button primary-button"
               disabled={!socket?.connected}
             >
-              {displayName}
+              <span style={{ fontSize: "24px", marginBottom: "8px" }}>
+                {GAME_ICONS[id]}
+              </span>
+              {name}
             </button>
           ))}
         </div>
       </div>
 
+      {/* 公開ルーム一覧セクション */}
       <div className="section room-list-section">
-        <h2 className="section-title list-header">公開ルーム一覧</h2>
+        <h2 className="section-title">公開ルーム一覧</h2>
         {isLoading ? (
           <p className="status-message">ルームリストを読み込み中...</p>
         ) : rooms.length === 0 ? (
@@ -119,26 +120,33 @@ export default function RoomLobby() {
                   room.playerCount < room.maxPlayers && handleJoinRoom(room)
                 }
               >
-                <div className="room-info">
-                  {/* 💡 room.name から日本語名に変換して表示 */}
-                  <p className="room-game-label">
-                    {GAME_DISPLAY_NAMES[room.gameName] || `🎲 ${room.gameName}`}
-                  </p>
-                  <p className="room-id">ID: {room.id}</p>
+                {/* 左側：背表紙ラベル */}
+                <div className="room-game-label">
+                  {GAME_ICONS[room.gameName] || "🎲"}{" "}
+                  {GAME_DISPLAY_NAMES[room.gameName] || room.gameName}
                 </div>
-                <div className="room-status">
-                  <span
-                    className={`player-count ${
-                      room.playerCount < room.maxPlayers
-                        ? "status-ok"
-                        : "status-full"
-                    }`}
-                  >
-                    {room.playerCount}/{room.maxPlayers}
-                  </span>
-                  <p className="created-at">
-                    {new Date(room.createdAt).toLocaleTimeString("ja-JP")}
-                  </p>
+
+                {/* 右側：メインコンテンツ */}
+                <div className="room-info-content">
+                  <div className="room-main-details">
+                    <span className="room-name">
+                      {room.gameName.toUpperCase()} ROOM
+                    </span>
+                    <span className="room-id">ID: {room.id}</span>
+                  </div>
+
+                  <div className="room-meta-details">
+                    <span className="player-count">
+                      {room.playerCount} / {room.maxPlayers} Players
+                    </span>
+                    <span className="room-created-at">
+                      Created at:{" "}
+                      {new Date(room.createdAt).toLocaleTimeString("ja-JP", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
                 </div>
               </li>
             ))}
