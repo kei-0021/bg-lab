@@ -117,7 +117,25 @@ export default function FireworksRoom() {
       {gameResult && (
         <div className="fireworks-result-overlay">
           <div className="fireworks-result-modal">
-            <h2>花火大会終了!!</h2>
+            <div className="fw-result-header">
+              <span className="fw-icon">🎇</span>
+              <h2>花火大会終了!!</h2>
+              <span className="fw-icon">🎇</span>
+            </div>
+            <p className="fw-result-message">{gameResult.message}</p>
+            <div className="fw-ranking-list">
+              {gameResult.rankings?.map((res: any) => (
+                <div key={res.rank} className={`fw-rank-item rank-${res.rank}`}>
+                  <div className="fw-rank-num">{res.rank}位</div>
+                  <div className="fw-player-info">
+                    <span className="fw-player-name">{res.name}</span>
+                    <span className="fw-player-score">
+                      {res.tokens} <small>点</small>
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
             <button className="fw-exit-button" onClick={() => navigate("/")}>
               ロビーへ戻る
             </button>
