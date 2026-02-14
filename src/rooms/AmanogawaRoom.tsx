@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Draggable from "../components/Draggable";
 import { RemoteCursor } from "../components/RemoteCursor";
 import { useSocket } from "../hooks/useSocket";
-import "./LightRoadRoom.css";
+import "./AmanogawaRoom.css";
 
 const SERVER_URL =
   import.meta.env.MODE === "development"
@@ -15,7 +15,7 @@ const CELL_SIZE = 100;
 const GAME_WIDTH = 1000;
 const GAME_HEIGHT = 1200;
 
-export default function LightRoadRoom() {
+export function AmanogawaRoom() {
   const { roomId } = useParams<{ roomId: string }>();
   const socket = useSocket(SERVER_URL);
   const navigate = useNavigate();
@@ -69,7 +69,7 @@ export default function LightRoadRoom() {
     setIsJoining(true);
     socket.emit("room:join", {
       roomId,
-      gamePresetId: "lightroad",
+      gamePresetId: "amanaogawa",
       playerName: userName.trim(),
     });
   };
@@ -181,7 +181,7 @@ export default function LightRoadRoom() {
       <div className="light-road-room full-screen-background">
         <div className="join-form">
           <h2 style={{ color: "#fde68a", marginBottom: "5px" }}>
-            Light Road ルーム参加
+            天の川・ルーム参加
           </h2>
           <input
             className="join-input"
@@ -208,7 +208,7 @@ export default function LightRoadRoom() {
     <div className="light-road-room">
       <div className="title-section" style={{ zIndex: 1000 }}>
         <div className="header-info">
-          <h1>🌟 Light Road</h1>
+          <h1>🌟 天の川</h1>
           <p>ルームID: {roomId}</p>
           <p>プレイヤー: {players.map((p) => p.name).join(", ")}</p>
         </div>
