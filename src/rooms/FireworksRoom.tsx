@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Player, PlayerWithResources } from "react-game-ui";
-import { Deck, PlayField, ScoreBoard, TokenStore } from "react-game-ui";
+import {
+  Deck,
+  Draggable,
+  PlayField,
+  ScoreBoard,
+  TokenStore,
+} from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { RemoteCursor } from "../components/RemoteCursor";
@@ -176,6 +182,21 @@ export default function FireworksRoom() {
           fixedContainerRef={containerRef}
           visible={true}
         />
+
+        {players.map((player, i) => (
+          <Draggable
+            key={player.id}
+            pieceId={player.id}
+            socket={socket}
+            roomId={roomId}
+            initialX={400 + i * 70}
+            initialY={900}
+            color={player.color}
+            size={60}
+            containerRef={containerRef}
+          ></Draggable>
+        ))}
+
         <div className="sidebar-left">
           <Deck
             socket={socket!}
