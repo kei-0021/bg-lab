@@ -4,28 +4,28 @@
     "rootDir": ".",
     "target": "ES2022",
     "module": "ESNext",
-    
+
     // 必須設定（すべてのエラーを解消）
-    "lib": ["DOM", "DOM.Iterable", "ES2022"], 
-    "jsx": "react-jsx", 
-    "esModuleInterop": true,         // <-- TS1259 エラーの解消
-    "resolveJsonModule": true,       // <-- TS2732 (JSON) エラーの解消
-    "moduleResolution": "node",      // <-- JSONモジュール解決の競合解消
-    
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "jsx": "react-jsx",
+    "esModuleInterop": true, // <-- TS1259 エラーの解消
+    "resolveJsonModule": true, // <-- TS2732 (JSON) エラーの解消
+    "moduleResolution": "node", // <-- JSONモジュール解決の競合解消
+
     "useDefineForClassFields": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "noEmit": false,
-    
+
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  
+
   "include": ["src", "public/data/cardEffects.ts"],
   "exclude": ["node_modules", "dist", "public/data/cardEffects.ts"]
 }

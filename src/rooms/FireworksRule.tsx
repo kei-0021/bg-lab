@@ -33,19 +33,34 @@ export const FireWorksRule: React.FC<FireWorksRuleProps> = ({
           </section>
 
           <section className="section-mt">
-            <h3>2. 手番のアクション</h3>
-            <p>自分の番では以下のいずれかを行います：</p>
+            <h3>2. 手番の開始 </h3>
+            <p>手番のアクションを行う前に、以下の処理を順に行います：</p>
             <ul>
+              <li>
+                <strong>装填カードの移動：</strong>
+                自分の「装填エリア」にあるすべてのカードを「場」に移動させます。
+              </li>
               <li>
                 <strong>ドロー：</strong> 山札から花火カードを1枚引く。
               </li>
+            </ul>
+          </section>
+
+          <section className="section-mt">
+            <h3>3. 手番のアクション</h3>
+            <p>
+              自分の番では以下のいずれか<strong>ひとつ</strong>を行います：
+            </p>
+            <ul>
               <li>
-                <strong>プレイ：</strong>{" "}
-                手札を1枚出し、演目を完成させる（早い者勝ち！）。
+                <strong>ドロー：</strong> 山札からさらに花火カードを1枚引く。
               </li>
               <li>
-                <strong>装填：</strong> 手札を1枚以上出し、装填エリアに置きます
-                (次のターン場に移動します)
+                <strong>プレイ：</strong>
+                手札を場に1枚出します。演目の完成を目指します。
+              </li>
+              <li>
+                <strong>装填：</strong> 手札を1~3枚出し、装填エリアに置きます。
               </li>
             </ul>
           </section>

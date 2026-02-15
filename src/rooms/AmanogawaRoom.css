@@ -1,0 +1,247 @@
+/* src/rooms/AmanogawaRoom.css */
+
+/*--- UI表示ロジック (参加フォーム) */
+
+.join-form {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #374151;
+  padding: 30px;
+  border-radius: 10px;
+  /* 黄色からテーマカラーに変更 */
+  box-shadow: 0 0 20px rgba(148, 206, 238, 0.5);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-align: center;
+}
+.join-input {
+  padding: 10px;
+  border-radius: 5px;
+  /* 黄色からテーマカラーに変更 */
+  border: 1px solid #94ceee;
+  background-color: #111827;
+  color: white;
+  font-size: 1em;
+}
+.join-button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  /* 黄色からテーマカラーに変更 */
+  background-color: #94ceee;
+  color: #111827;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s;
+}
+
+/* 部屋全体のスタイル */
+.light-road-room {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #0a192f 0%, #1e2a4a 100%);
+  color: white;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    Segoe UI,
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+}
+
+/* ヘッダー (レスポンシブ化) */
+.title-section {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 2rem 2rem;
+  text-align: left;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 80px;
+  background-color: rgba(10, 25, 47, 0.95);
+  backdrop-filter: blur(5px);
+  /* テーマカラー系の色味へ */
+  border-bottom: 2px solid rgba(148, 206, 238, 0.5);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.header-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  max-width: 50%;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  white-space: nowrap;
+}
+
+/* タイトル */
+.light-road-room h1 {
+  color: #94ceee;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  margin: 0;
+  font-size: 2.2rem;
+}
+
+/* ルーム情報 */
+.light-road-room p {
+  /* テーマカラーに馴染む明るい色へ */
+  color: #d1e9f7;
+  margin: 0;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.light-road-room-fixed-container {
+  width: 1000px;
+  height: 1200px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% - 40px));
+  transform-origin: center center;
+  background: transparent;
+}
+
+/* ボードのコンテナ */
+.game-board-container {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  display: grid;
+  grid-template-columns: repeat(5, 100px);
+  grid-template-rows: repeat(5, 100px);
+  /* 黄色からテーマカラーに変更 */
+  border: 2px solid #94ceee;
+  /* 格子線の色をテーマカラーの透過色へ */
+  background-image:
+    linear-gradient(to right, rgba(148, 206, 238, 0.3) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 206, 238, 0.3) 1px, transparent 1px);
+  background-size: 100px 100px;
+  pointer-events: none;
+  /* 影の色を調整 */
+  box-shadow: 0 0 20px rgba(148, 206, 238, 0.5);
+}
+
+/* ゴール地点のスタイル */
+.goal-area {
+  position: absolute;
+  top: 22%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 100px;
+  background: radial-gradient(
+    circle,
+    rgba(148, 206, 238, 0.3) 0%,
+    rgba(30, 30, 60, 0.8) 70%
+  );
+  /* 黄色からテーマカラーに変更 */
+  border: 3px solid #94ceee;
+  border-radius: 15px;
+  box-shadow: 0 0 15px 5px rgba(148, 206, 238, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.goal-area h2 {
+  color: white;
+  font-size: 2.5em;
+  /* シャドウをテーマカラーに変更 */
+  text-shadow: 0 0 10px #94ceee;
+  margin: 0;
+}
+
+/* ロビーへ戻るボタン */
+.lobby-button {
+  margin: 0;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  /* テーマカラーに変更 */
+  background-color: #94ceee;
+  /* 背景が明るいので文字色を暗く */
+  color: #0a192f;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  min-width: 100px;
+}
+
+.lobby-button:hover {
+  background-color: #ffffff;
+}
+
+/* レスポンシブ用メディアクエリ内のカラー調整（必要箇所のみ） */
+@media (max-width: 768px) {
+  .title-section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    box-sizing: border-box;
+    padding: 1rem 1rem;
+
+    flex-direction: column; /* 縦に並べる */
+    align-items: flex-start; /* 左寄せにする */
+    min-height: auto; /* 高さを自動調整 */
+    padding-bottom: 1rem; /* 下側にパディングを追加 */
+  }
+
+  /* 情報とアクションを縦に並べる */
+  .header-info {
+    flex-direction: column; /* 縦に並べる */
+    align-items: flex-start; /* 左寄せにする */
+    gap: 5px; /* 縦の間隔を詰める */
+    max-width: 100%; /* 縦並びの時は幅制限を解除 */
+  }
+
+  /* タイトルと情報部分を分けるための微調整 */
+  .title-section h1 {
+    margin-bottom: 5px;
+  }
+
+  /* ボタン群も横幅いっぱいに広げ、均等に配置 */
+  .header-actions {
+    width: 100%;
+    margin-top: 10px;
+    justify-content: space-between; /* ボタンを左右に広げる */
+    gap: 5px; /* ボタン間のスペースを調整 */
+  }
+
+  .lobby-button {
+    flex: 1; /* ボタンが均等に幅を占める */
+    min-width: auto; /* 最小幅を解除 */
+    padding: 0.5rem 0.5rem; /* ボタンのパディングを縮小 */
+    font-size: 0.9rem;
+  }
+}

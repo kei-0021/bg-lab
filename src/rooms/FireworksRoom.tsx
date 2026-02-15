@@ -1,8 +1,16 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Player, PlayerWithResources } from "react-game-ui";
-import { Deck, PlayField, ScoreBoard, TokenStore } from "react-game-ui";
+import {
+  Deck,
+  Dice,
+  Draggable,
+  PlayField,
+  ScoreBoard,
+  TokenStore,
+} from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
+import { RemoteCursor } from "../components/RemoteCursor";
 import { RoundProgressTracker } from "../components/RoundProgressTracker";
 import { useSocket } from "../hooks/useSocket.js";
 import "./FireworksRoom.css";
@@ -23,6 +31,7 @@ export default function FireworksRoom() {
   const { roomId } = useParams<{ roomId: string }>();
   const socket = useSocket(SERVER_URL);
   const navigate = useNavigate();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const [userName, setUserName] = useState<string>("");
   const [isJoining, setIsJoining] = useState<boolean>(false);
@@ -67,9 +76,7 @@ export default function FireworksRoom() {
       }
     };
 
-    const handleGameEnd = (result: any) => {
-      setGameResult(result);
-    };
+    const handleGameEnd = (result: any) => setGameResult(result);
 
     socket.on("player:assign-id", handleAssignId);
     socket.on("players:update", handlePlayersUpdate);
@@ -107,18 +114,13 @@ export default function FireworksRoom() {
               {isJoining ? "入場中" : "入場"}
             </button>
           </div>
-          {isJoining && (
-            <p className="fireworks-loading-text">門を潜っています...</p>
-          )}
         </div>
       </div>
     );
   }
 
-  // --- ゲーム本編画面 ---
   return (
-    <div className="fireworks-container">
-      {/* リザルトオーバーレイ */}
+    <div className="fireworks-container" ref={containerRef}>
       {gameResult && (
         <div className="fireworks-result-overlay">
           <div className="fireworks-result-modal">
@@ -148,7 +150,6 @@ export default function FireworksRoom() {
         </div>
       )}
 
-      {/* ヘッダー */}
       <header className="fireworks-header">
         <div className="header-logo">
           <h1 className="logo-text">🎆 FIREWORKS</h1>
@@ -166,10 +167,37 @@ export default function FireworksRoom() {
         </div>
       </header>
 
-      {/* ルール説明オーバーレイ */}
       <FireWorksRule isOpen={showRules} onClose={() => setShowRules(false)} />
 
       <main className="fireworks-main">
+        <RemoteCursor
+          socket={socket!}
+          roomId={roomId}
+          myPlayerId={myPlayerId}
+          players={players.map((p) => ({
+            name: p.name || "Unknown",
+            socketId: String(p.id),
+            color: p.color,
+          }))}
+          scale={1.0}
+          fixedContainerRef={containerRef}
+          visible={true}
+        />
+
+        {players.map((player, i) => (
+          <Draggable
+            key={player.id}
+            pieceId={player.id}
+            socket={socket}
+            roomId={roomId}
+            initialX={400 + i * 70}
+            initialY={900}
+            color={player.color}
+            size={60}
+            containerRef={containerRef}
+          ></Draggable>
+        ))}
+
         <div className="sidebar-left">
           <Deck
             socket={socket!}
@@ -178,23 +206,7 @@ export default function FireworksRoom() {
             name="[ 花火カード ]"
             playerId={currentPlayerId}
           />
-          <Deck
-            socket={socket!}
-            roomId={roomId}
-            deckId="theme"
-            name="[ 演目カード ]"
-            playerId={currentPlayerId}
-          />
-          <div className="fireworks-theme-field">
-            <PlayField
-              socket={socket}
-              roomId={roomId}
-              deckId="theme"
-              name="演目カード"
-              players={players}
-              myPlayerId={myPlayerId}
-            />
-          </div>
+          <Dice sides={3} socket={socket} diceId="move" roomId={roomId}></Dice>
         </div>
         <div className="fireworks-main-field">
           <PlayField
@@ -204,6 +216,7 @@ export default function FireworksRoom() {
             name="花火カード"
             players={players}
             myPlayerId={myPlayerId}
+            layoutMode="free"
           />
         </div>
         <div className="sidebar-right">
@@ -213,7 +226,6 @@ export default function FireworksRoom() {
             players={players}
             currentPlayerId={currentPlayerId}
             myPlayerId={myPlayerId}
-            autoNextTurnOnCardPlay={true}
           />
         </div>
         <div className="token-pos">

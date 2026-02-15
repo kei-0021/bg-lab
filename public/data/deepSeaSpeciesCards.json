@@ -7,7 +7,7 @@
     "location": "deck",
     "drawLocation": "field",
     "playLocation": "discard",
-    "frontImage": "/images/species_1.png"
+    "frontImage": "/images/deepabyss/species_1.png"
   },
   {
     "id": "species-01-angler-B",
@@ -17,7 +17,7 @@
     "location": "deck",
     "drawLocation": "field",
     "playLocation": "discard",
-    "frontImage": "/images/species_1.png"
+    "frontImage": "/images/deepabyss/species_1.png"
   },
   {
     "id": "species-02-viper-A",
@@ -27,7 +27,7 @@
     "location": "deck",
     "drawLocation": "field",
     "playLocation": "discard",
-    "frontImage": "/images/species_2.png"
+    "frontImage": "/images/deepabyss/species_2.png"
   },
   {
     "id": "species-02-viper-B",
@@ -37,7 +37,7 @@
     "location": "deck",
     "drawLocation": "field",
     "playLocation": "discard",
-    "frontImage": "/images/species_2.png"
+    "frontImage": "/images/deepabyss/species_2.png"
   },
   {
     "id": "species-03-blob-A",
@@ -47,7 +47,7 @@
     "location": "deck",
     "drawLocation": "field",
     "playLocation": "discard",
-    "frontImage": "/images/species_3.png"
+    "frontImage": "/images/deepabyss/species_3.png"
   },
   {
     "id": "species-03-blob-B",
@@ -57,6 +57,6 @@
     "location": "deck",
     "drawLocation": "field",
     "playLocation": "discard",
-    "frontImage": "/images/species_3.png"
+    "frontImage": "/images/deepabyss/species_3.png"
   }
 ]

@@ -1,13 +1,13 @@
 export const cardEffects = {
-  "緊急流量補給": ({ updateResource }) => {
+  緊急流量補給: ({ updateResource }) => {
     console.log(`🫧 緊急流量補給"!`);
     updateResource("OXYGEN", 10);
   },
-  "緊急酸素補給": ({ updateResource }) => {
+  緊急酸素補給: ({ updateResource }) => {
     console.log(`🏥 緊急酸素補給"!`);
     updateResource("OXYGEN", 20);
   },
-  "探索": ({ updateResource }) => {
+  探索: ({ updateResource }) => {
     console.log(`🔍 探索"!`);
     updateResource("BATTERY", -1);
   },

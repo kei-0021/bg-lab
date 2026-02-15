@@ -19,6 +19,7 @@
     "@vitejs/plugin-react": "^5.1.4",
     "concurrently": "^9.2.1",
     "express": "^5.2.1",
+    "prettier": "^3.8.1",
     "rimraf": "^6.1.2",
     "rollup": "4.20.0",
     "ts-node": "^10.9.2",
@@ -31,7 +32,7 @@
     "kei-0021@issue-12@latest": "link:github/kei-0021@issue-12@latest",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-game-ui": "github:kei-0021/react-game-ui#issue-12",
+    "react-game-ui": "github:kei-0021/react-game-ui#issue-17",
     "react-router-dom": "^7.13.0",
     "socket.io": "^4.8.3",
     "socket.io-client": "^4.8.3"
