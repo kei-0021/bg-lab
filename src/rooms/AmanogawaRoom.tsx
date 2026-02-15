@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Draggable } from "react-game-ui";
 import { useNavigate, useParams } from "react-router-dom";
-import Draggable from "../components/Draggable";
 import { RemoteCursor } from "../components/RemoteCursor";
 import { useSocket } from "../hooks/useSocket";
 import "./AmanogawaRoom.css";
@@ -62,7 +62,7 @@ export function AmanogawaRoom() {
       socket.off("players:update");
       socket.off("reset:draggable");
     };
-  }, [socket, roomId]);
+  }, [socket, roomId, resetCount]);
 
   const handleJoinRoom = () => {
     if (!socket || !roomId || userName.trim() === "" || isJoining) return;
@@ -103,6 +103,7 @@ export function AmanogawaRoom() {
           isTransparent={isTransparent}
           gridBounds={gridBounds}
           scale={scale}
+          containerRef={fixedContainerRef}
         >
           {isTransparent && (
             <>
@@ -159,6 +160,7 @@ export function AmanogawaRoom() {
         }}
         gridBounds={gridBounds}
         scale={scale}
+        containerRef={fixedContainerRef}
       >
         <div
           style={{
@@ -229,7 +231,9 @@ export function AmanogawaRoom() {
             {showRemoteCursors ? "カーソル表示 ON" : "カーソル表示 OFF"}
           </button>
           <button
-            onClick={() => socket?.emit("reset:draggable", { roomId })}
+            onClick={() => {
+              socket?.emit("reset:draggable", { roomId });
+            }}
             className="lobby-button"
           >
             🔄 タイル位置を全てリセット

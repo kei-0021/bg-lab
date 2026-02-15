@@ -162,6 +162,7 @@ export default function GameRoom() {
             disabled={isJoining}
             maxLength={12}
             onKeyDown={(e) => e.key === "Enter" && handleJoinRoom()}
+            autoFocus
           />
 
           <button
