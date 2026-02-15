@@ -20,24 +20,35 @@ export class Piece {
     this.tempY = null;
   }
 
-  draw(ctx: CanvasRenderingContext2D, center: { x: number; y: number }, cells: any[], radii: number[]) {
-    const cell = cells.find(c => c.r === this.r && c.s === this.s);
+  draw(
+    ctx: CanvasRenderingContext2D,
+    center: { x: number; y: number },
+    cells: any[],
+    radii: number[],
+  ) {
+    const cell = cells.find((c) => c.r === this.r && c.s === this.s);
     if (!cell) return;
 
-    const x = this.tempX ?? (center.x + Math.cos((cell.angleStart + cell.angleEnd)/2) * (radii[this.r]-50));
-    const y = this.tempY ?? (center.y + Math.sin((cell.angleStart + cell.angleEnd)/2) * (radii[this.r]-50));
+    const x =
+      this.tempX ??
+      center.x +
+        Math.cos((cell.angleStart + cell.angleEnd) / 2) * (radii[this.r] - 50);
+    const y =
+      this.tempY ??
+      center.y +
+        Math.sin((cell.angleStart + cell.angleEnd) / 2) * (radii[this.r] - 50);
 
     ctx.beginPath();
     ctx.arc(x, y, 15, 0, Math.PI * 2);
     ctx.fillStyle = this.color;
     ctx.fill();
-    ctx.strokeStyle = 'white';
+    ctx.strokeStyle = "white";
     ctx.stroke();
 
-    ctx.fillStyle = 'white';
-    ctx.font = '12px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    ctx.fillStyle = "white";
+    ctx.font = "12px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
     ctx.fillText(`${this.id}`, x, y);
   }
 
@@ -46,30 +57,52 @@ export class Piece {
     ctx.arc(x, y, 15, 0, Math.PI * 2);
     ctx.fillStyle = this.color;
     ctx.fill();
-    ctx.strokeStyle = 'white';
+    ctx.strokeStyle = "white";
     ctx.stroke();
 
-    ctx.fillStyle = 'white';
-    ctx.font = '12px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    ctx.fillStyle = "white";
+    ctx.font = "12px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
     ctx.fillText(`${this.id}`, x, y);
   }
 
-  isHit(mx: number, my: number, center: { x: number; y: number }, radii: number[], cells: any[]): boolean {
-    const cell = cells.find(c => c.r === this.r && c.s === this.s);
+  isHit(
+    mx: number,
+    my: number,
+    center: { x: number; y: number },
+    radii: number[],
+    cells: any[],
+  ): boolean {
+    const cell = cells.find((c) => c.r === this.r && c.s === this.s);
     if (!cell) return false;
 
-    const x = center.x + Math.cos((cell.angleStart + cell.angleEnd)/2) * (radii[this.r]-50);
-    const y = center.y + Math.sin((cell.angleStart + cell.angleEnd)/2) * (radii[this.r]-50);
+    const x =
+      center.x +
+      Math.cos((cell.angleStart + cell.angleEnd) / 2) * (radii[this.r] - 50);
+    const y =
+      center.y +
+      Math.sin((cell.angleStart + cell.angleEnd) / 2) * (radii[this.r] - 50);
     return Math.hypot(mx - x, my - y) < 15;
   }
 
-  startDrag(mx: number, my: number, center: { x: number; y: number }, radii: number[], cells: any[]) {
-    const cell = cells.find(c => c.r === this.r && c.s === this.s);
+  startDrag(
+    mx: number,
+    my: number,
+    center: { x: number; y: number },
+    radii: number[],
+    cells: any[],
+  ) {
+    const cell = cells.find((c) => c.r === this.r && c.s === this.s);
     if (!cell) return;
-    this.offsetX = mx - (center.x + Math.cos((cell.angleStart + cell.angleEnd)/2) * (radii[this.r]-50));
-    this.offsetY = my - (center.y + Math.sin((cell.angleStart + cell.angleEnd)/2) * (radii[this.r]-50));
+    this.offsetX =
+      mx -
+      (center.x +
+        Math.cos((cell.angleStart + cell.angleEnd) / 2) * (radii[this.r] - 50));
+    this.offsetY =
+      my -
+      (center.y +
+        Math.sin((cell.angleStart + cell.angleEnd) / 2) * (radii[this.r] - 50));
   }
 
   drag(mx: number, my: number) {

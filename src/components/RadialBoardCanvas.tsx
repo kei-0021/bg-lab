@@ -9,7 +9,11 @@ interface RadialBoardCanvasProps {
   theme?: "forest" | "moon" | "lake"; // ← テーマ追加
 }
 
-export function RadialBoardCanvas({ pieces, setPieces, theme = "forest" }: RadialBoardCanvasProps) {
+export function RadialBoardCanvas({
+  pieces,
+  setPieces,
+  theme = "forest",
+}: RadialBoardCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const draggingPieceRef = useRef<Piece | null>(null);
 
@@ -27,28 +31,28 @@ export function RadialBoardCanvas({ pieces, setPieces, theme = "forest" }: Radia
           background: "#0b3d0b",
           lightColor: "#3fa34d",
           shadowColor: "#1e4620",
-          lineColor: "#a4d68e"
+          lineColor: "#a4d68e",
         };
       case "moon":
         return {
           background: "#1a183f",
           lightColor: "#d1d1f2",
           shadowColor: "#4c4b6f",
-          lineColor: "#f8f6e7"
+          lineColor: "#f8f6e7",
         };
       case "lake":
         return {
           background: "#082b4c",
           lightColor: "#4fc3f7",
           shadowColor: "#1565c0",
-          lineColor: "#bbdefb"
+          lineColor: "#bbdefb",
         };
       default:
         return {
           background: "#000",
           lightColor: "#999",
           shadowColor: "#555",
-          lineColor: "#fff"
+          lineColor: "#fff",
         };
     }
   }, [theme]);
@@ -58,10 +62,22 @@ export function RadialBoardCanvas({ pieces, setPieces, theme = "forest" }: Radia
     const arr: Cell[] = [];
     for (let r = 0; r < radii.length; r++) {
       for (let s = 0; s < sectors; s++) {
-        const angleStart = (s / sectors) * 2 * Math.PI + offset - Math.PI / sectors;
-        const angleEnd = (s / sectors) * 2 * Math.PI + offset + Math.PI / sectors;
+        const angleStart =
+          (s / sectors) * 2 * Math.PI + offset - Math.PI / sectors;
+        const angleEnd =
+          (s / sectors) * 2 * Math.PI + offset + Math.PI / sectors;
         const state = (s + r) % 2 === 0 ? "light" : "shadow";
-        arr.push(new Cell(r, s, r === 0 ? 0 : radii[r - 1], radii[r], angleStart, angleEnd, state));
+        arr.push(
+          new Cell(
+            r,
+            s,
+            r === 0 ? 0 : radii[r - 1],
+            radii[r],
+            angleStart,
+            angleEnd,
+            state,
+          ),
+        );
       }
     }
     return arr;
@@ -80,13 +96,14 @@ export function RadialBoardCanvas({ pieces, setPieces, theme = "forest" }: Radia
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // マス描画（テーマ色を渡す）
-    cells.forEach(cell => {
-      const color = cell.state === "light" ? boardStyle.lightColor : boardStyle.shadowColor;
+    cells.forEach((cell) => {
+      const color =
+        cell.state === "light" ? boardStyle.lightColor : boardStyle.shadowColor;
       cell.draw(ctx, center, color);
     });
 
     // 駒描画
-    pieces.forEach(p => p.draw(ctx, center, cells, radii));
+    pieces.forEach((p) => p.draw(ctx, center, cells, radii));
 
     // セクター線
     ctx.strokeStyle = boardStyle.lineColor;
@@ -97,13 +114,13 @@ export function RadialBoardCanvas({ pieces, setPieces, theme = "forest" }: Radia
       ctx.moveTo(center.x, center.y);
       ctx.lineTo(
         center.x + Math.cos(angle) * radii[radii.length - 1],
-        center.y + Math.sin(angle) * radii[radii.length - 1]
+        center.y + Math.sin(angle) * radii[radii.length - 1],
       );
       ctx.stroke();
     }
 
     // 同心円
-    radii.forEach(r => {
+    radii.forEach((r) => {
       ctx.beginPath();
       ctx.arc(center.x, center.y, r, 0, 2 * Math.PI);
       ctx.stroke();
@@ -157,9 +174,13 @@ export function RadialBoardCanvas({ pieces, setPieces, theme = "forest" }: Radia
         // 近いセルに吸着
         let closestCell: Cell | null = null;
         let minDist = Infinity;
-        cells.forEach(c => {
-          const cx = center.x + Math.cos((c.angleStart + c.angleEnd) / 2) * (radii[c.r] - 50);
-          const cy = center.y + Math.sin((c.angleStart + c.angleEnd) / 2) * (radii[c.r] - 50);
+        cells.forEach((c) => {
+          const cx =
+            center.x +
+            Math.cos((c.angleStart + c.angleEnd) / 2) * (radii[c.r] - 50);
+          const cy =
+            center.y +
+            Math.sin((c.angleStart + c.angleEnd) / 2) * (radii[c.r] - 50);
           const dx = pos.x - cx;
           const dy = pos.y - cy;
           const dist = Math.sqrt(dx * dx + dy * dy);
@@ -177,12 +198,12 @@ export function RadialBoardCanvas({ pieces, setPieces, theme = "forest" }: Radia
           return;
         }
 
-        setPieces(prev =>
-          prev.map(p =>
+        setPieces((prev) =>
+          prev.map((p) =>
             p === draggingPiece
               ? new Piece(p.type, p.id, closestCell!.r, closestCell!.s, p.color)
-              : p
-          )
+              : p,
+          ),
         );
 
         draggingPiece.endDrag();
@@ -212,7 +233,7 @@ export function RadialBoardCanvas({ pieces, setPieces, theme = "forest" }: Radia
         display: "block",
         margin: "0 auto",
         borderRadius: "10px",
-        boxShadow: "0 0 12px rgba(0,0,0,0.4)"
+        boxShadow: "0 0 12px rgba(0,0,0,0.4)",
       }}
     />
   );

@@ -1,10 +1,75 @@
 [
-  { "templateId": "RA", "name": "遺物 (古代遺物)", "shapeType": "square", "backgroundColor": "#1c2a38", "content": "", "changedContent": "💎", "changedColor": "#ffd700" },
-  { "templateId": "RB", "name": "遺物 (技術部品)", "shapeType": "square", "backgroundColor": "#0d1721", "content": "", "changedContent": "⚙️", "changedColor": "#c0c0c0" },
-  { "templateId": "B_NORM", "name": "危険生物 (通常)", "shapeType": "square", "backgroundColor": "#1c2a38", "content": "", "changedContent": "🦑", "changedColor": "#ff5c5c" },
-  { "templateId": "B_TRACK", "name": "危険生物 (追跡型)", "shapeType": "square", "backgroundColor": "#0d1721", "content": "", "changedContent": "🦈", "changedColor": "#cc0000" },
-  { "templateId": "T_VOL", "name": "特殊地形 (火山)", "shapeType": "custom", "backgroundColor": "#1c2a38", "content": "", "changedContent": "🌋", "customClip": "polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)", "changedColor": "#ff4500" },
-  { "templateId": "T_CRF", "name": "特殊地形 (珊瑚礁)", "shapeType": "square", "backgroundColor": "#0d1721", "content": "", "changedContent": "🐠", "changedColor": "#3cb371" },
-  { "templateId": "N_A", "name": "通常地形 (深海A)", "shapeType": "square", "backgroundColor": "#1c2a38", "content": "", "changedContent": "", "changedColor": "#6a89cc" },
-  { "templateId": "N_B", "name": "通常地形 (深海B)", "shapeType": "square", "backgroundColor": "#0d1721", "content": "", "changedContent": "", "changedColor": "#407398" }
+  {
+    "templateId": "RA",
+    "name": "遺物 (古代遺物)",
+    "shapeType": "square",
+    "backgroundColor": "#1c2a38",
+    "content": "",
+    "changedContent": "💎",
+    "changedColor": "#ffd700"
+  },
+  {
+    "templateId": "RB",
+    "name": "遺物 (技術部品)",
+    "shapeType": "square",
+    "backgroundColor": "#0d1721",
+    "content": "",
+    "changedContent": "⚙️",
+    "changedColor": "#c0c0c0"
+  },
+  {
+    "templateId": "B_NORM",
+    "name": "危険生物 (通常)",
+    "shapeType": "square",
+    "backgroundColor": "#1c2a38",
+    "content": "",
+    "changedContent": "🦑",
+    "changedColor": "#ff5c5c"
+  },
+  {
+    "templateId": "B_TRACK",
+    "name": "危険生物 (追跡型)",
+    "shapeType": "square",
+    "backgroundColor": "#0d1721",
+    "content": "",
+    "changedContent": "🦈",
+    "changedColor": "#cc0000"
+  },
+  {
+    "templateId": "T_VOL",
+    "name": "特殊地形 (火山)",
+    "shapeType": "custom",
+    "backgroundColor": "#1c2a38",
+    "content": "",
+    "changedContent": "🌋",
+    "customClip": "polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)",
+    "changedColor": "#ff4500"
+  },
+  {
+    "templateId": "T_CRF",
+    "name": "特殊地形 (珊瑚礁)",
+    "shapeType": "square",
+    "backgroundColor": "#0d1721",
+    "content": "",
+    "changedContent": "🐠",
+    "changedColor": "#3cb371"
+  },
+  {
+    "templateId": "N_A",
+    "name": "通常地形 (深海A)",
+    "shapeType": "square",
+    "backgroundColor": "#1c2a38",
+    "content": "",
+    "changedContent": "",
+    "changedColor": "#6a89cc"
+  },
+  {
+    "templateId": "N_B",
+    "name": "通常地形 (深海B)",
+    "shapeType": "square",
+    "backgroundColor": "#0d1721",
+    "content": "",
+    "changedContent": "",
+    "changedColor": "#407398"
+  }
 ]

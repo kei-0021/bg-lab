@@ -17,7 +17,7 @@ export class Cell {
     outerR: number,
     angleStart: number,
     angleEnd: number,
-    state: CellState
+    state: CellState,
   ) {
     this.r = r;
     this.s = s;
@@ -36,12 +36,25 @@ export class Cell {
   draw(
     ctx: CanvasRenderingContext2D,
     center: { x: number; y: number },
-    color?: string
+    color?: string,
   ) {
     ctx.beginPath();
     ctx.moveTo(center.x, center.y);
-    ctx.arc(center.x, center.y, this.radiusOuter, this.angleStart, this.angleEnd);
-    ctx.arc(center.x, center.y, this.radiusInner, this.angleEnd, this.angleStart, true);
+    ctx.arc(
+      center.x,
+      center.y,
+      this.radiusOuter,
+      this.angleStart,
+      this.angleEnd,
+    );
+    ctx.arc(
+      center.x,
+      center.y,
+      this.radiusInner,
+      this.angleEnd,
+      this.angleStart,
+      true,
+    );
     ctx.closePath();
 
     // --- 塗りつぶし ---
@@ -53,10 +66,13 @@ export class Cell {
         this.radiusInner,
         center.x,
         center.y,
-        this.radiusOuter
+        this.radiusOuter,
       );
       gradient.addColorStop(0, this.state === "light" ? color : "#00000040");
-      gradient.addColorStop(1, this.state === "light" ? "#ffffff20" : "#00000080");
+      gradient.addColorStop(
+        1,
+        this.state === "light" ? "#ffffff20" : "#00000080",
+      );
       ctx.fillStyle = gradient;
     } else {
       // 旧スタイル（後方互換）
@@ -81,7 +97,11 @@ export class Cell {
    * --- 当たり判定 ---
    * マウス位置がこのセル内かどうかを判定する。
    */
-  containsPoint(x: number, y: number, center: { x: number; y: number }): boolean {
+  containsPoint(
+    x: number,
+    y: number,
+    center: { x: number; y: number },
+  ): boolean {
     const dx = x - center.x;
     const dy = y - center.y;
     const r = Math.sqrt(dx * dx + dy * dy);
