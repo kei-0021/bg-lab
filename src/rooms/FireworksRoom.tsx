@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { Player, PlayerWithResources } from "react-game-ui";
 import {
   Deck,
+  Dice,
   Draggable,
   PlayField,
   ScoreBoard,
@@ -205,6 +206,7 @@ export default function FireworksRoom() {
             name="[ 花火カード ]"
             playerId={currentPlayerId}
           />
+          <Dice sides={3} socket={socket} diceId="move" roomId={roomId}></Dice>
         </div>
         <div className="fireworks-main-field">
           <PlayField
