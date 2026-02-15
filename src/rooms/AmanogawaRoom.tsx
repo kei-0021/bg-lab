@@ -69,7 +69,7 @@ export function AmanogawaRoom() {
     setIsJoining(true);
     socket.emit("room:join", {
       roomId,
-      gamePresetId: "amanaogawa",
+      gamePresetId: "amanogawa",
       playerName: userName.trim(),
     });
   };
