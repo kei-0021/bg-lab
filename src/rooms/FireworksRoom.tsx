@@ -208,7 +208,53 @@ export default function FireworksRoom() {
             name="[ 花火カード ]"
             playerId={currentPlayerId}
           />
-          <Dice sides={3} socket={socket} diceId="move" roomId={roomId}></Dice>
+          <div className="dice-section">
+            <Dice sides={3} socket={socket} diceId="move" roomId={roomId} />
+            <Dice
+              sides={4}
+              socket={socket}
+              diceId="weather"
+              roomId={roomId}
+              customFaces={[
+                <img
+                  key="f1"
+                  src="/images/fireworks/weather_sunny.png"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                  }}
+                />,
+                <img
+                  key="f2"
+                  src="/images/fireworks/weather_cloud.png"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                  }}
+                />,
+                <img
+                  key="f3"
+                  src="/images/fireworks/weather_wind.png"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                  }}
+                />,
+                <img
+                  key="f4"
+                  src="/images/fireworks/weather_rain.png"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                  }}
+                />,
+              ]}
+            />
+          </div>
         </div>
         <div className="fireworks-main-field">
           <PlayField
