@@ -5,12 +5,12 @@ import {
   Dice,
   Draggable,
   PlayField,
+  RemoteCursor,
   ScoreBoard,
   TokenStore,
 } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { RemoteCursor } from "../components/RemoteCursor";
 import { RoundProgressTracker } from "../components/RoundProgressTracker";
 import { useSocket } from "../hooks/useSocket.js";
 import "./FireworksRoom.css";
@@ -213,6 +213,7 @@ export default function FireworksRoom() {
             scale={scale}
             fixedContainerRef={containerRef}
             visible={true}
+            isRelative={false}
           />
           {players.map((player, i) => (
             <div key={player.id} className="draggable-saturated">
