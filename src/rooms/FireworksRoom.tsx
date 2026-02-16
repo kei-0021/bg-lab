@@ -11,6 +11,7 @@ import {
 } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
+import { LaunchArea } from "../components/LaunchArea";
 import { RoundProgressTracker } from "../components/RoundProgressTracker";
 import { useSocket } from "../hooks/useSocket.js";
 import "./FireworksRoom.css";
@@ -283,6 +284,7 @@ export default function FireworksRoom() {
               myPlayerId={myPlayerId}
               layoutMode="free"
             />
+            <LaunchArea></LaunchArea>
           </div>
 
           <div className="sidebar-right">

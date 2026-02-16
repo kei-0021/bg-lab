@@ -1,0 +1,28 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 1000px;
+  height: 120px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+  /* 全体の背景を濃い茶色に */
+  background-color: #5d4037;
+  border-radius: 12px;
+}
+
+.slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* マスの背景を明るい茶色に */
+  background-color: #8d6e63;
+  border: 2px solid #4e342e;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #ffffff;
+  transition: background-color 0.2s;
+}
