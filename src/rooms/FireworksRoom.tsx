@@ -21,6 +21,9 @@ const SERVER_URL =
     ? "http://localhost:4000"
     : "https://bg-lab.onrender.com";
 
+const BASE_WIDTH = 1600;
+const BASE_HEIGHT = 900;
+
 interface TurnUpdatePayload {
   playerId: string;
   currentRound: number;
@@ -42,8 +45,19 @@ export default function FireworksRoom() {
   const [currentRound, setCurrentRound] = useState<number>(1);
   const [showRules, setShowRules] = useState<boolean>(false);
   const [gameResult, setGameResult] = useState<any>(null);
+  const [scale, setScale] = useState<number>(1);
 
-  if (!roomId) return null;
+  useEffect(() => {
+    const handleResize = () => {
+      const scaleX = window.innerWidth / BASE_WIDTH;
+      const scaleY = window.innerHeight / BASE_HEIGHT;
+      const newScale = Math.min(scaleX, scaleY);
+      setScale(newScale);
+    };
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleJoinRoom = useCallback(() => {
     if (!socket || userName.trim() === "" || isJoining) return;
@@ -91,6 +105,8 @@ export default function FireworksRoom() {
     };
   }, [socket]);
 
+  if (!roomId) return null;
+
   if (!hasJoined) {
     return (
       <div className="fireworks-container">
@@ -120,171 +136,174 @@ export default function FireworksRoom() {
   }
 
   return (
-    <div className="fireworks-container" ref={containerRef}>
-      {gameResult && (
-        <div className="fireworks-result-overlay">
-          <div className="fireworks-result-modal">
-            <div className="fw-result-header">
-              <span className="fw-icon">🎇</span>
-              <h2>花火大会終了!!</h2>
-              <span className="fw-icon">🎇</span>
-            </div>
-            <p className="fw-result-message">{gameResult.message}</p>
-            <div className="fw-ranking-list">
-              {gameResult.rankings?.map((res: any) => (
-                <div key={res.rank} className={`fw-rank-item rank-${res.rank}`}>
-                  <div className="fw-rank-num">{res.rank}位</div>
-                  <div className="fw-player-info">
-                    <span className="fw-player-name">{res.name}</span>
-                    <span className="fw-player-score">
-                      {res.tokens} <small>点</small>
-                    </span>
+    <div className="fireworks-viewport">
+      <div
+        className="game-scalable-wrapper"
+        ref={containerRef}
+        style={{
+          width: `${BASE_WIDTH}px`,
+          height: `${BASE_HEIGHT}px`,
+          transform: `scale(${scale})`,
+        }}
+      >
+        {gameResult && (
+          <div className="fireworks-result-overlay">
+            <div className="fireworks-result-modal">
+              <div className="fw-result-header">
+                <span className="fw-icon">🎇</span>
+                <h2>花火大会終了!!</h2>
+                <span className="fw-icon">🎇</span>
+              </div>
+              <p className="fw-result-message">{gameResult.message}</p>
+              <div className="fw-ranking-list">
+                {gameResult.rankings?.map((res: any) => (
+                  <div
+                    key={res.rank}
+                    className={`fw-rank-item rank-${res.rank}`}
+                  >
+                    <div className="fw-rank-num">{res.rank}位</div>
+                    <div className="fw-player-info">
+                      <span className="fw-player-name">{res.name}</span>
+                      <span className="fw-player-score">
+                        {res.tokens} <small>点</small>
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+              <button className="fw-exit-button" onClick={() => navigate("/")}>
+                ロビーへ戻る
+              </button>
             </div>
-            <button className="fw-exit-button" onClick={() => navigate("/")}>
-              ロビーへ戻る
+          </div>
+        )}
+
+        <header className="fireworks-header">
+          <div className="header-logo">
+            <h1 className="logo-text">🎆 FIREWORKS</h1>
+          </div>
+          <div className="header-tracker">
+            <RoundProgressTracker currentRound={currentRound} maxRound={5} />
+          </div>
+          <div className="header-nav">
+            <button
+              onClick={() => setShowRules(true)}
+              className="nav-btn-rules"
+            >
+              📖 遊び方
+            </button>
+            <button onClick={() => navigate("/")} className="nav-btn-lobby">
+              ロビーへ
             </button>
           </div>
-        </div>
-      )}
+        </header>
 
-      <header className="fireworks-header">
-        <div className="header-logo">
-          <h1 className="logo-text">🎆 FIREWORKS</h1>
-        </div>
-        <div className="header-tracker">
-          <RoundProgressTracker currentRound={currentRound} maxRound={5} />
-        </div>
-        <div className="header-nav">
-          <button onClick={() => setShowRules(true)} className="nav-btn-rules">
-            📖 遊び方
-          </button>
-          <button onClick={() => navigate("/")} className="nav-btn-lobby">
-            ロビーへ
-          </button>
-        </div>
-      </header>
+        <FireWorksRule isOpen={showRules} onClose={() => setShowRules(false)} />
 
-      <FireWorksRule isOpen={showRules} onClose={() => setShowRules(false)} />
-
-      <main className="fireworks-main">
-        <RemoteCursor
-          socket={socket!}
-          roomId={roomId}
-          myPlayerId={myPlayerId}
-          players={players.map((p) => ({
-            name: p.name || "Unknown",
-            socketId: String(p.id),
-            color: p.color,
-          }))}
-          scale={1.0}
-          fixedContainerRef={containerRef}
-          visible={true}
-        />
-
-        {players.map((player, i) => (
-          <Draggable
-            image="/images/fireworks/hanabishi.svg"
-            mask={true}
-            key={player.id}
-            pieceId={player.id}
-            socket={socket}
-            roomId={roomId}
-            initialX={400 + i * 70}
-            initialY={900}
-            color={player.color}
-            size={100}
-            containerRef={containerRef}
-          />
-        ))}
-
-        <div className="sidebar-left">
-          <Deck
+        <main className="fireworks-main">
+          <RemoteCursor
             socket={socket!}
             roomId={roomId}
-            deckId="firework"
-            name="[ 花火カード ]"
-            playerId={currentPlayerId}
+            myPlayerId={myPlayerId}
+            players={players.map((p) => ({
+              name: p.name || "Unknown",
+              socketId: String(p.id),
+              color: p.color,
+            }))}
+            scale={scale}
+            fixedContainerRef={containerRef}
+            visible={true}
           />
-          <div className="dice-section">
-            <Dice sides={3} socket={socket} diceId="move" roomId={roomId} />
-            <Dice
-              sides={4}
+
+          {players.map((player, i) => (
+            <Draggable
+              image="/images/fireworks/hanabishi.svg"
+              mask={true}
+              key={player.id}
+              pieceId={player.id}
               socket={socket}
-              diceId="weather"
               roomId={roomId}
-              customFaces={[
-                <img
-                  key="f1"
-                  src="/images/fireworks/weather_sunny.png"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                  }}
-                />,
-                <img
-                  key="f2"
-                  src="/images/fireworks/weather_cloud.png"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                  }}
-                />,
-                <img
-                  key="f3"
-                  src="/images/fireworks/weather_wind.png"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                  }}
-                />,
-                <img
-                  key="f4"
-                  src="/images/fireworks/weather_rain.png"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                  }}
-                />,
-              ]}
+              initialX={100 + i * 110}
+              initialY={750}
+              color={player.color}
+              size={80}
+              containerRef={containerRef}
+            />
+          ))}
+
+          <div className="sidebar-left">
+            <Deck
+              socket={socket!}
+              roomId={roomId}
+              deckId="firework"
+              name="[ 花火カード ]"
+              playerId={currentPlayerId}
+            />
+            <div className="dice-section">
+              <Dice sides={3} socket={socket} diceId="move" roomId={roomId} />
+              <Dice
+                sides={4}
+                socket={socket}
+                diceId="weather"
+                roomId={roomId}
+                customFaces={[
+                  <img
+                    key="f1"
+                    src="/images/fireworks/weather_sunny.png"
+                    className="dice-custom-face"
+                  />,
+                  <img
+                    key="f2"
+                    src="/images/fireworks/weather_cloud.png"
+                    className="dice-custom-face"
+                  />,
+                  <img
+                    key="f3"
+                    src="/images/fireworks/weather_wind.png"
+                    className="dice-custom-face"
+                  />,
+                  <img
+                    key="f4"
+                    src="/images/fireworks/weather_rain.png"
+                    className="dice-custom-face"
+                  />,
+                ]}
+              />
+            </div>
+          </div>
+
+          <div className="fireworks-main-field">
+            <PlayField
+              socket={socket}
+              roomId={roomId}
+              deckId="firework"
+              name="花火カード"
+              players={players}
+              myPlayerId={myPlayerId}
+              layoutMode="free"
             />
           </div>
-        </div>
-        <div className="fireworks-main-field">
-          <PlayField
-            socket={socket}
-            roomId={roomId}
-            deckId="firework"
-            name="花火カード"
-            players={players}
-            myPlayerId={myPlayerId}
-            layoutMode="free"
-          />
-        </div>
-        <div className="sidebar-right">
-          <ScoreBoard
-            socket={socket!}
-            roomId={roomId}
-            players={players}
-            currentPlayerId={currentPlayerId}
-            myPlayerId={myPlayerId}
-          />
-        </div>
-        <div className="token-pos">
-          <TokenStore
-            socket={socket!}
-            roomId={roomId}
-            tokenStoreId="STAR_PARTS"
-            name="秘伝玉"
-          />
-        </div>
-      </main>
+
+          <div className="sidebar-right">
+            <ScoreBoard
+              socket={socket!}
+              roomId={roomId}
+              players={players}
+              currentPlayerId={currentPlayerId}
+              myPlayerId={myPlayerId}
+            />
+          </div>
+
+          <div className="token-pos">
+            <TokenStore
+              socket={socket!}
+              roomId={roomId}
+              tokenStoreId="STAR_PARTS"
+              name="秘伝玉"
+            />
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
