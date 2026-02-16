@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Draggable } from "react-game-ui";
+import { Draggable, RemoteCursor } from "react-game-ui";
 import { useNavigate, useParams } from "react-router-dom";
-import { RemoteCursor } from "../components/RemoteCursor";
 import { useSocket } from "../hooks/useSocket";
 import "./AmanogawaRoom.css";
 
