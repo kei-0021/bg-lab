@@ -186,6 +186,8 @@ export default function FireworksRoom() {
 
         {players.map((player, i) => (
           <Draggable
+            image="/images/fireworks/hanabishi.svg"
+            mask={true}
             key={player.id}
             pieceId={player.id}
             socket={socket}
@@ -193,9 +195,9 @@ export default function FireworksRoom() {
             initialX={400 + i * 70}
             initialY={900}
             color={player.color}
-            size={60}
+            size={100}
             containerRef={containerRef}
-          ></Draggable>
+          />
         ))}
 
         <div className="sidebar-left">
