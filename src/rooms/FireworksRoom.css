@@ -1,36 +1,19 @@
-/* ==========================================================================
-   基礎・ビューポート設定
-   ========================================================================== */
-.fireworks-viewport {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  position: relative;
-  background: #0a0a0a;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: "Shippori Mincho", "Sawarabi Mincho", "Yu Mincho", serif;
-}
+/* --- [復旧] あなたが大切にしているオリジナルの PlayField.css 全内容 --- */
 
-/* スケーリングされるゲームボードの基盤 */
-.game-scalable-wrapper {
-  position: relative;
-  flex-shrink: 0;
+.fireworks-container {
+  min-height: 100vh;
   background: radial-gradient(
     circle at center,
     #1b1e4e 0%,
     #0c0b2e 50%,
     #05010a 100%
-  );
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
-  transform-origin: center;
+  ) !important;
+  font-family: "Shippori Mincho", serif;
+  position: relative;
   overflow: hidden;
+  padding: 20px;
 }
 
-/* ==========================================================================
-   入場画面 (Entrance)
-   ========================================================================== */
 .fireworks-entrance-wrapper {
   position: absolute;
   top: 50%;
@@ -41,15 +24,18 @@
 }
 
 .fireworks-title {
-  color: #fffdf0;
+  color: #fffdf0 !important;
   letter-spacing: 0.8em;
   margin-right: -0.8em;
   font-size: 64px;
   margin-bottom: 60px;
   font-weight: 900;
+  text-align: center;
   text-shadow:
     0 0 15px rgba(255, 215, 0, 0.9),
-    0 0 50px rgba(255, 165, 0, 0.4);
+    0 0 30px rgba(255, 215, 0, 0.6),
+    0 0 50px rgba(255, 165, 0, 0.4) !important;
+  font-family: "Sawarabi Mincho", "Yu Mincho", serif;
 }
 
 .fireworks-form-group {
@@ -62,33 +48,107 @@
 .fireworks-input {
   padding: 18px 24px;
   font-size: 24px;
-  background: #fff;
+  background: #ffffff;
   border: 4px solid #ffc300;
-  border-radius: 8px;
-  width: 400px;
+  color: #000;
   text-align: center;
+  outline: none;
+  width: 400px;
+  border-radius: 8px;
   box-shadow: 0 0 20px rgba(255, 195, 0, 0.4);
 }
 
 .fireworks-join-button {
   background: #ffc300;
+  color: #000;
+  border: none;
   padding: 18px 60px;
   font-size: 26px;
-  font-weight: bold;
-  border: none;
-  border-radius: 8px;
   cursor: pointer;
+  font-weight: bold;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .fireworks-join-button:hover {
   background: #fff;
   transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
 }
 
-/* ==========================================================================
-   メインレイアウト (Header & Main Area)
-   ========================================================================== */
+.fireworks-main-field .rg-playfield {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 16 / 9;
+  max-height: 85vh;
+  margin: 0 auto !important;
+  background-color: black !important;
+  border: 1px solid white;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  padding: 0 !important;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.fireworks-main-field .rg-playfield-title {
+  color: #ffffff !important;
+  font-size: 30px !important;
+  margin: 20px 0 !important;
+  flex-shrink: 0 !important;
+  z-index: 5;
+}
+
+.fireworks-main-field .rg-playfield-container {
+  width: 100% !important;
+  flex-grow: 1 !important;
+  display: block !important;
+  position: relative !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.fireworks-theme-field .rg-playfield-title {
+  color: black;
+}
+
+.fireworks-main-field .rg-playfield-card-wrapper {
+  position: absolute !important;
+  width: 126px !important;
+  height: 175px !important;
+  flex-shrink: 0 !important;
+
+  /* 遅延の原因となる transition を切る */
+  transition: none !important;
+
+  cursor: grab;
+  /* 文字選択を禁止 */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.fireworks-main-field .rg-playfield-card-wrapper:active {
+  cursor: grabbing;
+}
+
+/* 画像の標準ドラッグを殺す */
+.fireworks-main-field .rg-playfield-card-wrapper img {
+  pointer-events: none; /* 画像へのクリックを透過させて親(wrapper)に届ける */
+  user-select: none;
+  -webkit-user-drag: none; /* Safari/Chrome用：画像のドラッグ禁止 */
+}
+
+.fireworks-main-field .rg-card-text-content {
+  font-size: 25px;
+  pointer-events: none;
+}
+
+/* --- 以下、レイアウトパーツ --- */
+
 .fireworks-header {
   position: absolute;
   top: 0;
@@ -106,20 +166,58 @@
 
 .logo-text {
   color: #ebebeb;
+  margin: 0;
   font-size: 35px;
   text-shadow: 0 0 10px rgba(255, 195, 0, 0.8);
 }
 
+.header-logo {
+  flex: 0 0 300px;
+}
+
+.header-tracker {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.header-nav {
+  flex: 0 0 250px;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.nav-btn-rules {
+  background: #ffc300;
+  color: #000;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 15px;
+  box-shadow: 0 0 10px rgba(255, 195, 0, 0.4);
+}
+
+.nav-btn-lobby {
+  background: #000;
+  color: #ffc300;
+  border: 1px solid #ffc300;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 15px;
+}
+
 .fireworks-main {
-  width: 100%;
-  height: 100%;
+  width: 100%; /* 100vwから変更（ラッパー内で収めるため） */
+  height: 100%; /* 100vhから変更（ラッパー内で収めるため） */
   display: flex;
   padding: 130px 40px 40px 40px;
   box-sizing: border-box;
   gap: 20px;
 }
 
-/* サイドバー共通 */
 .sidebar-left {
   display: flex;
   flex-direction: column;
@@ -127,27 +225,6 @@
   flex-shrink: 0;
 }
 
-.sidebar-right {
-  width: 480px;
-  flex-shrink: 0;
-}
-
-/* ダイス */
-.dice-section {
-  display: flex;
-  gap: 10px;
-  margin-top: 15px;
-}
-
-.dice-custom-face {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-/* ==========================================================================
-   盤面 (PlayField) スタイル
-   ========================================================================== */
 .fireworks-main-field {
   flex: 1;
   position: relative;
@@ -156,18 +233,37 @@
 .fireworks-main-field .rg-playfield {
   position: relative;
   width: 100% !important;
+  height: auto !important;
   aspect-ratio: 16 / 9;
+  max-height: 85vh;
+  margin: 0 auto !important;
+  background-color: black !important;
+  border: 1px solid white;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  padding: 0 !important;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
   background: radial-gradient(
     circle at 50% 100%,
     #151540 0%,
     #000005 100%
   ) !important;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-  overflow: hidden !important;
-  /* 背景装飾：地平線やグリッド */
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(
+      to bottom,
+      transparent 33%,
+      rgba(255, 255, 255, 0.15) 33%,
+      transparent 33.5%
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 66%,
+      rgba(255, 255, 255, 0.15) 66%,
+      transparent 66.5%
+    ),
     radial-gradient(
       ellipse at 50% 105%,
       rgba(255, 195, 0, 0.1) 0%,
@@ -175,11 +271,14 @@
     ) !important;
   background-size:
     200px 100%,
+    100% 100%,
+    100% 100%,
     100% 150px !important;
   background-position: center bottom !important;
+  background-repeat: repeat-x, no-repeat, no-repeat, no-repeat !important;
 }
 
-/* 地平線エフェクト */
+/* 地平線をPlayFieldの底に合わせる */
 .fireworks-main-field .rg-playfield::after {
   content: "";
   position: absolute;
@@ -189,25 +288,24 @@
   height: 4px;
   background: #ffc300;
   box-shadow: 0 0 15px #ffc300;
-  z-index: 10;
+  z-index: 10; /* カードよりは下、背景よりは上 */
   pointer-events: none;
 }
 
-/* カード周りの微調整 */
-.fireworks-main-field .rg-playfield-card-wrapper {
-  transition: none !important;
-  cursor: grab;
-  user-select: none;
-}
-
-.fireworks-main-field .rg-playfield-card-wrapper img {
+.fireworks-main-field .rg-playfield::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   pointer-events: none;
-  -webkit-user-drag: none;
+  z-index: 1;
+}
+.sidebar-right {
+  width: 480px;
+  flex-shrink: 0;
 }
 
-/* ==========================================================================
-   ゲーム内パーツ (Token, Result, Rules)
-   ========================================================================== */
 .token-pos {
   position: absolute;
   bottom: 40px;
@@ -215,10 +313,84 @@
   z-index: 5;
 }
 
-/* リザルト画面 */
-.fireworks-result-overlay {
+.rules-overlay {
   position: fixed;
   inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rules-content {
+  background: #1a1a1a;
+  border: 2px solid #ffc300;
+  padding: 40px;
+  max-width: 640px;
+  color: #fff;
+  border-radius: 12px;
+  position: relative;
+}
+
+.rules-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #ffc300;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.rules-title {
+  color: #ffc300;
+  margin-top: 0;
+}
+
+.rules-hr {
+  border-color: #333;
+  margin: 20px 0;
+}
+
+.rules-body {
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+.section-mt {
+  margin-top: 20px;
+}
+
+.rules-ok-btn {
+  width: 100%;
+  margin-top: 30px;
+  padding: 12px;
+  background: #ffc300;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateX(-50%) scale(1.2);
+    opacity: 1;
+  }
+}
+
+.fireworks-result-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.85);
   display: flex;
   justify-content: center;
@@ -232,14 +404,41 @@
   border: 3px double #e94560;
   border-radius: 15px;
   padding: 40px;
-  width: 500px;
+  width: 90%;
+  max-width: 500px;
   text-align: center;
+  box-shadow: 0 0 30px rgba(233, 69, 96, 0.4);
+}
+
+.fw-result-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
 }
 
 .fw-result-header h2 {
   color: #f9ed69;
   font-size: 2.2rem;
+  margin: 0;
   text-shadow: 0 0 10px rgba(249, 237, 105, 0.6);
+}
+
+.fw-icon {
+  font-size: 1.8rem;
+}
+
+.fw-result-message {
+  color: #fff;
+  opacity: 0.9;
+  margin-bottom: 30px;
+}
+
+.fw-ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .fw-rank-item {
@@ -248,7 +447,7 @@
   background: rgba(255, 255, 255, 0.1);
   padding: 15px 20px;
   border-radius: 10px;
-  margin-bottom: 12px;
+  gap: 20px;
 }
 
 .rank-1 {
@@ -256,22 +455,91 @@
   border: 1px solid #f9ed69;
 }
 
-/* ナビゲーションボタン */
-.nav-btn-rules,
-.nav-btn-lobby {
-  padding: 8px 16px;
+.fw-rank-num {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #e94560;
+  width: 50px;
+  flex-shrink: 0;
+  margin-right: 15px;
+}
+
+.rank-1 .fw-rank-num {
+  color: #f9ed69;
+}
+
+.fw-player-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.fw-player-name {
+  font-size: 1.2rem;
+  color: #eee;
+}
+
+.fw-player-score {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.fw-exit-button {
+  margin-top: 30px;
+  padding: 12px 40px;
+  background: transparent;
+  border: 2px solid #e94560;
+  color: #e94560;
+  border-radius: 50px;
   font-weight: bold;
   cursor: pointer;
-  border-radius: 4px;
 }
 
-.nav-btn-rules {
-  background: #ffc300;
-  border: none;
+/* --- 追加分：あなたのスタイルに一切干渉しない隔離された定義 --- */
+
+.fireworks-viewport {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  background: #0a0a0a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.nav-btn-lobby {
-  background: #000;
-  color: #ffc300;
-  border: 1px solid #ffc300;
+.game-scalable-wrapper {
+  position: relative;
+  flex-shrink: 0;
+  transform-origin: center;
+}
+
+.dice-section {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.dice-custom-face {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.draggable-saturated > div {
+  filter: saturate(0.7) brightness(1.4) contrast(0.9) !important;
+}
+
+.draggable-saturated > div {
+  /* saturate(0.8)   : 色味は8割残してしっかり「プレイヤーの色」を主張
+    brightness(1.5) : ガツンと明るくして、色の密度を「希釈」する
+    contrast(0.8)   : 色の「トゲ」を抜いて、目に優しいパステル調に
+  */
+  filter: saturate(0.8) brightness(1.5) contrast(0.8) !important;
+}
+
+.draggable-saturated img {
+  /* 画像の黒い線が浮かないように、少しだけ薄めて色に馴染ませるっす */
+  opacity: 0.4 !important;
 }

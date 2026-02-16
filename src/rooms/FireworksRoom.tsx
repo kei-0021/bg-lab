@@ -214,21 +214,21 @@ export default function FireworksRoom() {
             fixedContainerRef={containerRef}
             visible={true}
           />
-
           {players.map((player, i) => (
-            <Draggable
-              image="/images/fireworks/hanabishi.svg"
-              mask={true}
-              key={player.id}
-              pieceId={player.id}
-              socket={socket}
-              roomId={roomId}
-              initialX={100 + i * 110}
-              initialY={750}
-              color={player.color}
-              size={80}
-              containerRef={containerRef}
-            />
+            <div key={player.id} className="draggable-saturated">
+              <Draggable
+                image="/images/fireworks/hanabishi.svg"
+                mask={true}
+                pieceId={player.id}
+                socket={socket}
+                roomId={roomId}
+                initialX={100 + i * 110}
+                initialY={750}
+                color={player.color}
+                size={80}
+                containerRef={containerRef}
+              />
+            </div>
           ))}
 
           <div className="sidebar-left">
