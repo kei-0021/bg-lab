@@ -1,7 +1,3 @@
-/* ==========================================================================
-   FIREWORKS ROOM - 職人専用・地平線完全固定版
-   ========================================================================== */
-
 .fireworksViewport {
   width: 100vw;
   height: 100vh;
@@ -91,12 +87,10 @@
   box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
 }
 
-/* --- PlayField & 地平線の矯正エリア --- */
-
 .fireworksMainField :global(.rg-playfield) {
   position: relative !important;
   width: 100% !important;
-  height: auto !important;
+  height: 440px !important;
   aspect-ratio: 16 / 9;
   max-height: 85vh;
   margin: 0 auto !important;
@@ -141,7 +135,6 @@
   background-repeat: repeat-x, no-repeat, no-repeat, no-repeat !important;
 }
 
-/* ここが重要！ PlayField 自体の疑似要素として地平線を描く */
 .fireworksMainField :global(.rg-playfield)::after {
   content: "" !important;
   position: absolute !important;
@@ -166,32 +159,36 @@
 }
 
 .fireworksMainField :global(.rg-playfield-title) {
-  color: #ffffff !important;
   font-size: 30px !important;
-  margin: 20px 0 !important;
-  flex-shrink: 0 !important;
-  z-index: 5 !important;
+  position: absolute !important;
+  top: 20px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  margin: 0 !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
 }
 
 .fireworksMainField :global(.rg-playfield-container) {
   width: 100% !important;
-  flex-grow: 1 !important;
-  display: block !important;
-  position: relative !important;
-  overflow: hidden !important;
-  padding: 0 !important;
-  margin: 0 !important;
+  height: 100% !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  overflow: visible !important;
+  z-index: 5 !important;
 }
 
 .fireworksMainField :global(.rg-playfield-card-wrapper) {
   position: absolute !important;
-  width: 126px !important;
-  height: 175px !important;
+  width: 80px !important;
+  height: 112px !important;
   flex-shrink: 0 !important;
   transition: none !important;
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
+  z-index: 100 !important;
 }
 
 .fireworksMainField :global(.rg-playfield-card-wrapper img) {
@@ -204,8 +201,6 @@
   font-size: 25px !important;
   pointer-events: none !important;
 }
-
-/* --- レイアウトパーツ --- */
 
 .fireworksHeader {
   position: absolute;
@@ -271,7 +266,7 @@
   display: flex;
   padding: 130px 40px 40px 40px;
   box-sizing: border-box;
-  gap: 20px;
+  gap: 40px;
 }
 
 .sidebarLeft {
@@ -287,7 +282,7 @@
 }
 
 .sidebarRight {
-  width: 480px;
+  width: 280px;
   flex-shrink: 0;
 }
 
@@ -297,8 +292,6 @@
   left: 40px;
   z-index: 5;
 }
-
-/* --- スケーリング・演出 --- */
 
 .gameScalableWrapper {
   position: relative;
@@ -325,8 +318,6 @@
 .draggableSaturated img {
   opacity: 0.4 !important;
 }
-
-/* --- リザルト画面 --- */
 
 .fireworksResultOverlay {
   position: fixed;
@@ -427,4 +418,92 @@
   border-radius: 50px;
   font-weight: bold;
   cursor: pointer;
+}
+
+.sidebarLeft :global([class*="deckSection"]) {
+  padding: 8px !important;
+  border: 1px solid #444 !important;
+}
+
+.sidebarLeft :global([class*="deckContainer"]),
+.sidebarLeft :global([class*="deckCard"]),
+.sidebarLeft :global([class*="deckCardFront"]),
+.sidebarLeft :global([class*="cardBack"]) {
+  width: 64px !important;
+  height: 89px !important;
+  min-width: 64px !important;
+  min-height: 89px !important;
+}
+
+.sidebarLeft :global([class*="cardNameText"]),
+.sidebarLeft :global([class*="deckCardFront"]) {
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+}
+
+.sidebarLeft :global([class*="deckWrapper"]) {
+  gap: 10px !important;
+}
+
+.sidebarRight :global([class*="container"]) {
+  padding: 12px !important;
+  max-width: 280px !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+
+.sidebarRight :global([class*="title"]) {
+  font-size: 1.1em !important;
+  margin-left: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  width: 100% !important;
+}
+
+.sidebarRight :global([class*="playerItem"]) {
+  padding: 8px !important;
+  margin-bottom: 8px !important;
+}
+
+.sidebarRight :global([class*="activePlayer"]) {
+  transform: translateX(0) !important;
+}
+
+.sidebarRight :global([class*="tokenBadge"]) {
+  width: 24px !important;
+  height: 24px !important;
+  font-size: 0.6em !important;
+  box-shadow: none !important;
+}
+
+.sidebarRight :global([class*="cardBase"]) {
+  width: 64px !important;
+  height: 89px !important;
+  font-size: 8px !important;
+  padding: 2px !important;
+}
+
+.sidebarRight :global([class*="tooltip"]) {
+  width: 120px !important;
+  font-size: 10px !important;
+}
+
+.sidebarRight :global([class*="buttonGroup"]) {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 4px !important;
+  width: 100% !important;
+  justify-content: space-between !important;
+  margin-top: 8px !important;
+}
+
+.sidebarRight :global([class*="buttonArea"] button) {
+  white-space: nowrap !important;
+  font-size: 8px !important;
+  padding: 6px 1px !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+  letter-spacing: -1px !important;
 }
