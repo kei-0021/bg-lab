@@ -18,15 +18,15 @@ interface Room {
 
 const GAME_DISPLAY_NAMES: Record<string, string> = {
   fireworks: "FireWorks",
-  deepabyss: "DeepAbyss",
   amanogawa: "Amanogawa",
+  uberninja: "UberNinja",
 };
 
 // アイコン用のマッピング
 const GAME_ICONS: Record<string, string> = {
   fireworks: "🎆",
-  deepabyss: "🌊",
   amanogawa: "🌟",
+  uberninja: "🥷",
 };
 
 export default function RoomLobby() {
