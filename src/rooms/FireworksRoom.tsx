@@ -14,7 +14,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { LaunchArea } from "../components/LaunchArea";
 import { RoundProgressTracker } from "../components/RoundProgressTracker";
 import { useSocket } from "../hooks/useSocket.js";
-import "./FireworksRoom.css";
+import styles from "./FireworksRoom.module.css";
 import { FireWorksRule } from "./FireworksRule";
 
 const SERVER_URL =
@@ -52,8 +52,7 @@ export default function FireworksRoom() {
     const handleResize = () => {
       const scaleX = window.innerWidth / BASE_WIDTH;
       const scaleY = window.innerHeight / BASE_HEIGHT;
-      const newScale = Math.min(scaleX, scaleY);
-      setScale(newScale);
+      setScale(Math.min(scaleX, scaleY));
     };
     window.addEventListener("resize", handleResize);
     handleResize();
@@ -110,12 +109,12 @@ export default function FireworksRoom() {
 
   if (!hasJoined) {
     return (
-      <div className="fireworks-container">
-        <div className="fireworks-entrance-wrapper">
-          <h2 className="fireworks-title">XX花火大会</h2>
-          <div className="fireworks-form-group">
+      <div className={styles.fireworksContainer}>
+        <div className={styles.fireworksEntranceWrapper}>
+          <h2 className={styles.fireworksTitle}>XX花火大会</h2>
+          <div className={styles.fireworksFormGroup}>
             <input
-              className="fireworks-input"
+              className={styles.fireworksInput}
               type="text"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
@@ -124,7 +123,7 @@ export default function FireworksRoom() {
               onKeyDown={(e) => e.key === "Enter" && handleJoinRoom()}
             />
             <button
-              className="fireworks-join-button"
+              className={styles.fireworksJoinButton}
               onClick={handleJoinRoom}
               disabled={isJoining}
             >
@@ -137,9 +136,9 @@ export default function FireworksRoom() {
   }
 
   return (
-    <div className="fireworks-viewport">
+    <div className={styles.fireworksViewport}>
       <div
-        className="game-scalable-wrapper"
+        className={styles.gameScalableWrapper}
         ref={containerRef}
         style={{
           width: `${BASE_WIDTH}px`,
@@ -148,52 +147,58 @@ export default function FireworksRoom() {
         }}
       >
         {gameResult && (
-          <div className="fireworks-result-overlay">
-            <div className="fireworks-result-modal">
-              <div className="fw-result-header">
-                <span className="fw-icon">🎇</span>
+          <div className={styles.fireworksResultOverlay}>
+            <div className={styles.fireworksResultModal}>
+              <div className={styles.fwResultHeader}>
+                <span className={styles.fwIcon}>🎇</span>
                 <h2>花火大会終了!!</h2>
-                <span className="fw-icon">🎇</span>
+                <span className={styles.fwIcon}>🎇</span>
               </div>
-              <p className="fw-result-message">{gameResult.message}</p>
-              <div className="fw-ranking-list">
+              <p className={styles.fwResultMessage}>{gameResult.message}</p>
+              <div className={styles.fwRankingList}>
                 {gameResult.rankings?.map((res: any) => (
                   <div
                     key={res.rank}
-                    className={`fw-rank-item rank-${res.rank}`}
+                    className={`${styles.fwRankItem} ${styles[`rank${res.rank}`]}`}
                   >
-                    <div className="fw-rank-num">{res.rank}位</div>
-                    <div className="fw-player-info">
-                      <span className="fw-player-name">{res.name}</span>
-                      <span className="fw-player-score">
+                    <div className={styles.fwRankNum}>{res.rank}位</div>
+                    <div className={styles.fwPlayerInfo}>
+                      <span className={styles.fwPlayerName}>{res.name}</span>
+                      <span className={styles.fwPlayerScore}>
                         {res.tokens} <small>点</small>
                       </span>
                     </div>
                   </div>
                 ))}
               </div>
-              <button className="fw-exit-button" onClick={() => navigate("/")}>
+              <button
+                className={styles.fwExitButton}
+                onClick={() => navigate("/")}
+              >
                 ロビーへ戻る
               </button>
             </div>
           </div>
         )}
 
-        <header className="fireworks-header">
-          <div className="header-logo">
-            <h1 className="logo-text">🎆 FIREWORKS</h1>
+        <header className={styles.fireworksHeader}>
+          <div className={styles.headerLogo}>
+            <h1 className={styles.logoText}>🎆 FIREWORKS</h1>
           </div>
-          <div className="header-tracker">
+          <div className={styles.headerTracker}>
             <RoundProgressTracker currentRound={currentRound} maxRound={5} />
           </div>
-          <div className="header-nav">
+          <div className={styles.headerNav}>
             <button
               onClick={() => setShowRules(true)}
-              className="nav-btn-rules"
+              className={styles.navBtnRules}
             >
               📖 遊び方
             </button>
-            <button onClick={() => navigate("/")} className="nav-btn-lobby">
+            <button
+              onClick={() => navigate("/")}
+              className={styles.navBtnLobby}
+            >
               ロビーへ
             </button>
           </div>
@@ -201,7 +206,7 @@ export default function FireworksRoom() {
 
         <FireWorksRule isOpen={showRules} onClose={() => setShowRules(false)} />
 
-        <main className="fireworks-main">
+        <main className={styles.fireworksMain}>
           <RemoteCursor
             socket={socket!}
             roomId={roomId}
@@ -217,7 +222,7 @@ export default function FireworksRoom() {
             isRelative={false}
           />
           {players.map((player, i) => (
-            <div key={player.id} className="draggable-saturated">
+            <div key={player.id} className={styles.draggableSaturated}>
               <Draggable
                 image="/images/fireworks/hanabishi.svg"
                 mask={true}
@@ -233,7 +238,7 @@ export default function FireworksRoom() {
             </div>
           ))}
 
-          <div className="sidebar-left">
+          <div className={styles.sidebarLeft}>
             <Deck
               socket={socket!}
               roomId={roomId}
@@ -241,7 +246,7 @@ export default function FireworksRoom() {
               name="[ 花火カード ]"
               playerId={currentPlayerId}
             />
-            <div className="dice-section">
+            <div className={styles.diceSection}>
               <Dice sides={3} socket={socket} diceId="move" roomId={roomId} />
               <Dice
                 sides={4}
@@ -252,29 +257,29 @@ export default function FireworksRoom() {
                   <img
                     key="f1"
                     src="/images/fireworks/weather_sunny.png"
-                    className="dice-custom-face"
+                    className={styles.diceCustomFace}
                   />,
                   <img
                     key="f2"
                     src="/images/fireworks/weather_cloud.png"
-                    className="dice-custom-face"
+                    className={styles.diceCustomFace}
                   />,
                   <img
                     key="f3"
                     src="/images/fireworks/weather_wind.png"
-                    className="dice-custom-face"
+                    className={styles.diceCustomFace}
                   />,
                   <img
                     key="f4"
                     src="/images/fireworks/weather_rain.png"
-                    className="dice-custom-face"
+                    className={styles.diceCustomFace}
                   />,
                 ]}
               />
             </div>
           </div>
 
-          <div className="fireworks-main-field">
+          <div className={styles.fireworksMainField}>
             <PlayField
               socket={socket}
               roomId={roomId}
@@ -284,10 +289,10 @@ export default function FireworksRoom() {
               myPlayerId={myPlayerId}
               layoutMode="free"
             />
-            <LaunchArea></LaunchArea>
+            <LaunchArea />
           </div>
 
-          <div className="sidebar-right">
+          <div className={styles.sidebarRight}>
             <ScoreBoard
               socket={socket!}
               roomId={roomId}
@@ -297,7 +302,7 @@ export default function FireworksRoom() {
             />
           </div>
 
-          <div className="token-pos">
+          <div className={styles.tokenPos}>
             <TokenStore
               socket={socket!}
               roomId={roomId}

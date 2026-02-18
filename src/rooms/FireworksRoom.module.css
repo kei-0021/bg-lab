@@ -1,0 +1,430 @@
+/* ==========================================================================
+   FIREWORKS ROOM - 職人専用・地平線完全固定版
+   ========================================================================== */
+
+.fireworksViewport {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  background: #0a0a0a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fireworksContainer {
+  min-height: 100vh;
+  background: radial-gradient(
+    circle at center,
+    #1b1e4e 0%,
+    #0c0b2e 50%,
+    #05010a 100%
+  ) !important;
+  font-family: "Shippori Mincho", serif;
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.fireworksEntranceWrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 100%;
+}
+
+.fireworksTitle {
+  color: #fffdf0 !important;
+  letter-spacing: 0.8em;
+  margin-right: -0.8em;
+  font-size: 64px;
+  margin-bottom: 60px;
+  font-weight: 900;
+  text-align: center;
+  text-shadow:
+    0 0 15px rgba(255, 215, 0, 0.9),
+    0 0 30px rgba(255, 215, 0, 0.6),
+    0 0 50px rgba(255, 165, 0, 0.4) !important;
+  font-family: "Sawarabi Mincho", "Yu Mincho", serif;
+}
+
+.fireworksFormGroup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+}
+
+.fireworksInput {
+  padding: 18px 24px;
+  font-size: 24px;
+  background: #ffffff;
+  border: 4px solid #ffc300;
+  color: #000;
+  text-align: center;
+  outline: none;
+  width: 400px;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(255, 195, 0, 0.4);
+}
+
+.fireworksJoinButton {
+  background: #ffc300;
+  color: #000;
+  border: none;
+  padding: 18px 60px;
+  font-size: 26px;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.fireworksJoinButton:hover {
+  background: #fff;
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+}
+
+/* --- PlayField & 地平線の矯正エリア --- */
+
+.fireworksMainField :global(.rg-playfield) {
+  position: relative !important;
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 16 / 9;
+  max-height: 85vh;
+  margin: 0 auto !important;
+  background-color: black !important;
+  border: 1px solid white !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  padding: 0 !important;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5) !important;
+  background: radial-gradient(
+    circle at 50% 100%,
+    #151540 0%,
+    #000005 100%
+  ) !important;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(
+      to bottom,
+      transparent 33%,
+      rgba(255, 255, 255, 0.15) 33%,
+      transparent 33.5%
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 66%,
+      rgba(255, 255, 255, 0.15) 66%,
+      transparent 66.5%
+    ),
+    radial-gradient(
+      ellipse at 50% 105%,
+      rgba(255, 195, 0, 0.1) 0%,
+      transparent 70%
+    ) !important;
+  background-size:
+    200px 100%,
+    100% 100%,
+    100% 100%,
+    100% 150px !important;
+  background-position: center bottom !important;
+  background-repeat: repeat-x, no-repeat, no-repeat, no-repeat !important;
+}
+
+/* ここが重要！ PlayField 自体の疑似要素として地平線を描く */
+.fireworksMainField :global(.rg-playfield)::after {
+  content: "" !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 4px !important;
+  background: #ffc300 !important;
+  box-shadow: 0 0 15px #ffc300 !important;
+  z-index: 10 !important;
+  pointer-events: none !important;
+}
+
+.fireworksMainField :global(.rg-playfield)::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  opacity: 0.05 !important;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E") !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+.fireworksMainField :global(.rg-playfield-title) {
+  color: #ffffff !important;
+  font-size: 30px !important;
+  margin: 20px 0 !important;
+  flex-shrink: 0 !important;
+  z-index: 5 !important;
+}
+
+.fireworksMainField :global(.rg-playfield-container) {
+  width: 100% !important;
+  flex-grow: 1 !important;
+  display: block !important;
+  position: relative !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.fireworksMainField :global(.rg-playfield-card-wrapper) {
+  position: absolute !important;
+  width: 126px !important;
+  height: 175px !important;
+  flex-shrink: 0 !important;
+  transition: none !important;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.fireworksMainField :global(.rg-playfield-card-wrapper img) {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.fireworksMainField :global(.rg-card-text-content) {
+  font-size: 25px !important;
+  pointer-events: none !important;
+}
+
+/* --- レイアウトパーツ --- */
+
+.fireworksHeader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 110px;
+  padding: 20px 40px;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent);
+  box-sizing: border-box;
+}
+
+.logoText {
+  color: #ebebeb;
+  margin: 0;
+  font-size: 35px;
+  text-shadow: 0 0 10px rgba(255, 195, 0, 0.8);
+}
+
+.headerLogo {
+  flex: 0 0 300px;
+}
+.headerTracker {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.headerNav {
+  flex: 0 0 250px;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.navBtnRules {
+  background: #ffc300;
+  color: #000;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 15px;
+  box-shadow: 0 0 10px rgba(255, 195, 0, 0.4);
+}
+
+.navBtnLobby {
+  background: #000;
+  color: #ffc300;
+  border: 1px solid #ffc300;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.fireworksMain {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  padding: 130px 40px 40px 40px;
+  box-sizing: border-box;
+  gap: 20px;
+}
+
+.sidebarLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.fireworksMainField {
+  flex: 1;
+  position: relative;
+}
+
+.sidebarRight {
+  width: 480px;
+  flex-shrink: 0;
+}
+
+.tokenPos {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  z-index: 5;
+}
+
+/* --- スケーリング・演出 --- */
+
+.gameScalableWrapper {
+  position: relative;
+  flex-shrink: 0;
+  transform-origin: center;
+}
+
+.diceSection {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.diceCustomFace {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.draggableSaturated > div {
+  filter: saturate(0.8) brightness(1.5) contrast(0.8) !important;
+}
+
+.draggableSaturated img {
+  opacity: 0.4 !important;
+}
+
+/* --- リザルト画面 --- */
+
+.fireworksResultOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  backdrop-filter: blur(10px);
+}
+
+.fireworksResultModal {
+  background: #1a1a2e;
+  border: 3px double #e94560;
+  border-radius: 15px;
+  padding: 40px;
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(233, 69, 96, 0.4);
+}
+
+.fwResultHeader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.fwResultHeader h2 {
+  color: #f9ed69;
+  font-size: 2.2rem;
+  margin: 0;
+  text-shadow: 0 0 10px rgba(249, 237, 105, 0.6);
+}
+
+.fwIcon {
+  font-size: 1.8rem;
+}
+.fwResultMessage {
+  color: #fff;
+  opacity: 0.9;
+  margin-bottom: 30px;
+}
+.fwRankingList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fwRankItem {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px 20px;
+  border-radius: 10px;
+  gap: 20px;
+}
+
+.rank1 {
+  background: rgba(249, 237, 105, 0.15);
+  border: 1px solid #f9ed69;
+}
+
+.fwRankNum {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #e94560;
+  width: 50px;
+  flex-shrink: 0;
+  margin-right: 15px;
+}
+
+.fwPlayerInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.fwPlayerName {
+  font-size: 1.2rem;
+  color: #eee;
+}
+.fwPlayerScore {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.fwExitButton {
+  margin-top: 30px;
+  padding: 12px 40px;
+  background: transparent;
+  border: 2px solid #e94560;
+  color: #e94560;
+  border-radius: 50px;
+  font-weight: bold;
+  cursor: pointer;
+}

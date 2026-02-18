@@ -1,0 +1,191 @@
+.ninjaViewport {
+  width: 100vw;
+  height: 100vh;
+  background-color: #0d0d0d;
+  background-image: radial-gradient(circle at 50% 50%, #1e1e1e 0%, #000 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  font-family: "Hiragino Mincho ProN", "MS Mincho", serif;
+}
+
+.gameScalableWrapper {
+  background: url("/images/ninja/dojo_floor_texture.jpg") center/cover;
+  background-color: #1a150f;
+  position: relative;
+  box-shadow:
+    0 0 50px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(139, 0, 0, 0.2);
+  border: 4px solid #2c241a;
+  transform-origin: center center;
+}
+
+.ninjaHeader {
+  height: 80px;
+  background: linear-gradient(to bottom, #1a1a1a, #000);
+  border-bottom: 2px solid #3d0000;
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+  justify-content: space-between;
+}
+
+.logoText {
+  font-size: 2rem;
+  letter-spacing: 0.2em;
+  color: #ff3e3e;
+  text-shadow:
+    2px 2px 0px #000,
+    0 0 10px rgba(255, 62, 62, 0.5);
+  margin: 0;
+}
+
+.sidebarLeft,
+.sidebarRight {
+  width: 280px;
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(5px);
+  border: 1px solid #333;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sidebarLeft {
+  position: absolute;
+  left: 40px;
+  top: 120px;
+}
+.sidebarRight {
+  position: absolute;
+  right: 40px;
+  top: 120px;
+}
+
+.diceSection {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  background: rgba(40, 40, 40, 0.5);
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #ff3e3e;
+}
+
+.diceCustomFace {
+  background: #222;
+  color: #fff;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.ninjaPieceWrapper {
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.7));
+}
+
+.tokenPos {
+  position: absolute;
+  bottom: 30px;
+  right: 320px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: 1px solid #ff3e3e;
+  color: #fff;
+}
+
+/* 入場画面 */
+.ninjaContainer {
+  width: 100vw;
+  height: 100vh;
+  background: #000 url("/images/ninja/entrance_bg.jpg") center/cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ninjaEntranceWrapper {
+  background: rgba(0, 0, 0, 0.85);
+  padding: 60px;
+  border-radius: 4px;
+  border-top: 4px solid #ff3e3e;
+  text-align: center;
+}
+
+.ninjaTitle {
+  color: #fff;
+  font-size: 3rem;
+  margin-bottom: 40px;
+  letter-spacing: 0.5em;
+  text-shadow: 0 0 20px #ff3e3e;
+}
+
+.ninjaInput {
+  background: #111;
+  border: 1px solid #444;
+  color: #fff;
+  padding: 15px 25px;
+  font-size: 1.5rem;
+  margin-right: 15px;
+  outline: none;
+}
+
+.ninjaJoinButton {
+  background: #8b0000;
+  color: #fff;
+  padding: 15px 40px;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.ninjaJoinButton:hover {
+  background: #ff3e3e;
+  transform: scale(1.05);
+}
+
+/* リザルト */
+.ninjaResultOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ninjaResultModal {
+  background: #fdf5e6;
+  color: #1a1a1a;
+  padding: 50px;
+  border: 10px double #3d0000;
+  text-align: center;
+}
+
+.ninjaRankItem {
+  display: flex;
+  padding: 15px;
+  margin: 10px 0;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.rank1 {
+  background: linear-gradient(90deg, #fff3b0, transparent);
+  border-left: 5px solid #d4af37;
+}
+
+.navBtnLobby {
+  background: #000;
+  color: #ff3e3e;
+  border: 1px solid #ff3e3e;
+  padding: 8px 16px;
+  cursor: pointer;
+}

@@ -11,7 +11,7 @@ import {
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSocket } from "../hooks/useSocket.js";
-import "./UberNinjaRoom.css";
+import styles from "./UberNinjaRoom.module.css"; // タイポ修正
 
 const SERVER_URL =
   import.meta.env.MODE === "development"
@@ -42,7 +42,6 @@ export function UberNinjaRoom() {
   const [gameResult, setGameResult] = useState<any>(null);
   const [scale, setScale] = useState<number>(1);
 
-  // レスポンシブ対応のスケール計算
   useEffect(() => {
     const handleResize = () => {
       const scaleX = window.innerWidth / BASE_WIDTH;
@@ -59,7 +58,7 @@ export function UberNinjaRoom() {
     setIsJoining(true);
     socket.emit("room:join", {
       roomId,
-      gamePresetId: "uber-ninja", // プリセットIDを変更
+      gamePresetId: "uber-ninja",
       playerName: userName.trim(),
     });
   }, [socket, roomId, userName, isJoining]);
@@ -101,15 +100,14 @@ export function UberNinjaRoom() {
 
   if (!roomId) return null;
 
-  // 入場画面（忍びの里への入り口）
   if (!hasJoined) {
     return (
-      <div className="ninja-container">
-        <div className="ninja-entrance-wrapper">
-          <h2 className="ninja-title">忍びの里：極</h2>
-          <div className="ninja-form-group">
+      <div className={styles.ninjaContainer}>
+        <div className={styles.ninjaEntranceWrapper}>
+          <h2 className={styles.ninjaTitle}>忍びの里：極</h2>
+          <div className={styles.ninjaFormGroup}>
             <input
-              className="ninja-input"
+              className={styles.ninjaInput}
               type="text"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
@@ -118,7 +116,7 @@ export function UberNinjaRoom() {
               onKeyDown={(e) => e.key === "Enter" && handleJoinRoom()}
             />
             <button
-              className="ninja-join-button"
+              className={styles.ninjaJoinButton}
               onClick={handleJoinRoom}
               disabled={isJoining}
             >
@@ -131,9 +129,9 @@ export function UberNinjaRoom() {
   }
 
   return (
-    <div className="ninja-viewport">
+    <div className={styles.ninjaViewport}>
       <div
-        className="game-scalable-wrapper"
+        className={styles.gameScalableWrapper}
         ref={containerRef}
         style={{
           width: `${BASE_WIDTH}px`,
@@ -141,26 +139,25 @@ export function UberNinjaRoom() {
           transform: `scale(${scale})`,
         }}
       >
-        {/* リザルト画面 */}
         {gameResult && (
-          <div className="ninja-result-overlay">
-            <div className="ninja-result-modal">
-              <div className="ninja-result-header">
-                <span className="ninja-icon">⚔️</span>
+          <div className={styles.ninjaResultOverlay}>
+            <div className={styles.ninjaResultModal}>
+              <div className={styles.ninjaResultHeader}>
+                <span className={styles.ninjaIcon}>⚔️</span>
                 <h2>任務完了!!</h2>
-                <span className="ninja-icon">⚔️</span>
+                <span className={styles.ninjaIcon}>⚔️</span>
               </div>
-              <p className="ninja-result-message">{gameResult.message}</p>
-              <div className="ninja-ranking-list">
+              <p className={styles.ninjaResultMessage}>{gameResult.message}</p>
+              <div className={styles.ninjaRankingList}>
                 {gameResult.rankings?.map((res: any) => (
                   <div
                     key={res.rank}
-                    className={`ninja-rank-item rank-${res.rank}`}
+                    className={`${styles.ninjaRankItem} ${styles[`rank${res.rank}`]}`}
                   >
-                    <div className="ninja-rank-num">{res.rank}位</div>
-                    <div className="ninja-player-info">
-                      <span className="ninja-player-name">{res.name}</span>
-                      <span className="ninja-player-score">
+                    <div className={styles.ninjaRankNum}>{res.rank}位</div>
+                    <div className={styles.ninjaPlayerInfo}>
+                      <span className={styles.ninjaPlayerName}>{res.name}</span>
+                      <span className={styles.ninjaPlayerScore}>
                         {res.tokens} <small>貫</small>
                       </span>
                     </div>
@@ -168,7 +165,7 @@ export function UberNinjaRoom() {
                 ))}
               </div>
               <button
-                className="ninja-exit-button"
+                className={styles.ninjaExitButton}
                 onClick={() => navigate("/")}
               >
                 里を去る
@@ -177,18 +174,21 @@ export function UberNinjaRoom() {
           </div>
         )}
 
-        <header className="ninja-header">
-          <div className="header-logo">
-            <h1 className="logo-text">🥷 UBER NINJA</h1>
+        <header className={styles.ninjaHeader}>
+          <div className={styles.headerLogo}>
+            <h1 className={styles.logoText}>🥷 UBER NINJA</h1>
           </div>
-          <div className="header-nav">
-            <button onClick={() => navigate("/")} className="nav-btn-lobby">
+          <div className={styles.headerNav}>
+            <button
+              onClick={() => navigate("/")}
+              className={styles.navBtnLobby}
+            >
               撤退
             </button>
           </div>
         </header>
 
-        <main className="ninja-main">
+        <main className={styles.ninjaMain}>
           <RemoteCursor
             socket={socket!}
             roomId={roomId}
@@ -204,9 +204,8 @@ export function UberNinjaRoom() {
             isRelative={false}
           />
 
-          {/* プレイヤーの駒（忍者） */}
           {players.map((player, i) => (
-            <div key={player.id} className="ninja-piece-wrapper">
+            <div key={player.id} className={styles.ninjaPieceWrapper}>
               <Draggable
                 image="/images/ninja/ninja_icon.svg"
                 mask={true}
@@ -222,7 +221,7 @@ export function UberNinjaRoom() {
             </div>
           ))}
 
-          <div className="sidebar-left">
+          <div className={styles.sidebarLeft}>
             <Deck
               socket={socket!}
               roomId={roomId}
@@ -230,7 +229,7 @@ export function UberNinjaRoom() {
               name="[ 忍術の書 ]"
               playerId={currentPlayerId}
             />
-            <div className="dice-section">
+            <div className={styles.diceSection}>
               <Dice
                 sides={6}
                 socket={socket}
@@ -243,16 +242,16 @@ export function UberNinjaRoom() {
                 diceId="environment"
                 roomId={roomId}
                 customFaces={[
-                  <div key="e1" className="dice-custom-face">
+                  <div key="e1" className={styles.diceCustomFace}>
                     🥷 昼
                   </div>,
-                  <div key="e2" className="dice-custom-face">
+                  <div key="e2" className={styles.diceCustomFace}>
                     🌙 夜
                   </div>,
-                  <div key="e3" className="dice-custom-face">
+                  <div key="e3" className={styles.diceCustomFace}>
                     🌫️ 霧
                   </div>,
-                  <div key="e4" className="dice-custom-face">
+                  <div key="e4" className={styles.diceCustomFace}>
                     🏮 警戒
                   </div>,
                 ]}
@@ -260,7 +259,7 @@ export function UberNinjaRoom() {
             </div>
           </div>
 
-          <div className="sidebar-right">
+          <div className={styles.sidebarRight}>
             <ScoreBoard
               socket={socket!}
               roomId={roomId}
@@ -270,7 +269,7 @@ export function UberNinjaRoom() {
             />
           </div>
 
-          <div className="token-pos">
+          <div className={styles.tokenPos}>
             <TokenStore
               socket={socket!}
               roomId={roomId}
