@@ -280,7 +280,9 @@ export default function FireworksRoom() {
             </div>
           </div>
 
-          <div className={fieldStyles.fireworksMainField}>
+          <div
+            className={`${fieldStyles.baseField} ${fieldStyles.fireworksCircleField}`}
+          >
             <PlayField
               socket={socket}
               roomId={roomId}
