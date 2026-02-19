@@ -1,0 +1,148 @@
+/* --- MainField (通常の四角いフィールド定義) --- */
+.fireworksMainField :global(.rg-playfield) {
+  position: relative !important;
+  width: 100% !important;
+  height: 440px !important;
+  aspect-ratio: 16 / 9;
+  max-height: 85vh;
+  margin: 0 auto !important;
+  background-color: black !important;
+  border: 1px solid white !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  padding: 0 !important;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5) !important;
+  background: radial-gradient(
+    circle at 50% 100%,
+    #151540 0%,
+    #000005 100%
+  ) !important;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(
+      to bottom,
+      transparent 33%,
+      rgba(255, 255, 255, 0.15) 33%,
+      transparent 33.5%
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 66%,
+      rgba(255, 255, 255, 0.15) 66%,
+      transparent 66.5%
+    ),
+    radial-gradient(
+      ellipse at 50% 105%,
+      rgba(255, 195, 0, 0.1) 0%,
+      transparent 70%
+    ) !important;
+  background-size:
+    200px 100%,
+    100% 100%,
+    100% 100%,
+    100% 150px !important;
+  background-position: center bottom !important;
+  background-repeat: repeat-x, no-repeat, no-repeat, no-repeat !important;
+}
+
+.fireworksMainField :global(.rg-playfield)::after {
+  content: "" !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 4px !important;
+  background: #ffc300 !important;
+  box-shadow: 0 0 15px #ffc300 !important;
+  z-index: 10 !important;
+  pointer-events: none !important;
+}
+
+.fireworksMainField :global(.rg-playfield)::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  opacity: 0.05 !important;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E") !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+.fireworksMainField :global(.rg-playfield-title) {
+  font-size: 30px !important;
+  position: absolute !important;
+  top: 20px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  margin: 0 !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+}
+
+.fireworksMainField :global(.rg-playfield-container) {
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  overflow: visible !important;
+  z-index: 5 !important;
+}
+
+.fireworksMainField :global(.rg-playfield-card-wrapper) {
+  position: absolute !important;
+  width: 80px !important;
+  height: 112px !important;
+  flex-shrink: 0 !important;
+  transition: none !important;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  z-index: 100 !important;
+}
+
+.fireworksMainField :global(.rg-playfield-card-wrapper img) {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.fireworksMainField :global(.rg-card-text-content) {
+  font-size: 25px !important;
+  pointer-events: none !important;
+}
+
+/* --- CircleField (円形ボード定義) --- */
+.fireworksCircleField :global(.rg-playfield) {
+  width: 500px !important;
+  height: 500px !important;
+  aspect-ratio: 1 / 1 !important;
+  border-radius: 50% !important;
+  border: 4px solid #ffc300 !important;
+  position: relative !important;
+  margin: 0 auto !important;
+  background: radial-gradient(circle, #151540 0%, #000 70%) !important;
+  box-shadow: 0 0 50px rgba(255, 195, 0, 0.3) !important;
+  overflow: visible !important;
+}
+
+.fireworksCircleField :global(.rg-playfield-container) {
+  border-radius: 50% !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: visible !important;
+  z-index: 999 !important;
+  pointer-events: auto !important;
+}
+
+.fireworksCircleField :global(.rg-playfield-card-wrapper) {
+  z-index: 1000 !important;
+  cursor: grab !important;
+  touch-action: none;
+}
+
+.fireworksCircleField :global(.rg-playfield-card-wrapper:active) {
+  cursor: grabbing !important;
+}
