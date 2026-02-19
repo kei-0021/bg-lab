@@ -130,10 +130,6 @@
   z-index: 5 !important;
 }
 
-.fireworksMainField :global(.rg-playfield-card-wrapper) {
-  z-index: 100 !important;
-}
-
 /* --- CircleField --- */
 .fireworksCircleField :global(.rg-playfield) {
   width: 500px !important;
@@ -154,7 +150,6 @@
 
 .fireworksCircleField :global(.rg-playfield-container) {
   border-radius: 50% !important;
-  z-index: 999 !important;
   pointer-events: auto !important;
 }
 
