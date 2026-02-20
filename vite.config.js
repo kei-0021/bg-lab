@@ -9,7 +9,7 @@ export default defineConfig({
     react(),
     viteStaticCopy({
       targets: [
-        { src: "server.js", dest: "." },
+        { src: "server.ts", dest: "." },
         { src: "server/*", dest: "server" },
       ],
     }),

@@ -8,7 +8,7 @@
     "clean": "rm -rf dist node_modules/.cache",
     "build": "pnpm --filter react-game-ui run build && vite build",
     "preview": "vite preview",
-    "server": "tsx tests/server.ts",
+    "server": "tsx src/server.ts",
     "dev:multi": "concurrently \"npm run server\" \"npm run dev\""
   },
   "devDependencies": {
