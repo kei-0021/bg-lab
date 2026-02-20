@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --host",
     "clean": "rm -rf dist node_modules/.cache",
-    "build": "pnpm --filter react-game-ui run build && vite build",
+    "build": "pnpm --filter react-game-ui run build && vite build && tsc src/server.ts --outDir dist --module NodeNext --target ESNext --moduleResolution NodeNext --allowJs --skipLibCheck --esModuleInterop",
     "preview": "vite preview",
     "server": "tsx src/server.ts",
     "dev:multi": "concurrently \"npm run server\" \"npm run dev\""
