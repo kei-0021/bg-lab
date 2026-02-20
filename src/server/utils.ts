@@ -1,13 +1,13 @@
 import * as fs from "fs/promises";
 import path from "path";
 
-export async function loadJson(relativePath, dirname) {
+export async function loadJson(relativePath: string, dirname: string): Promise<any> {
   const jsonPath = path.join(dirname, relativePath);
   const data = await fs.readFile(jsonPath, "utf-8");
   return JSON.parse(data);
 }
 
-export function assertCards(cards, deckId) {
+export function assertCards(cards: any[], deckId: string): any[] {
   return cards.map((c) => {
     if (!["hand", "field", "drawn"].includes(c.drawLocation)) {
       throw new Error(`[ASSERT FAILED] deck: ${deckId}, id: ${c.id}`);
@@ -16,8 +16,8 @@ export function assertCards(cards, deckId) {
   });
 }
 
-export function createUniqueCards(cards, numSets) {
-  const allCards = [];
+export function createUniqueCards(cards: any[], numSets: number): any[] {
+  const allCards: any[] = [];
   for (let i = 1; i <= numSets; i++) {
     cards.forEach((card) =>
       allCards.push({ ...card, id: `${card.id}-set${i}` }),
@@ -26,7 +26,7 @@ export function createUniqueCards(cards, numSets) {
   return allCards;
 }
 
-export function createTokenStore(id, name, templates, count) {
+export function createTokenStore(id: string, name: string, templates: any[], count: number): any[] {
   return [
     {
       tokenStoreId: id,
@@ -42,12 +42,12 @@ export function createTokenStore(id, name, templates, count) {
   ];
 }
 
-export function createBoardLayout(baseCells, cellCounts, rows, cols) {
-  const templateMap = baseCells.reduce((map, t) => {
+export function createBoardLayout(baseCells: any[], cellCounts: Record<string, number>, rows: number, cols: number): any[][] {
+  const templateMap = baseCells.reduce((map: Record<string, any>, t) => {
     map[t.templateId] = t;
     return map;
   }, {});
-  const finalCells = [];
+  const finalCells: any[] = [];
   for (const tid in cellCounts) {
     const template = templateMap[tid];
     if (!template) continue;
@@ -55,7 +55,7 @@ export function createBoardLayout(baseCells, cellCounts, rows, cols) {
       finalCells.push({ ...template, id: `${tid}-${i}` });
     }
   }
-  const cells2D = [];
+  const cells2D: any[][] = [];
   for (let r = 0; r < rows; r++) {
     cells2D.push(finalCells.slice(r * cols, (r + 1) * cols));
   }

@@ -1,5 +1,5 @@
 // 深海ゲーム専用の定数
-const CELL_COUNTS = {
+const CELL_COUNTS: Record<string, number> = {
   RA: 5,
   RB: 10,
   B_NORM: 4,
@@ -31,18 +31,24 @@ const DEEP_SEA_RESOURCES = [
   },
 ];
 
+interface SetupTools {
+  assertCards: (cards: any[], deckId: string) => any[];
+  createUniqueCards: (cards: any[], numSets: number) => any[];
+  createTokenStore: (id: string, name: string, templates: any[], count: number) => any[];
+  createBoardLayout: (baseCells: any[], cellCounts: Record<string, number>, rows: number, cols: number) => any[][];
+}
+
 export const deepAbyssConfig = {
   id: "deepabyss",
   dataFiles: {
-    // 修正：dist/server.js から見て一つ上の public を指す
     actionCards: "../public/data/deepSeaActionCards.json",
     cells: "../public/data/deepSeaCells.json",
     speciesCards: "../public/data/deepSeaSpeciesCards.json",
   },
   setup: (
-    data,
-    { assertCards, createUniqueCards, createTokenStore, createBoardLayout },
-  ) => {
+    data: Record<string, any>,
+    { assertCards, createUniqueCards, createTokenStore, createBoardLayout }: SetupTools,
+  ): any => {
     // データ整形
     const deepSeaSpeciesCards = assertCards(
       data.speciesCards,

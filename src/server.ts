@@ -1,9 +1,8 @@
 import path from "path";
-import { GameServer } from "react-game-ui/server";
+import { GameServer, type GameServerOptions } from "react-game-ui/server";
 import { fileURLToPath } from "url";
 
 // 必要な関数だけを明示的にインポート
-// ビルド後は dist/server/ に配置されるため、このパスで正解
 import {
   assertCards,
   createBoardLayout,
@@ -16,7 +15,7 @@ import {
 import { deepAbyssConfig } from "./server/deepAbyssConfig.js";
 import { fireworksConfig } from "./server/fireworksConfig.js";
 
-// 共有データのインポート（publicはビルド時にルートに維持される前提）
+// 共有データのインポート
 import { cardEffects } from "../public/data/cardEffects.js";
 import { cellEffects } from "../public/data/cellEffects.js";
 import { customEvents } from "../public/data/customEvents.js";
@@ -31,24 +30,22 @@ const setupTools = {
   createBoardLayout,
 };
 
-async function startServer() {
-  const gamePresets = {};
+async function startServer(): Promise<void> {
+  const gamePresets: Record<string, any> = {};
   const configs = [fireworksConfig, deepAbyssConfig];
 
   for (const config of configs) {
-    const loadedData = {};
+    const loadedData: Record<string, any> = {};
     for (const [key, relPath] of Object.entries(config.dataFiles)) {
-      // relPath は "../public/data/xxx.json" である必要があります
-      loadedData[key] = await loadJson(relPath, __dirname);
+      loadedData[key] = await loadJson(relPath as string, __dirname);
     }
 
     // 各ゲームのプリセットを生成
     gamePresets[config.id] = config.setup(loadedData, setupTools);
   }
 
-  const demoServer = new GameServer({
+  const options: GameServerOptions = {
     port: 4000,
-    // server.jsがdist直下にあるため、パスは__dirname（dist）そのものを指定
     clientDistPath: __dirname,
     libDistPath: __dirname,
     corsOrigins: [
@@ -66,14 +63,15 @@ async function startServer() {
       cell: false,
       custom_event: false,
     },
-    onServerStart: (url) => console.log(`🎮 Server running at: ${url}`),
-  });
+    onServerStart: (url: string) => console.log(`🎮 Server running at: ${url}`),
+  };
+
+  const demoServer = new GameServer(options);
 
   demoServer.start();
 }
 
-startServer().catch((err) => {
+startServer().catch((err: unknown) => {
   console.error("致命的なエラー: サーバー起動に失敗しました。", err);
-  // Render等の環境で異常終了を検知させるため
   process.exit(1);
 });

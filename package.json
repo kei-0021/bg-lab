@@ -5,15 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "clean": "rimraf dist node_modules/.cache apps/react-game-ui/dist apps/react-game-ui/types",
+    "clean": "rm -rf dist node_modules/.cache",
     "build": "pnpm --filter react-game-ui run build && vite build",
     "preview": "vite preview",
-    "start": "node dist/server.js",
-    "dev:multi": "concurrently \"npm run start\" \"vite --host\""
+    "server": "tsx tests/server.ts",
+    "dev:multi": "concurrently \"npm run server\" \"npm run dev\""
   },
   "devDependencies": {
     "@rollup/plugin-replace": "^6.0.3",
     "@rollup/rollup-linux-x64-gnu": "^4.57.1",
+    "@types/node": "^25.3.0",
     "@types/react": "^18.3.28",
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react": "^5.1.4",
@@ -23,6 +24,7 @@
     "rimraf": "^6.1.3",
     "rollup": "4.20.0",
     "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typescript": "~5.8.3",
     "vite": "^7.3.1",
     "vite-plugin-node-polyfills": "^0.24.0",

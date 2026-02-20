@@ -1,6 +1,6 @@
-export const cellEffects = {
+export const cellEffects: Record<string, (params: any) => void> = {
   // 探索者が見つけたレリックタイル (💎)
-  "Relic Site": ({ updateResource, playerId }) => {
+  "Relic Site": ({ updateResource, playerId }: any) => {
     // ✅ playerId を追加
     // プレイヤーのリソースID 'artifact' に +1 する
     if (playerId) {
@@ -9,7 +9,7 @@ export const cellEffects = {
   },
 
   // 資源（エネルギー）が豊富なタイル (🫧)
-  "Energy Vein": ({ updateResource, playerId }) => {
+  "Energy Vein": ({ updateResource, playerId }: any) => {
     // ✅ playerId を追加
     // プレイヤーのリソースID 'OXYGEN' に +2 する
     if (playerId) {
@@ -18,7 +18,7 @@ export const cellEffects = {
   },
 
   // 危険な荒地タイル（🌋） (ペナルティ)
-  "特殊地形 (火山)": ({ updateResource, playerId }) => {
+  "特殊地形 (火山)": ({ updateResource, playerId }: any) => {
     // ✅ playerId を追加
     if (playerId) {
       updateResource(playerId, "OXYGEN", -100);
@@ -33,7 +33,7 @@ export const cellEffects = {
   },
 
   // ランドマークタイル (🔱)
-  "Abyss Landmark": ({ updateResource, playerId }) => {
+  "Abyss Landmark": ({ updateResource, playerId }: any) => {
     // ✅ playerId を追加
     if (playerId) {
       updateResource(playerId, "ARTIFACT", 5);
