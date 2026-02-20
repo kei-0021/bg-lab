@@ -29,7 +29,6 @@
     "vite-plugin-static-copy": "^3.2.0"
   },
   "dependencies": {
-    "kei-0021@issue-12@latest": "link:github/kei-0021@issue-12@latest",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-game-ui": "github:kei-0021/react-game-ui#issue-17",
