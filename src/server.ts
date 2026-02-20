@@ -36,15 +36,19 @@ async function startServer(): Promise<void> {
   for (const config of configs) {
     const loadedData: Record<string, any> = {};
     for (const [key, relPath] of Object.entries(config.dataFiles)) {
-      let finalPath = relPath as string;
+      let finalPath: string;
 
       if (isProduction) {
-        // Renderの本番環境パス /opt/render/project/src/dist/data/ を絶対パスで解決
-        const fileName = path.basename(finalPath);
+        // loadJsonの内部処理に邪魔されないよう、ここですべてを完結させる
+        const fileName = path.basename(relPath as string);
         finalPath = path.join(process.cwd(), "dist", "data", fileName);
-      }
 
-      loadedData[key] = await loadJson(finalPath, __dirname);
+        // Render環境では絶対パスをそのまま渡すため、第2引数を空にする戦略
+        loadedData[key] = await loadJson(finalPath, "");
+      } else {
+        // 開発環境（tsx）
+        loadedData[key] = await loadJson(relPath as string, __dirname);
+      }
     }
 
     gamePresets[config.id] = config.setup(loadedData, setupTools);
@@ -52,7 +56,6 @@ async function startServer(): Promise<void> {
 
   const options: GameServerOptions = {
     port: Number(process.env.PORT) || 4000,
-    // clientDistPathも絶対パスで安全に指定
     clientDistPath: path.join(process.cwd(), "dist"),
     libDistPath: __dirname,
     corsOrigins: [
