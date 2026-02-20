@@ -31,7 +31,6 @@ async function startServer(): Promise<void> {
   const gamePresets: Record<string, any> = {};
   const configs = [fireworksConfig, deepAbyssConfig];
 
-  // 本番環境フラグ
   const isProduction = process.env.NODE_ENV === "production";
 
   for (const config of configs) {
@@ -39,9 +38,10 @@ async function startServer(): Promise<void> {
     for (const [key, relPath] of Object.entries(config.dataFiles)) {
       let finalPath = relPath as string;
 
-      // Render(本番)では ../public/data/... ではなく ./data/... を見るように補正
       if (isProduction) {
-        finalPath = finalPath.replace("../public/", "./");
+        // Renderの本番環境パス /opt/render/project/src/dist/data/ を絶対パスで解決
+        const fileName = path.basename(finalPath);
+        finalPath = path.join(process.cwd(), "dist", "data", fileName);
       }
 
       loadedData[key] = await loadJson(finalPath, __dirname);
@@ -51,9 +51,9 @@ async function startServer(): Promise<void> {
   }
 
   const options: GameServerOptions = {
-    // Renderでは環境変数PORTが優先される
     port: Number(process.env.PORT) || 4000,
-    clientDistPath: path.resolve(__dirname, "../dist"), // クライアント資産の場所を明示
+    // clientDistPathも絶対パスで安全に指定
+    clientDistPath: path.join(process.cwd(), "dist"),
     libDistPath: __dirname,
     corsOrigins: [
       "http://localhost:5173",
