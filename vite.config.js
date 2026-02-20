@@ -8,7 +8,10 @@ export default defineConfig({
   plugins: [
     react(),
     viteStaticCopy({
-      targets: [{ src: "server/*", dest: "server" }],
+      targets: [
+        { src: "server/*", dest: "server" },
+        { src: "../public/data/*", dest: "data" },
+      ],
     }),
   ],
   build: {
