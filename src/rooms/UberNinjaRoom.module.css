@@ -2,8 +2,13 @@
 .ninjaViewport {
   width: 100vw;
   height: 100vh;
-  background-color: #0d0d0d;
-  background-image: radial-gradient(circle at 50% 50%, #1e1e1e 0%, #000 100%);
+  /* 蛍光感を抑えた、深く鮮やかな森の緑 */
+  background-color: #1a3a1a;
+  background-image: radial-gradient(
+    circle at 50% 50%,
+    #2d5a27 0%,
+    #0a1a0a 100%
+  );
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,14 +18,13 @@
 
 .gameScalableWrapper {
   background: url("/images/ninja/dojo_floor_texture.jpg") center/cover;
-  background-color: #1a150f;
+  background-color: #243520; /* 苔むした岩のような緑 */
   position: relative;
   box-shadow:
-    0 0 50px rgba(0, 0, 0, 0.8),
-    0 0 20px rgba(139, 0, 0, 0.2);
-  border: 4px solid #2c241a;
+    0 0 80px rgba(0, 0, 0, 0.8),
+    0 0 40px rgba(50, 100, 40, 0.4);
+  border: 4px solid #0d1a0d;
   transform-origin: center center;
-  /* flex を追加してヘッダーとメインを縦に並べる */
   display: flex;
   flex-direction: column;
 }
@@ -28,8 +32,9 @@
 /* --- ヘッダー --- */
 .ninjaHeader {
   height: 80px;
-  background: linear-gradient(to bottom, #1a1a1a, #000);
-  border-bottom: 2px solid #3d0000;
+  /* 落ち着いた常盤色のグラデーション */
+  background: linear-gradient(to bottom, #2d5a27, #1a331a);
+  border-bottom: 3px solid #000;
   display: flex;
   align-items: center;
   padding: 0 30px;
@@ -40,19 +45,25 @@
 .logoText {
   font-size: 2rem;
   letter-spacing: 0.2em;
-  color: #ff3e3e;
+  color: #e6ffcc; /* 柔らかな若葉色 */
   text-shadow:
     2px 2px 0px #000,
-    0 0 10px rgba(255, 62, 62, 0.5);
+    0 0 12px rgba(100, 200, 80, 0.5);
   margin: 0;
 }
 
 .navBtnLobby {
   background: #000;
-  color: #ff3e3e;
-  border: 1px solid #ff3e3e;
+  color: #cdeeb5;
+  border: 2px solid #4a7c44; /* 彩度を落とした自然な緑 */
   padding: 8px 16px;
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+.navBtnLobby:hover {
+  background: #4a7c44;
+  color: #fff;
 }
 
 /* --- メインコンテンツ領域 --- */
@@ -62,22 +73,22 @@
   justify-content: space-between;
   align-items: stretch;
   padding: 20px 40px;
-  position: relative; /* 駒の absolute 配置の基準 */
+  position: relative;
+  background: rgba(20, 40, 20, 0.3);
   gap: 20px;
 }
 
-/* --- サイドバー (相対配置化) --- */
+/* --- サイドバー --- */
 .sidebarLeft,
 .sidebarRight {
   width: 280px;
-  background: rgba(10, 10, 10, 0.85);
-  backdrop-filter: blur(5px);
-  border: 1px solid #333;
+  background: rgba(0, 5, 0, 0.85); /* 漆黒に近い緑黒 */
+  backdrop-filter: blur(10px);
+  border: 1px solid #3a6332;
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  /* absolute を解除 */
   position: relative;
   top: auto;
   left: auto;
@@ -85,19 +96,18 @@
   z-index: 10;
 }
 
-/* --- クナイ残数 (左サイドバー内の相対要素) --- */
+/* --- クナイ残数 (トークン) --- */
 .tokenPos {
-  /* 浮かせを解除し、サイドバー内の最下部に配置 */
   position: relative;
-  bottom: auto;
-  right: auto;
   margin-top: auto;
-
-  background: rgba(0, 0, 0, 0.6);
-  padding: 10px 20px;
-  border-radius: 4px; /* 丸みから和風の角に変更 */
-  border: 1px solid #ff3e3e;
+  /* 蛍光を避け、彩度の高い本物の草色（萌黄色）に */
+  background: #6b8e23; /* オリーブドラブ気味の自然な緑 */
+  padding: 12px 20px;
+  border-radius: 4px;
+  border: 2px solid #1a2e1a;
   color: #fff;
+  font-weight: bold;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
   display: flex;
   justify-content: center;
 }
@@ -116,14 +126,14 @@
   display: flex;
   gap: 15px;
   justify-content: center;
-  background: rgba(40, 40, 40, 0.5);
+  background: rgba(0, 0, 0, 0.8);
   padding: 15px;
   border-radius: 8px;
-  border-left: 4px solid #ff3e3e;
+  border: 2px solid #4a7c44;
 }
 
 .diceCustomFace {
-  background: #222;
+  background: #4a7c44; /* 落ち着いた木の葉の緑 */
   color: #fff;
   width: 100%;
   height: 100%;
@@ -148,10 +158,9 @@
 }
 
 .ninjaEntranceWrapper {
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(5, 15, 5, 0.95);
   padding: 60px;
-  border-radius: 4px;
-  border-top: 4px solid #ff3e3e;
+  border: 4px solid #5a8c4a;
   text-align: center;
 }
 
@@ -174,13 +183,13 @@
 }
 
 .ninjaJoinButton {
-  background: #8b0000;
+  background: #3a6332;
   color: #fff;
-  padding: 15px 40px;
   border: none;
+  padding: 15px 40px;
   font-size: 1.5rem;
-  cursor: pointer;
-  transition: all 0.3s;
+  box-shadow: 0 4px 0 #1a2e1a;
+  transition: all 0.2s;
 }
 
 .ninjaJoinButton:hover {
