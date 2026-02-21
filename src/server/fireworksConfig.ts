@@ -1,8 +1,9 @@
+import type { Card, DeckId, RoomState } from "react-game-ui";
 /**
  * 花火ゲームの固有設定
  */
 interface SetupTools {
-  assertCards: (cards: any[], deckId: string) => any[];
+  assertCards: (cards: Card[], deckId: DeckId) => any[];
   createUniqueCards: (cards: any[], numSets: number) => any[];
   createTokenStore: (id: string, name: string, templates: any[], count: number) => any[];
   createBoardLayout: (baseCells: any[], cellCounts: Record<string, number>, rows: number, cols: number) => any[][];
@@ -47,9 +48,11 @@ export const fireworksConfig = {
       ),
       initialHand: { deckId: "firework", count: 5 },
       initialBoard: [],
-      checkGameEnd: (gameState: any) => gameState.currentRoundIndex >= 5,
-      onGameEnd: (gameState: any) => {
-        const rankings = [...gameState.gameStateInstance.players]
+      checkGameEnd: (room: RoomState) =>
+        // 終了条件: 5ラウンド終了 (5ラウンド目の最後 かつ 最後のプレイヤーの手番時)
+        room.currentRoundIndex >= 4 && room.currentTurnIndex == room.initRoomState.players.length - 1,
+      onGameEnd: (roomState: RoomState) => {
+        const rankings = [...roomState.initRoomState.players]
           .sort((a: any, b: any) => b.tokens.length - a.tokens.length)
           .map((player: any, index: number) => ({
             rank: index + 1,
@@ -59,7 +62,7 @@ export const fireworksConfig = {
         return {
           message: "全演目の打ち上げが終了しました。本日の最優秀職人は…",
           rankings,
-          finalRound: gameState.currentRound,
+          finalRound: roomState.currentRoundIndex,
         };
       },
     };

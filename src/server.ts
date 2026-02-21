@@ -13,6 +13,7 @@ import {
 import { deepAbyssConfig } from "./server/deepAbyssConfig.js";
 import { fireworksConfig } from "./server/fireworksConfig.js";
 
+import type { GameId } from "react-game-ui";
 import { cardEffects } from "../public/data/cardEffects.js";
 import { cellEffects } from "../public/data/cellEffects.js";
 import { customEvents } from "../public/data/customEvents.js";
@@ -34,7 +35,7 @@ async function startServer(): Promise<void> {
   const isProduction = process.env.NODE_ENV === "production";
 
   for (const config of configs) {
-    const loadedData: Record<string, any> = {};
+    const loadedData: Record<GameId, any> = {};
     for (const [key, relPath] of Object.entries(config.dataFiles)) {
       let finalPath: string;
 

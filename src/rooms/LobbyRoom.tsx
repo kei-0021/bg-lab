@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { RoomMeta } from "react-game-ui";
 import { useNavigate } from "react-router-dom";
 import io, { Socket } from "socket.io-client";
 import "./LobbyRoom.css";
@@ -7,14 +8,6 @@ const SERVER_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:4000"
     : "https://bg-lab.onrender.com";
-
-interface Room {
-  id: string;
-  gameName: string;
-  playerCount: number;
-  maxPlayers: number;
-  createdAt: number;
-}
 
 const GAME_DISPLAY_NAMES: Record<string, string> = {
   fireworks: "FireWorks",
@@ -30,7 +23,7 @@ const GAME_ICONS: Record<string, string> = {
 };
 
 export default function RoomLobby() {
-  const [rooms, setRooms] = useState<Room[]>([]);
+  const [rooms, setRooms] = useState<RoomMeta[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [socket, setSocket] = useState<Socket | null>(null);
   const navigate = useNavigate();
@@ -43,7 +36,7 @@ export default function RoomLobby() {
       lobbySocket.emit("lobby:get-rooms");
     });
 
-    lobbySocket.on("lobby:rooms-list", (fetchedRooms: Room[]) => {
+    lobbySocket.on("lobby:rooms-list", (fetchedRooms: RoomMeta[]) => {
       fetchedRooms.sort((a, b) => b.createdAt - a.createdAt);
       setRooms(fetchedRooms);
       setIsLoading(false);
@@ -63,9 +56,9 @@ export default function RoomLobby() {
     };
   }, []);
 
-  const handleJoinRoom = (room: Room) => {
+  const handleJoinRoom = (room: RoomMeta) => {
     if (!room.id.trim()) return;
-    navigate(`/${room.gameName}/${room.id.trim()}`);
+    navigate(`/${room.gameId || "unknown"}/${room.id.trim()}`);
   };
 
   const handleCreateRoom = (gameId: string) => {
@@ -108,48 +101,52 @@ export default function RoomLobby() {
           </p>
         ) : (
           <ul className="room-list">
-            {rooms.map((room) => (
-              <li
-                key={room.id}
-                className={`room-item ${
-                  room.playerCount >= room.maxPlayers
-                    ? "room-item-full"
-                    : "room-item-available"
-                }`}
-                onClick={() =>
-                  room.playerCount < room.maxPlayers && handleJoinRoom(room)
-                }
-              >
-                {/* 左側：背表紙ラベル */}
-                <div className="room-game-label">
-                  {GAME_ICONS[room.gameName] || "🎲"}{" "}
-                  {GAME_DISPLAY_NAMES[room.gameName] || room.gameName}
-                </div>
+            {rooms.map((room) => {
+              // maxPlayers が存在し、かつ現在の人数が上限に達しているかを判定
+              const isFull =
+                room.maxPlayers != null && room.playerCount >= room.maxPlayers;
 
-                {/* 右側：メインコンテンツ */}
-                <div className="room-info-content">
-                  <div className="room-main-details">
-                    <span className="room-name">
-                      {room.gameName.toUpperCase()} ROOM
-                    </span>
-                    <span className="room-id">ID: {room.id}</span>
+              return (
+                <li
+                  key={room.id}
+                  className={`room-item ${
+                    isFull ? "room-item-full" : "room-item-available"
+                  }`}
+                  onClick={() => !isFull && handleJoinRoom(room)}
+                >
+                  {/* 左側：背表紙ラベル */}
+                  <div className="room-game-label">
+                    {GAME_ICONS[room.gameId] || "🎲"}{" "}
+                    {GAME_DISPLAY_NAMES[room.gameId] || room.id}
                   </div>
 
-                  <div className="room-meta-details">
-                    <span className="player-count">
-                      {room.playerCount} / {room.maxPlayers} Players
-                    </span>
-                    <span className="room-created-at">
-                      Created at:{" "}
-                      {new Date(room.createdAt).toLocaleTimeString("ja-JP", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </span>
+                  {/* 右側：メインコンテンツ */}
+                  <div className="room-info-content">
+                    <div className="room-main-details">
+                      <span className="room-name">
+                        {(room.gameId || "UNKNOWN").toUpperCase()} ROOM
+                      </span>
+                      <span className="room-id">RoomID: {room.id}</span>
+                    </div>
+
+                    <div className="room-meta-details">
+                      <span className="player-count">
+                        {room.playerCount}{" "}
+                        {room.maxPlayers != null ? `/ ${room.maxPlayers}` : ""}{" "}
+                        Players
+                      </span>
+                      <span className="room-created-at">
+                        Created at:{" "}
+                        {new Date(room.createdAt).toLocaleTimeString("ja-JP", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>
