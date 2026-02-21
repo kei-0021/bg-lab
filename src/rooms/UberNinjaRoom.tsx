@@ -10,8 +10,9 @@ import {
 } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
+import GridDeliverRoad from "../components/GridDeliverRoad.js";
 import { useSocket } from "../hooks/useSocket.js";
-import styles from "./UberNinjaRoom.module.css"; // タイポ修正
+import styles from "./UberNinjaRoom.module.css";
 
 const SERVER_URL =
   import.meta.env.MODE === "development"
@@ -65,16 +66,13 @@ export function UberNinjaRoom() {
 
   useEffect(() => {
     if (!socket) return;
-
     const handleAssignId = (id: Player["id"]) => {
       setMyPlayerId(id);
       setHasJoined(true);
       setIsJoining(false);
     };
-
     const handlePlayersUpdate = (updatedPlayers: PlayerWithResources[]) =>
       setPlayers(updatedPlayers);
-
     const handleGameTurn = (data: TurnUpdatePayload | string) => {
       if (typeof data === "string") {
         setCurrentPlayerId(data);
@@ -82,7 +80,6 @@ export function UberNinjaRoom() {
         setCurrentPlayerId(data.playerId);
       }
     };
-
     const handleGameEnd = (result: any) => setGameResult(result);
 
     socket.on("player:assign-id", handleAssignId);
@@ -204,24 +201,8 @@ export function UberNinjaRoom() {
             isRelative={false}
           />
 
-          {players.map((player, i) => (
-            <div key={player.id} className={styles.ninjaPieceWrapper}>
-              <Draggable
-                image="/images/ninja/ninja_icon.svg"
-                mask={true}
-                pieceId={player.id}
-                socket={socket}
-                roomId={roomId}
-                initialX={150 + i * 120}
-                initialY={750}
-                color={player.color}
-                size={70}
-                containerRef={containerRef}
-              />
-            </div>
-          ))}
-
-          <div className={styles.sidebarLeft}>
+          {/* 左サイドバー */}
+          <aside className={styles.sidebarLeft}>
             <Deck
               socket={socket!}
               roomId={roomId}
@@ -243,7 +224,7 @@ export function UberNinjaRoom() {
                 roomId={roomId}
                 customFaces={[
                   <div key="e1" className={styles.diceCustomFace}>
-                    🥷 昼
+                    ☀️ 昼
                   </div>,
                   <div key="e2" className={styles.diceCustomFace}>
                     🌙 夜
@@ -257,26 +238,52 @@ export function UberNinjaRoom() {
                 ]}
               />
             </div>
+            {/* クナイ残数をサイドバー内の最下部に相対配置 */}
+            <div className={styles.tokenPos}>
+              <TokenStore
+                socket={socket!}
+                roomId={roomId}
+                tokenStoreId="KUNAI_COUNT"
+                name="クナイ残数"
+              />
+            </div>
+          </aside>
+
+          {/* 中央：配達グリッドボード */}
+          <div className={styles.centerBoard}>
+            <GridDeliverRoad rows={8} cols={8} />
           </div>
 
-          <div className={styles.sidebarRight}>
+          {/* 右サイドバー */}
+          <aside className={styles.sidebarRight}>
             <ScoreBoard
               socket={socket!}
               roomId={roomId}
               players={players}
               currentPlayerId={currentPlayerId}
               myPlayerId={myPlayerId}
+              isDebug={true}
             />
-          </div>
+          </aside>
 
-          <div className={styles.tokenPos}>
-            <TokenStore
-              socket={socket!}
-              roomId={roomId}
-              tokenStoreId="KUNAI_COUNT"
-              name="クナイ残数"
-            />
-          </div>
+          {/* 駒レイヤー (Absolute) */}
+          {players.map((player, i) => (
+            <div key={player.id} className={styles.ninjaPieceWrapper}>
+              <Draggable
+                image="/images/ninja/ninja_icon.svg"
+                mask={true}
+                pieceId={player.id}
+                socket={socket}
+                roomId={roomId}
+                initialX={150 + i * 120}
+                initialY={750}
+                color={player.color}
+                size={70}
+                containerRef={containerRef}
+                scale={scale}
+              />
+            </div>
+          ))}
         </main>
       </div>
     </div>

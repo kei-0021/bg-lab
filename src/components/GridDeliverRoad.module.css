@@ -1,0 +1,44 @@
+/* GridDeliverRoad.module.css */
+
+.boardContainer {
+  position: relative;
+  display: grid;
+  grid-template-rows: repeat(var(--grid-rows), 1fr);
+  grid-template-columns: repeat(var(--grid-cols), 1fr);
+  width: 640px;
+  height: 640px;
+  background-color: #1a1a1a;
+  /* 外枠を少し明るい金色や木目調の色にすると締まります */
+  border: 4px solid #8b4513;
+  margin: 0 auto;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.gridOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-rows: inherit;
+  grid-template-columns: inherit;
+  pointer-events: none;
+}
+
+.cell {
+  /* 境界線を少し明るいグレーか、和紙のような色に設定 */
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-sizing: border-box;
+}
+
+/* 互い違いに色を変えて、視認性をさらにアップ（市松模様） */
+.cell:nth-child(odd) {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* ホバーしたマスを光らせる（デバッグや配置の目安に便利） */
+.cell:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.4);
+}

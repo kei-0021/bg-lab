@@ -1,3 +1,4 @@
+/* --- ベースレイアウト --- */
 .ninjaViewport {
   width: 100vw;
   height: 100vh;
@@ -19,8 +20,12 @@
     0 0 20px rgba(139, 0, 0, 0.2);
   border: 4px solid #2c241a;
   transform-origin: center center;
+  /* flex を追加してヘッダーとメインを縦に並べる */
+  display: flex;
+  flex-direction: column;
 }
 
+/* --- ヘッダー --- */
 .ninjaHeader {
   height: 80px;
   background: linear-gradient(to bottom, #1a1a1a, #000);
@@ -29,6 +34,7 @@
   align-items: center;
   padding: 0 30px;
   justify-content: space-between;
+  flex-shrink: 0;
 }
 
 .logoText {
@@ -41,6 +47,26 @@
   margin: 0;
 }
 
+.navBtnLobby {
+  background: #000;
+  color: #ff3e3e;
+  border: 1px solid #ff3e3e;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+/* --- メインコンテンツ領域 --- */
+.ninjaMain {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  padding: 20px 40px;
+  position: relative; /* 駒の absolute 配置の基準 */
+  gap: 20px;
+}
+
+/* --- サイドバー (相対配置化) --- */
 .sidebarLeft,
 .sidebarRight {
   width: 280px;
@@ -51,19 +77,41 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  /* absolute を解除 */
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  z-index: 10;
 }
 
-.sidebarLeft {
-  position: absolute;
-  left: 40px;
-  top: 120px;
-}
-.sidebarRight {
-  position: absolute;
-  right: 40px;
-  top: 120px;
+/* --- クナイ残数 (左サイドバー内の相対要素) --- */
+.tokenPos {
+  /* 浮かせを解除し、サイドバー内の最下部に配置 */
+  position: relative;
+  bottom: auto;
+  right: auto;
+  margin-top: auto;
+
+  background: rgba(0, 0, 0, 0.6);
+  padding: 10px 20px;
+  border-radius: 4px; /* 丸みから和風の角に変更 */
+  border: 1px solid #ff3e3e;
+  color: #fff;
+  display: flex;
+  justify-content: center;
 }
 
+/* --- 中央盤面エリア --- */
+.centerBoard {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+}
+
+/* --- パーツ --- */
 .diceSection {
   display: flex;
   gap: 15px;
@@ -89,18 +137,7 @@
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.7));
 }
 
-.tokenPos {
-  position: absolute;
-  bottom: 30px;
-  right: 320px;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 10px 20px;
-  border-radius: 50px;
-  border: 1px solid #ff3e3e;
-  color: #fff;
-}
-
-/* 入場画面 */
+/* --- 入場画面 --- */
 .ninjaContainer {
   width: 100vw;
   height: 100vh;
@@ -151,7 +188,7 @@
   transform: scale(1.05);
 }
 
-/* リザルト */
+/* --- リザルト --- */
 .ninjaResultOverlay {
   position: absolute;
   inset: 0;
@@ -180,12 +217,4 @@
 .rank1 {
   background: linear-gradient(90deg, #fff3b0, transparent);
   border-left: 5px solid #d4af37;
-}
-
-.navBtnLobby {
-  background: #000;
-  color: #ff3e3e;
-  border: 1px solid #ff3e3e;
-  padding: 8px 16px;
-  cursor: pointer;
 }
