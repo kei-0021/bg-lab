@@ -301,7 +301,7 @@ export default function FireworksRoom() {
               socket={socket}
               roomId={roomId}
               deckId="firework"
-              name="花火カード"
+              title=""
               players={players}
               myPlayerId={myPlayerId}
               layoutMode="free"
