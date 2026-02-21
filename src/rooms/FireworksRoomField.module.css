@@ -1,6 +1,5 @@
-/* ============================================================
-   BaseField (提示されたコードの共通プロパティを抽出)
-   ============================================================ */
+/* src/rooms/FireworksRoomField.module.css */
+
 .baseField :global(.rg-playfield) {
   position: relative !important;
   margin: 0 auto !important;
@@ -10,11 +9,7 @@
   padding: 0 !important;
   /* MainField側の背景定義を優先して継承 */
   background-color: black !important;
-  background: radial-gradient(
-    circle at 50% 100%,
-    #151540 0%,
-    #000005 100%
-  ) !important;
+  background: #05010a;
   background-image:
     linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
     linear-gradient(
@@ -28,11 +23,6 @@
       transparent 66%,
       rgba(255, 255, 255, 0.15) 66%,
       transparent 66.5%
-    ),
-    radial-gradient(
-      ellipse at 50% 105%,
-      rgba(255, 195, 0, 0.1) 0%,
-      transparent 70%
     ) !important;
   background-size:
     200px 100%,
@@ -110,8 +100,8 @@
    各フィールドの固有設定
    ============================================================ */
 
-/* --- MainField --- */
-.fireworksMainField :global(.rg-playfield) {
+/* --- RequtangleField --- */
+.fireworksRequtangleField :global(.rg-playfield) {
   width: 100% !important;
   height: 440px !important;
   aspect-ratio: 16 / 9;
@@ -121,30 +111,27 @@
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.5) !important;
 }
 
-.fireworksMainField :global(.rg-playfield)::after {
+.fireworksRequtangleField :global(.rg-playfield)::after {
   left: 0 !important;
   width: 100% !important;
 }
 
-.fireworksMainField :global(.rg-playfield-container) {
+.fireworksRequtangleField :global(.rg-playfield-container) {
   z-index: 5 !important;
 }
 
-/* --- CircleField --- */
+/* --- CircleField  --- */
 .fireworksCircleField :global(.rg-playfield) {
-  width: 500px !important;
-  height: 500px !important;
+  width: 600px !important;
+  height: 600px !important;
   aspect-ratio: 1 / 1 !important;
   border-radius: 50% !important;
-  border: 4px solid #ffc300 !important;
+  border: 4px solid #ffffff !important;
   overflow: visible !important;
-  /* 背景とシャドウをCircleField側の値で上書き */
-  background: radial-gradient(circle, #151540 0%, #000 70%) !important;
-  box-shadow: 0 0 50px rgba(255, 195, 0, 0.3) !important;
+  background: #05010a;
 }
 
 .fireworksCircleField :global(.rg-playfield)::after {
-  /* CircleFieldには::afterの定義が元々ないためMainFieldの継承を無効化、または位置調整が必要な場合はここで行う */
   display: none !important;
 }
 
@@ -154,10 +141,9 @@
 }
 
 .fireworksCircleField :global(.rg-playfield-card-wrapper) {
-  z-index: 1000 !important;
+  z-index: 300 !important;
   touch-action: none;
 }
-
 .fireworksCircleField :global(.rg-playfield-card-wrapper:active) {
   cursor: grabbing !important;
 }

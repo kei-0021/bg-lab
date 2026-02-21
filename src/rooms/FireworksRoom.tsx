@@ -48,6 +48,17 @@ export default function FireworksRoom() {
   const [showRules, setShowRules] = useState<boolean>(false);
   const [gameResult, setGameResult] = useState<any>(null);
   const [scale, setScale] = useState<number>(1);
+  const [fieldClassName, setFieldClassName] = useState<string>(
+    "fireworksRequtangleField",
+  );
+
+  const toggleFieldLayout = useCallback(() => {
+    setFieldClassName((prev) =>
+      prev === "fireworksRequtangleField"
+        ? "fireworksCircleField"
+        : "fireworksRequtangleField",
+    );
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -196,6 +207,9 @@ export default function FireworksRoom() {
             >
               📖 遊び方
             </button>
+            <button onClick={toggleFieldLayout} className={styles.navBtnLobby}>
+              レイアウト切替
+            </button>
             <button
               onClick={() => navigate("/")}
               className={styles.navBtnLobby}
@@ -281,7 +295,7 @@ export default function FireworksRoom() {
           </div>
 
           <div
-            className={`${fieldStyles.baseField} ${fieldStyles.fireworksCircleField}`}
+            className={`${fieldStyles.baseField} ${fieldStyles[fieldClassName]}`}
           >
             <PlayField
               socket={socket}

@@ -1,22 +1,19 @@
+/* src/rooms/FireworksRoom.module.css */
+
 .fireworksViewport {
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  overflow: auto; /* はみ出し時にスクロールを許可 */
   position: relative;
   background: #0a0a0a;
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* スクロール時に上が切れないよう開始位置固定 */
   justify-content: center;
 }
 
 .fireworksContainer {
   min-height: 100vh;
-  background: radial-gradient(
-    circle at center,
-    #1b1e4e 0%,
-    #0c0b2e 50%,
-    #05010a 100%
-  ) !important;
+  background: #05010a;
   font-family: "Shippori Mincho", serif;
   position: relative;
   overflow: hidden;
@@ -88,13 +85,13 @@
 }
 
 .fireworksHeader {
-  position: absolute;
+  position: sticky; /* スクロール時に隠れないよう固定 */
   top: 0;
   left: 0;
   width: 100%;
   height: 110px;
   padding: 20px 40px;
-  z-index: 10;
+  z-index: 100;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -116,12 +113,14 @@
   flex: 1;
   display: flex;
   justify-content: center;
+  min-width: 0;
 }
 .headerNav {
-  flex: 0 0 250px;
+  flex: 0 0 450px;
   display: flex;
-  gap: 12px;
+  gap: 16px;
   justify-content: flex-end;
+  align-items: center;
 }
 
 .navBtnRules {
@@ -147,14 +146,18 @@
 
 .fireworksMain {
   width: 100%;
-  height: 100%;
+  min-height: min-content; /* 中身のサイズを保証 */
   display: flex;
-  padding: 130px 40px 40px 40px;
+  padding: 130px 20px 40px 20px;
   box-sizing: border-box;
-  gap: 40px;
+  gap: 20px;
+  justify-content: stretch;
 }
 
 .sidebarLeft {
+  flex: 0.7;
+  min-width: 180px;
+  max-width: 250px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -162,12 +165,18 @@
 }
 
 .fireworksMainField {
-  flex: 1;
+  flex: 3.5;
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 500px;
 }
 
 .sidebarRight {
-  width: 280px;
+  flex: 1.2;
+  min-width: 280px;
+  max-width: 450px;
   flex-shrink: 0;
 }
 
@@ -181,7 +190,7 @@
 .gameScalableWrapper {
   position: relative;
   flex-shrink: 0;
-  transform-origin: center;
+  transform-origin: top center;
 }
 
 .diceSection {
@@ -268,7 +277,6 @@
   background: rgba(249, 237, 105, 0.15);
   border: 1px solid #f9ed69;
 }
-
 .fwRankNum {
   font-size: 1.2rem;
   font-weight: bold;
@@ -277,7 +285,6 @@
   flex-shrink: 0;
   margin-right: 15px;
 }
-
 .fwPlayerInfo {
   display: flex;
   justify-content: space-between;
@@ -309,7 +316,6 @@
   padding: 8px !important;
   border: 1px solid #444 !important;
 }
-
 .sidebarLeft :global([class*="deckContainer"]),
 .sidebarLeft :global([class*="deckCard"]),
 .sidebarLeft :global([class*="deckCardFront"]),
@@ -325,55 +331,46 @@
   font-size: 11px !important;
   line-height: 1.2 !important;
 }
-
 .sidebarLeft :global([class*="deckWrapper"]) {
   gap: 10px !important;
 }
 
 .sidebarRight :global([class*="container"]) {
   padding: 12px !important;
-  max-width: 280px !important;
+  max-width: 100% !important;
   margin: 0 !important;
   overflow: hidden !important;
 }
-
 .sidebarRight :global([class*="title"]) {
   font-size: 1.1em !important;
   margin-left: 0 !important;
   white-space: nowrap !important;
-  overflow: hidden !important;
   text-overflow: ellipsis !important;
   width: 100% !important;
 }
-
 .sidebarRight :global([class*="playerItem"]) {
   padding: 8px !important;
   margin-bottom: 8px !important;
 }
-
 .sidebarRight :global([class*="activePlayer"]) {
   transform: translateX(0) !important;
 }
-
 .sidebarRight :global([class*="tokenBadge"]) {
   width: 24px !important;
   height: 24px !important;
   font-size: 0.6em !important;
   box-shadow: none !important;
 }
-
 .sidebarRight :global([class*="cardBase"]) {
   width: 64px !important;
   height: 89px !important;
   font-size: 8px !important;
   padding: 2px !important;
 }
-
 .sidebarRight :global([class*="tooltip"]) {
   width: 120px !important;
   font-size: 10px !important;
 }
-
 .sidebarRight :global([class*="buttonGroup"]) {
   display: flex !important;
   flex-direction: row !important;
@@ -383,7 +380,6 @@
   justify-content: space-between !important;
   margin-top: 8px !important;
 }
-
 .sidebarRight :global([class*="buttonArea"] button) {
   white-space: nowrap !important;
   font-size: 8px !important;
