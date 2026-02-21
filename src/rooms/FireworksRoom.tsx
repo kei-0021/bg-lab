@@ -53,12 +53,9 @@ export default function FireworksRoom() {
   );
 
   const toggleFieldLayout = useCallback(() => {
-    setFieldClassName((prev) =>
-      prev === "fireworksRequtangleField"
-        ? "fireworksCircleField"
-        : "fireworksRequtangleField",
-    );
-  }, []);
+    if (!socket || !roomId) return;
+    socket.emit("playfield:switch", { roomId });
+  }, [socket, roomId]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -104,16 +101,26 @@ export default function FireworksRoom() {
 
     const handleGameEnd = (result: any) => setGameResult(result);
 
+    const handleFieldSwitch = () => {
+      setFieldClassName((prev) =>
+        prev === "fireworksRequtangleField"
+          ? "fireworksCircleField"
+          : "fireworksRequtangleField",
+      );
+    };
+
     socket.on("player:assign-id", handleAssignId);
     socket.on("players:update", handlePlayersUpdate);
     socket.on("game:turn", handleGameTurn);
     socket.on("game:end", handleGameEnd);
+    socket.on("playfield:switch", handleFieldSwitch);
 
     return () => {
       socket.off("player:assign-id", handleAssignId);
       socket.off("players:update", handlePlayersUpdate);
       socket.off("game:turn", handleGameTurn);
       socket.off("game:end", handleGameEnd);
+      socket.off("playfield:switch", handleFieldSwitch);
     };
   }, [socket]);
 
