@@ -198,7 +198,7 @@ export default function FireworksRoom() {
             <h1 className={styles.logoText}>🎆 FIREWORKS</h1>
           </div>
           <div className={styles.headerTracker}>
-            <RoundProgressTracker currentRound={currentRound} maxRound={5} />
+            <RoundProgressTracker currentRound={currentRound} maxRound={10} />
           </div>
           <div className={styles.headerNav}>
             <button

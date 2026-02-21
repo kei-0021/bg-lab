@@ -49,8 +49,8 @@ export const fireworksConfig = {
       initialHand: { deckId: "firework", count: 5 },
       initialBoard: [],
       checkGameEnd: (room: RoomState) =>
-        // 終了条件: 5ラウンド終了 (5ラウンド目の最後 かつ 最後のプレイヤーの手番時)
-        room.currentRoundIndex >= 4 && room.currentTurnIndex == room.initRoomState.players.length - 1,
+        // 終了条件: 10ラウンド終了 (10ラウンド目の最後 かつ 最後のプレイヤーの手番時)
+        room.currentRoundIndex >= 9 && room.currentTurnIndex == room.initRoomState.players.length - 1,
       onGameEnd: (roomState: RoomState) => {
         const rankings = [...roomState.initRoomState.players]
           .sort((a: any, b: any) => b.tokens.length - a.tokens.length)
