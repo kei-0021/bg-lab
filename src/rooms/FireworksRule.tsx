@@ -1,5 +1,7 @@
+// src/components/FireWorksRule.tsx
 import React from "react";
-import styles from "./FireworksRoom.module.css";
+import { createPortal } from "react-dom";
+import styles from "./FireworksRoomRule.module.css";
 
 interface FireWorksRuleProps {
   isOpen: boolean;
@@ -12,7 +14,7 @@ export const FireWorksRule: React.FC<FireWorksRuleProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div className={styles.rulesOverlay} onClick={onClose}>
       <div className={styles.rulesContent} onClick={(e) => e.stopPropagation()}>
         <button
@@ -29,9 +31,8 @@ export const FireWorksRule: React.FC<FireWorksRuleProps> = ({
           <section>
             <h3>1. 勝利条件</h3>
             <p>
-              共通の場にある<strong>「3枚の演目カード」</strong>
-              から1つを選び、条件に合う「花火カード」を並べます。
-              花火大会が終わるまでに最も高いスコアを獲得した職人が勝者です。
+              条件に合う「花火カード」を並べていきます。 花火大会 (10ラウンド)
+              が終わるまでに最も高いスコアを獲得した職人が勝者です。
             </p>
           </section>
 
@@ -73,6 +74,7 @@ export const FireWorksRule: React.FC<FireWorksRuleProps> = ({
           了解
         </button>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };

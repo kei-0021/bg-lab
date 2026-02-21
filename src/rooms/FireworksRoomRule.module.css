@@ -1,0 +1,74 @@
+/* src/rooms/FireworksRoomRule.module.css */
+
+.rulesOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rulesContent {
+  background: #1a1a1a;
+  border: 2px solid #ffc300;
+  padding: 40px;
+  max-width: 640px;
+  width: 90%;
+  color: #fff;
+  border-radius: 12px;
+  position: relative;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.rulesClose {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #ffc300;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.rulesTitle {
+  color: #ffc300;
+  margin-top: 0;
+  font-size: 24px;
+}
+
+.rulesHr {
+  border: 0;
+  border-top: 1px solid #333;
+  margin: 20px 0;
+}
+
+.rulesBody {
+  line-height: 1.8;
+  font-size: 16px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.sectionMt {
+  margin-top: 24px;
+}
+
+.rulesOkBtn {
+  width: 100%;
+  margin-top: 30px;
+  padding: 12px;
+  background: #ffc300;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  color: #000;
+  border-radius: 4px;
+  transition: opacity 0.2s;
+}
+
+.rulesOkBtn:hover {
+  opacity: 0.9;
+}
