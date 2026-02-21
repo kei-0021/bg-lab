@@ -120,7 +120,7 @@
   z-index: 5 !important;
 }
 
-/* --- CircleField  --- */
+/* --- CircleField --- */
 .fireworksCircleField :global(.rg-playfield) {
   width: 600px !important;
   height: 600px !important;
@@ -128,7 +128,36 @@
   border-radius: 50% !important;
   border: 4px solid #ffffff !important;
   overflow: visible !important;
-  background: #05010a;
+
+  /* 四角いグリッドを完全に上書きし、放射状の線のみを適用 */
+  background-color: #05010a !important;
+  background-image: conic-gradient(
+    from 0deg,
+    transparent 0deg 0.5deg,
+    rgba(255, 255, 255, 0.2) 0.5deg 1deg,
+    transparent 1deg 59.5deg,
+    rgba(255, 255, 255, 0.2) 59.5deg 60.5deg,
+    transparent 60.5deg 119.5deg,
+    rgba(255, 255, 255, 0.2) 119.5deg 120.5deg,
+    transparent 120.5deg 179.5deg,
+    rgba(255, 255, 255, 0.2) 179.5deg 180.5deg,
+    transparent 180.5deg 239.5deg,
+    rgba(255, 255, 255, 0.2) 239.5deg 240.5deg,
+    transparent 240.5deg 299.5deg,
+    rgba(255, 255, 255, 0.2) 299.5deg 300.5deg,
+    transparent 300.5deg 359.5deg
+  ) !important;
+
+  /* グリッド用のサイズ指定をリセット */
+  background-size: 100% 100% !important;
+  background-position: center !important;
+
+  box-shadow: 0 0 80px rgba(255, 255, 255, 0.2) !important;
+}
+
+/* ノイズエフェクトの角丸対応 */
+.fireworksCircleField :global(.rg-playfield)::before {
+  border-radius: 50% !important;
 }
 
 .fireworksCircleField :global(.rg-playfield)::after {

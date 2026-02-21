@@ -306,7 +306,7 @@ export default function FireworksRoom() {
               myPlayerId={myPlayerId}
               layoutMode="free"
             />
-            <LaunchArea />
+            {fieldClassName !== "fireworksCircleField" && <LaunchArea />}
           </div>
 
           <div className={styles.sidebarRight}>
