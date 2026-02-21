@@ -388,3 +388,19 @@
   min-width: 0 !important;
   letter-spacing: -1px !important;
 }
+
+/* 煙のDraggableを上書き */
+.draggableSmoke [class*="draggable"] {
+  z-index: 9999 !important;
+}
+
+/* プレイヤー駒のDraggableを上書き */
+.draggableSaturated [class*="draggable"] {
+  z-index: 99999 !important;
+}
+
+/* ドラッグ中は問答無用で最前面にする（ライブラリの仕様に合わせる） */
+[class*="draggable"]:active,
+[class*="dragging"] {
+  z-index: 999999 !important;
+}

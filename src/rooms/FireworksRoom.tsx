@@ -227,6 +227,25 @@ export default function FireworksRoom() {
 
         <FireWorksRule isOpen={showRules} onClose={() => setShowRules(false)} />
 
+        {/* 煙Draggable 10個 - 右下にスタック配置 */}
+        {[...Array(10)].map((_, i) => (
+          <div key={`smoke-${i}`} className={styles.draggableSmoke}>
+            <Draggable
+              pieceId={`smoke-${i}`}
+              socket={socket}
+              roomId={roomId}
+              // 右下付近 (1600x900基準)
+              initialX={1350 + i * 5}
+              // 少しずつずらして重なりを見せる
+              initialY={700 + i * 5}
+              color="grey"
+              size={70}
+              containerRef={containerRef}
+              scale={scale}
+            />
+          </div>
+        ))}
+
         <main className={styles.fireworksMain}>
           <RemoteCursor
             socket={socket!}

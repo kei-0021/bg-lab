@@ -13,7 +13,6 @@ export const fireworksConfig = {
   id: "fireworks",
   dataFiles: {
     cards: "../public/data/fireworksCards.json",
-    themes: "../public/data/fireworksThemeCards.json",
   },
   // サーバー側でロードしたデータを setup に渡す
   setup: (loadedData: Record<string, any>, helpers: SetupTools): any => {
@@ -22,7 +21,6 @@ export const fireworksConfig = {
       helpers.assertCards(loadedData.cards, "firework"),
       3,
     );
-    const fireworksThemeCards = helpers.assertCards(loadedData.themes, "theme");
 
     return {
       initialDecks: [
@@ -31,12 +29,6 @@ export const fireworksConfig = {
           name: "花火カード",
           cards: fireworksCards,
           backColor: "#000000",
-        },
-        {
-          deckId: "theme",
-          name: "演目カード",
-          cards: fireworksThemeCards,
-          backColor: "#ff0000",
         },
       ],
       initialResources: [],
