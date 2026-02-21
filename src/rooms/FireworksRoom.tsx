@@ -7,7 +7,6 @@ import {
   PlayField,
   RemoteCursor,
   ScoreBoard,
-  TokenStore,
 } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
@@ -323,15 +322,7 @@ export default function FireworksRoom() {
               players={players}
               currentPlayerId={currentPlayerId}
               myPlayerId={myPlayerId}
-            />
-          </div>
-
-          <div className={styles.tokenPos}>
-            <TokenStore
-              socket={socket!}
-              roomId={roomId}
-              tokenStoreId="STAR_PARTS"
-              name="秘伝玉"
+              isDebug={true}
             />
           </div>
         </main>
