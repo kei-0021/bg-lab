@@ -10,8 +10,8 @@ import {
   loadJson,
 } from "./server/utils.js";
 
-import { deepAbyssConfig } from "./server/deepAbyssConfig.js";
 import { fireworksConfig } from "./server/fireworksConfig.js";
+import { uberNinjaConfig } from "./server/uberNinjaConfig.js";
 
 import type { GameId } from "react-game-ui";
 import { cardEffects } from "../public/data/cardEffects.js";
@@ -30,7 +30,7 @@ const setupTools = {
 
 async function startServer(): Promise<void> {
   const gamePresets: Record<string, any> = {};
-  const configs = [fireworksConfig, deepAbyssConfig];
+  const configs = [fireworksConfig, uberNinjaConfig];
 
   const isProduction = process.env.NODE_ENV === "production";
 

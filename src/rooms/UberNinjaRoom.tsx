@@ -59,7 +59,7 @@ export function UberNinjaRoom() {
     setIsJoining(true);
     socket.emit("room:join", {
       roomId,
-      gamePresetId: "uber-ninja",
+      gamePresetId: "uberninja",
       playerName: userName.trim(),
     });
   }, [socket, roomId, userName, isJoining]);
@@ -101,7 +101,7 @@ export function UberNinjaRoom() {
     return (
       <div className={styles.ninjaContainer}>
         <div className={styles.ninjaEntranceWrapper}>
-          <h2 className={styles.ninjaTitle}>忍びの里：極</h2>
+          <h2 className={styles.ninjaTitle}>Uber Ninja</h2>
           <div className={styles.ninjaFormGroup}>
             <input
               className={styles.ninjaInput}
@@ -173,7 +173,7 @@ export function UberNinjaRoom() {
 
         <header className={styles.ninjaHeader}>
           <div className={styles.headerLogo}>
-            <h1 className={styles.logoText}>🥷 UBER NINJA</h1>
+            <h1 className={styles.logoText}>🥷 uber Ninja</h1>
           </div>
           <div className={styles.headerNav}>
             <button
@@ -207,7 +207,7 @@ export function UberNinjaRoom() {
               socket={socket!}
               roomId={roomId}
               deckId="jutsu-scroll"
-              name="[ 忍術の書 ]"
+              name="[ 注文カード ]"
               playerId={currentPlayerId}
             />
             <div className={styles.diceSection}>
@@ -244,7 +244,7 @@ export function UberNinjaRoom() {
                 socket={socket!}
                 roomId={roomId}
                 tokenStoreId="KUNAI_COUNT"
-                name="クナイ残数"
+                name="マキビシ"
               />
             </div>
           </aside>
@@ -253,6 +253,23 @@ export function UberNinjaRoom() {
           <div className={styles.centerBoard}>
             <GridDeliverRoad rows={8} cols={8} />
           </div>
+
+          {players.map((player, i) => (
+            <div key={player.id} className={styles.draggableSaturated}>
+              <Draggable
+                image="/images/uberninja/ninja.svg"
+                mask={true}
+                pieceId={player.id}
+                socket={socket}
+                roomId={roomId}
+                initialX={100 + i * 110}
+                initialY={750}
+                color={player.color}
+                size={120}
+                containerRef={containerRef}
+              />
+            </div>
+          ))}
 
           {/* 右サイドバー */}
           <aside className={styles.sidebarRight}>

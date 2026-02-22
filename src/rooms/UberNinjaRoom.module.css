@@ -17,7 +17,6 @@
 }
 
 .gameScalableWrapper {
-  background: url("/images/ninja/dojo_floor_texture.jpg") center/cover;
   background-color: #243520; /* 苔むした岩のような緑 */
   position: relative;
   box-shadow:
@@ -151,7 +150,7 @@
 .ninjaContainer {
   width: 100vw;
   height: 100vh;
-  background: #000 url("/images/ninja/entrance_bg.jpg") center/cover;
+  background: #000;
   display: flex;
   justify-content: center;
   align-items: center;

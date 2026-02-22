@@ -31,6 +31,7 @@
     "vite-plugin-static-copy": "^3.2.0"
   },
   "dependencies": {
+    "@types/react-router-dom": "^5.3.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-game-ui": "github:kei-0021/react-game-ui#issue-17",
@@ -46,6 +47,9 @@
     "overrides": {
       "react": "18.3.1",
       "react-dom": "18.3.1"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   }
 }
