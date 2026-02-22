@@ -9,11 +9,8 @@ export const uberNinjaConfig = {
   dataFiles: {
     orderCards: "../public/data/uberNinjaOrder.json",
   },
-  setup: (
-    data: Record<string, any>,
-    { assertCards }: SetupTools,
-  ): any => {
-    const uberNinjaOrderCards = assertCards(data.orderCards, "order")
+  setup: (data: Record<string, any>, { assertCards }: SetupTools): any => {
+    const uberNinjaOrderCards = assertCards(data.orderCards, "order");
 
     return {
       initialDecks: [

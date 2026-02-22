@@ -34,7 +34,7 @@
     "@types/react-router-dom": "^5.3.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-game-ui": "github:kei-0021/react-game-ui#issue-17",
+    "react-game-ui": "github:kei-0021/react-game-ui#main",
     "react-router-dom": "^7.13.0",
     "socket.io": "^4.8.3",
     "socket.io-client": "^4.8.3"

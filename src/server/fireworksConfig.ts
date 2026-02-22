@@ -5,8 +5,18 @@ import type { Card, DeckId, RoomState } from "react-game-ui";
 interface SetupTools {
   assertCards: (cards: Card[], deckId: DeckId) => any[];
   createUniqueCards: (cards: any[], numSets: number) => any[];
-  createTokenStore: (id: string, name: string, templates: any[], count: number) => any[];
-  createBoardLayout: (baseCells: any[], cellCounts: Record<string, number>, rows: number, cols: number) => any[][];
+  createTokenStore: (
+    id: string,
+    name: string,
+    templates: any[],
+    count: number,
+  ) => any[];
+  createBoardLayout: (
+    baseCells: any[],
+    cellCounts: Record<string, number>,
+    rows: number,
+    cols: number,
+  ) => any[][];
 }
 
 export const fireworksConfig = {
@@ -42,7 +52,8 @@ export const fireworksConfig = {
       initialBoard: [],
       checkGameEnd: (room: RoomState) =>
         // 終了条件: 10ラウンド終了 (10ラウンド目の最後 かつ 最後のプレイヤーの手番時)
-        room.currentRoundIndex >= 9 && room.currentTurnIndex == room.initRoomState.players.length - 1,
+        room.currentRoundIndex >= 9 &&
+        room.currentTurnIndex == room.initRoomState.players.length - 1,
       onGameEnd: (roomState: RoomState) => {
         const rankings = [...roomState.initRoomState.players]
           .sort((a: any, b: any) => b.tokens.length - a.tokens.length)

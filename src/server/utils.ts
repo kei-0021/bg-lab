@@ -1,7 +1,10 @@
 import * as fs from "fs/promises";
 import path from "path";
 
-export async function loadJson(relativePath: string, dirname: string): Promise<any> {
+export async function loadJson(
+  relativePath: string,
+  dirname: string,
+): Promise<any> {
   const jsonPath = path.join(dirname, relativePath);
   const data = await fs.readFile(jsonPath, "utf-8");
   return JSON.parse(data);
@@ -26,7 +29,12 @@ export function createUniqueCards(cards: any[], numSets: number): any[] {
   return allCards;
 }
 
-export function createTokenStore(id: string, name: string, templates: any[], count: number): any[] {
+export function createTokenStore(
+  id: string,
+  name: string,
+  templates: any[],
+  count: number,
+): any[] {
   return [
     {
       tokenStoreId: id,
@@ -42,7 +50,12 @@ export function createTokenStore(id: string, name: string, templates: any[], cou
   ];
 }
 
-export function createBoardLayout(baseCells: any[], cellCounts: Record<string, number>, rows: number, cols: number): any[][] {
+export function createBoardLayout(
+  baseCells: any[],
+  cellCounts: Record<string, number>,
+  rows: number,
+  cols: number,
+): any[][] {
   const templateMap = baseCells.reduce((map: Record<string, any>, t) => {
     map[t.templateId] = t;
     return map;
