@@ -304,7 +304,7 @@ export default function FireworksRoom() {
               </div>
 
               <div className={styles.diceWrapper}>
-                <p className={styles.diceLabel}>天候</p>
+                <p className={styles.diceLabel}>天候ダイス</p>
                 <Dice
                   sides={4}
                   socket={socket}
