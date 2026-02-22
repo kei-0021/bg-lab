@@ -129,231 +129,228 @@ export function UberNinjaRoom() {
   }
 
   return (
-    <div className={styles.ninjaViewport}>
-      <div
-        className={styles.gameScalableWrapper}
-        ref={containerRef}
-        style={{
-          width: `${BASE_WIDTH}px`,
-          height: `${BASE_HEIGHT}px`,
-          transform: `scale(${scale})`,
-        }}
-      >
-        {/* リザルトモーダル */}
-        {gameResult && (
-          <div className={styles.ninjaResultOverlay}>
-            <div className={styles.ninjaResultModal}>
-              <div className={styles.ninjaResultHeader}>
-                <span className={styles.ninjaIcon}>⚔️</span>
-                <h2>任務完了!!</h2>
-                <span className={styles.ninjaIcon}>⚔️</span>
-              </div>
-              <p className={styles.ninjaResultMessage}>{gameResult.message}</p>
-              <div className={styles.ninjaRankingList}>
-                {gameResult.rankings?.map((res: any) => (
-                  <div
-                    key={res.rank}
-                    className={`${styles.ninjaRankItem} ${styles[`rank${res.rank}`]}`}
-                  >
-                    <div className={styles.ninjaRankNum}>{res.rank}位</div>
-                    <div className={styles.ninjaPlayerInfo}>
-                      <span className={styles.ninjaPlayerName}>{res.name}</span>
-                      <span className={styles.ninjaPlayerScore}>
-                        {res.tokens} <small>貫</small>
-                      </span>
-                    </div>
+    /* ninjaViewportを削除し、直にScalableWrapperを配置（CSS側でmargin: auto等で調整済み想定） */
+    <div
+      className={styles.gameScalableWrapper}
+      ref={containerRef}
+      style={{
+        width: `${BASE_WIDTH}px`,
+        height: `${BASE_HEIGHT}px`,
+        transform: `scale(${scale})`,
+        /* Viewportを消した分、画面中央に置くためのスタイルを念のためインラインでも補強 */
+        position: "absolute",
+        left: "50%",
+        top: "50%",
+        marginLeft: `-${BASE_WIDTH / 2}px`,
+        marginTop: `-${BASE_HEIGHT / 2}px`,
+      }}
+    >
+      {/* リザルトモーダル */}
+      {gameResult && (
+        <div className={styles.ninjaResultOverlay}>
+          <div className={styles.ninjaResultModal}>
+            <div className={styles.ninjaResultHeader}>
+              <span className={styles.ninjaIcon}>⚔️</span>
+              <h2>任務完了!!</h2>
+              <span className={styles.ninjaIcon}>⚔️</span>
+            </div>
+            <p className={styles.ninjaResultMessage}>{gameResult.message}</p>
+            <div className={styles.ninjaRankingList}>
+              {gameResult.rankings?.map((res: any) => (
+                <div
+                  key={res.rank}
+                  className={`${styles.ninjaRankItem} ${styles[`rank${res.rank}`]}`}
+                >
+                  <div className={styles.ninjaRankNum}>{res.rank}位</div>
+                  <div className={styles.ninjaPlayerInfo}>
+                    <span className={styles.ninjaPlayerName}>{res.name}</span>
+                    <span className={styles.ninjaPlayerScore}>
+                      {res.tokens} <small>貫</small>
+                    </span>
                   </div>
-                ))}
-              </div>
-              <button
-                className={styles.ninjaExitButton}
-                onClick={() => navigate("/")}
-              >
-                里を去る
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* ルール（巻物）モーダル - 切り出し済み */}
-        {showRules && <UberNinjaRoomRule setShowRules={setShowRules} />}
-
-        <header className={styles.ninjaHeader}>
-          <div className={styles.headerLogo}>
-            <h1 className={styles.logoText}>🥷 uber Ninja</h1>
-          </div>
-          <div className={styles.headerNav}>
-            {/* 撤退ボタンの左側に配置 */}
-            <button
-              className={styles.navBtnScroll}
-              onClick={() => setShowRules(true)}
-            >
-              📜 巻物 (ルール)
-            </button>
-            <button
-              onClick={() => navigate("/")}
-              className={styles.navBtnLobby}
-            >
-              撤退
-            </button>
-          </div>
-        </header>
-
-        <main className={styles.ninjaMain}>
-          <RemoteCursor
-            socket={socket!}
-            roomId={roomId}
-            myPlayerId={myPlayerId}
-            players={players.map((p) => ({
-              name: p.name || "Unknown",
-              socketId: String(p.id),
-              color: p.color,
-            }))}
-            scale={scale}
-            fixedContainerRef={containerRef}
-            visible={true}
-            isRelative={false}
-          />
-
-          {/* 左サイドバー */}
-          <aside className={styles.sidebarLeft}>
-            <Deck
-              socket={socket!}
-              roomId={roomId}
-              deckId="order"
-              name="[ 注文カード ]"
-              playerId={currentPlayerId}
-            />
-            <div className={styles.diceSection}>
-              {/* 移動ダイス */}
-              <div className={styles.diceWrapper}>
-                <p className={styles.diceLabel}>3面ダイス</p>
-                <Dice
-                  sides={3}
-                  socket={socket}
-                  diceId="action-move"
-                  roomId={roomId}
-                />
-              </div>
-
-              {/* 環境ダイス */}
-              <div className={styles.diceWrapper}>
-                <p className={styles.diceLabel}>刻限ダイス</p>
-                <Dice
-                  sides={4}
-                  socket={socket}
-                  diceId="environment"
-                  roomId={roomId}
-                  customFaces={[
-                    <div key="e1" className={styles.diceCustomFace}>
-                      ☀️ 昼
-                    </div>,
-                    <div key="e2" className={styles.diceCustomFace}>
-                      🌙 夜
-                    </div>,
-                    <div key="e3" className={styles.diceCustomFace}>
-                      🌫️ 霧
-                    </div>,
-                    <div key="e4" className={styles.diceCustomFace}>
-                      🏮 警戒
-                    </div>,
-                  ]}
-                />
-              </div>
-            </div>
-            <div className={styles.tokenPos}>
-              <TokenStore
-                socket={socket!}
-                roomId={roomId}
-                tokenStoreId="KUNAI_COUNT"
-                name="コマ置場"
-              />
-            </div>
-          </aside>
-
-          {/* 中央：配達グリッドボード */}
-          <div className={styles.centerBoard}>
-            <GridDeliverRoad rows={8} cols={8} />
-          </div>
-
-          {players.map((player, i) => (
-            <div key={player.id} className={styles.draggableSaturated}>
-              {/* 忍者 */}
-              <Draggable
-                image="/images/uberninja/ninja.svg"
-                mask={true}
-                pieceId={`${player.id}_ninja`}
-                socket={socket}
-                roomId={roomId}
-                initialX={100 + i * 130}
-                initialY={660}
-                color={player.color}
-                size={140}
-                containerRef={containerRef}
-                scale={scale}
-              />
-              {/* スクーター */}
-              <Draggable
-                image="/images/uberninja/scooter.svg"
-                mask={true}
-                pieceId={`${player.id}_scooter`}
-                socket={socket}
-                roomId={roomId}
-                initialX={100 + i * 130}
-                initialY={720}
-                color={player.color}
-                size={140}
-                containerRef={containerRef}
-                scale={scale}
-              />
-              {/* 撒菱（プレイヤーごとに8個） */}
-              {[...Array(8)].map((_, j) => (
-                <Draggable
-                  key={`${player.id}_makibishi_${j}`}
-                  image="/images/uberninja/makibishi.svg"
-                  pieceId={`${player.id}_makibishi_${j}`}
-                  socket={socket}
-                  roomId={roomId}
-                  initialX={1250 + i * 150 + j * 4}
-                  initialY={650 + j * 4}
-                  color={player.color}
-                  size={65}
-                  containerRef={containerRef}
-                  scale={scale}
-                />
+                </div>
               ))}
             </div>
-          ))}
-          {/* 共通の荷物（プレイヤーに依存しない固定8枚） */}
-          {[...Array(8)].map((_, j) => (
-            <div key={`order_${j}`} className={styles.draggableSaturated}>
+            <button
+              className={styles.ninjaExitButton}
+              onClick={() => navigate("/")}
+            >
+              里を去る
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ルール（巻物）モーダル */}
+      {showRules && <UberNinjaRoomRule setShowRules={setShowRules} />}
+
+      <header className={styles.ninjaHeader}>
+        <div className={styles.headerLogo}>
+          <h1 className={styles.logoText}>🥷 uber Ninja</h1>
+        </div>
+        <div className={styles.headerNav}>
+          <button
+            className={styles.navBtnScroll}
+            onClick={() => setShowRules(true)}
+          >
+            📜 巻物 (ルール)
+          </button>
+          <button onClick={() => navigate("/")} className={styles.navBtnLobby}>
+            撤退
+          </button>
+        </div>
+      </header>
+
+      <main className={styles.ninjaMain}>
+        <RemoteCursor
+          socket={socket!}
+          roomId={roomId}
+          myPlayerId={myPlayerId}
+          players={players.map((p) => ({
+            name: p.name || "Unknown",
+            socketId: String(p.id),
+            color: p.color,
+          }))}
+          scale={scale}
+          fixedContainerRef={containerRef}
+          visible={true}
+          isRelative={false}
+        />
+
+        {/* 左サイドバー */}
+        <aside className={styles.sidebarLeft}>
+          <Deck
+            socket={socket!}
+            roomId={roomId}
+            deckId="order"
+            name="[ 注文カード ]"
+            playerId={currentPlayerId}
+          />
+          <div className={styles.diceSection}>
+            <div className={styles.diceWrapper}>
+              <p className={styles.diceLabel}>3面ダイス</p>
+              <Dice
+                sides={3}
+                socket={socket}
+                diceId="action-move"
+                roomId={roomId}
+              />
+            </div>
+
+            <div className={styles.diceWrapper}>
+              <p className={styles.diceLabel}>刻限ダイス</p>
+              <Dice
+                sides={4}
+                socket={socket}
+                diceId="environment"
+                roomId={roomId}
+                customFaces={[
+                  <div key="e1" className={styles.diceCustomFace}>
+                    ☀️ 昼
+                  </div>,
+                  <div key="e2" className={styles.diceCustomFace}>
+                    🌙 夜
+                  </div>,
+                  <div key="e3" className={styles.diceCustomFace}>
+                    🌫️ 霧
+                  </div>,
+                  <div key="e4" className={styles.diceCustomFace}>
+                    🏮 警戒
+                  </div>,
+                ]}
+              />
+            </div>
+          </div>
+          <div className={styles.tokenPos}>
+            <TokenStore
+              socket={socket!}
+              roomId={roomId}
+              tokenStoreId="KUNAI_COUNT"
+              name="コマ置場"
+            />
+          </div>
+        </aside>
+
+        {/* 中央：配達グリッドボード */}
+        <div className={styles.centerBoard}>
+          <GridDeliverRoad rows={8} cols={8} />
+        </div>
+
+        {players.map((player, i) => (
+          <div key={player.id} className={styles.draggableSaturated}>
+            <Draggable
+              image="/images/uberninja/ninja.svg"
+              mask={true}
+              pieceId={`${player.id}_ninja`}
+              socket={socket}
+              roomId={roomId}
+              initialX={100 + i * 130}
+              initialY={660}
+              color={player.color}
+              size={140}
+              containerRef={containerRef}
+              scale={scale}
+            />
+            <Draggable
+              image="/images/uberninja/scooter.svg"
+              mask={true}
+              pieceId={`${player.id}_scooter`}
+              socket={socket}
+              roomId={roomId}
+              initialX={100 + i * 130}
+              initialY={720}
+              color={player.color}
+              size={140}
+              containerRef={containerRef}
+              scale={scale}
+            />
+            {[...Array(8)].map((_, j) => (
               <Draggable
-                pieceId={`white_card_${j}`}
+                key={`${player.id}_makibishi_${j}`}
+                image="/images/uberninja/makibishi.svg"
+                pieceId={`${player.id}_makibishi_${j}`}
                 socket={socket}
                 roomId={roomId}
-                initialX={800 + j * 5} // 中央付近に少しずらして重ねる例
-                initialY={750 + j * 2}
-                color="#ffffff"
+                initialX={1250 + i * 150 + j * 4}
+                initialY={650 + j * 4}
+                color={player.color}
                 size={65}
                 containerRef={containerRef}
                 scale={scale}
               />
-            </div>
-          ))}
+            ))}
+          </div>
+        ))}
 
-          {/* 右サイドバー */}
-          <aside className={styles.sidebarRight}>
-            <ScoreBoard
-              socket={socket!}
+        {/* 共通の荷物 */}
+        {[...Array(8)].map((_, j) => (
+          <div key={`order_${j}`} className={styles.draggableSaturated}>
+            <Draggable
+              pieceId={`white_card_${j}`}
+              socket={socket}
               roomId={roomId}
-              players={players}
-              currentPlayerId={currentPlayerId}
-              myPlayerId={myPlayerId}
-              isDebug={true}
+              initialX={800 + j * 5}
+              initialY={750 + j * 2}
+              color="#ffffff"
+              size={65}
+              containerRef={containerRef}
+              scale={scale}
             />
-          </aside>
-        </main>
-      </div>
+          </div>
+        ))}
+
+        {/* 右サイドバー */}
+        <aside className={styles.sidebarRight}>
+          <ScoreBoard
+            socket={socket!}
+            roomId={roomId}
+            players={players}
+            currentPlayerId={currentPlayerId}
+            myPlayerId={myPlayerId}
+            isDebug={true}
+          />
+        </aside>
+      </main>
     </div>
   );
 }

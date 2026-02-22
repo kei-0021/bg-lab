@@ -1,35 +1,19 @@
 /* src/rooms/UberNinjaRoom.module.css */
 
 /* --- ベースレイアウト --- */
-.ninjaViewport {
-  width: 100vw;
-  height: 100vh;
-  background-color: #1a3a1a;
-  background-image: radial-gradient(
-    circle at 50% 50%,
-    #2d5a27 0%,
-    #0a1a0a 100%
-  );
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  font-family: "Hiragino Mincho ProN", "MS Mincho", serif;
-}
+/* Viewportを削除し、最外周の設定を調整 */
 
 .gameScalableWrapper {
   background-color: #243520;
   position: relative;
-  box-shadow:
-    0 0 80px rgba(0, 0, 0, 0.8),
-    0 0 40px rgba(50, 100, 40, 0.4);
-  border: 4px solid #0d1a0d;
+  /* 枠線と影を削除し背景に馴染ませる */
   transform-origin: center center;
   display: flex;
   flex-direction: column;
   width: 1600px;
   height: 900px;
   overflow: hidden;
+  margin: auto; /* 中央に配置 */
 }
 
 /* --- ヘッダー --- */
@@ -99,20 +83,20 @@
 .ninjaMain {
   flex: 1;
   display: flex;
-  justify-content: space-between;
-  align-items: stretch;
+  justify-content: center;
+  align-items: center;
   padding: 20px;
   position: relative;
   background: rgba(20, 40, 20, 0.3);
-  gap: 15px;
+  gap: 10px;
   overflow: hidden;
   min-height: 0;
 }
 
-/* --- サイドバー（サイズアップ版） --- */
+/* --- サイドバー --- */
 .sidebarLeft,
 .sidebarRight {
-  width: 400px;
+  width: 350px;
   background: rgba(0, 5, 0, 0.85);
   backdrop-filter: blur(10px);
   border: 1px solid #3a6332;
@@ -143,28 +127,47 @@
 
 /* --- 中央盤面エリア --- */
 .centerBoard {
-  flex: 1;
+  width: 600px;
+  height: 600px;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 5;
-  height: 100%;
-  min-width: 0;
+  position: relative;
+  flex-shrink: 0;
 }
 
 .centerBoard > div {
-  transform: scale(0.95);
+  width: 100%;
+  height: 100%;
 }
 
 /* --- パーツ --- */
 .diceSection {
   display: flex;
-  gap: 10px;
+  gap: 15px;
   justify-content: center;
+  align-items: flex-end;
   background: rgba(0, 0, 0, 0.8);
   padding: 15px;
   border-radius: 8px;
   border: 2px solid #4a7c44;
+}
+
+.diceWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.diceLabel {
+  font-size: 10px;
+  color: #fff;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  font-family: sans-serif;
 }
 
 .diceCustomFace {
