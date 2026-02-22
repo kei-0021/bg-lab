@@ -193,18 +193,6 @@
   transform-origin: top center;
 }
 
-.diceSection {
-  display: flex;
-  gap: 10px;
-  margin-top: 15px;
-}
-
-.diceCustomFace {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
 .draggableSaturated > div {
   filter: saturate(0.8) brightness(1.5) contrast(0.8) !important;
 }
@@ -403,4 +391,43 @@
 [class*="draggable"]:active,
 [class*="dragging"] {
   z-index: 999999 !important;
+}
+
+/* ダイスセクション全体：各セットを横に並べる */
+.diceSection {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: flex-end; /* 底辺を揃える */
+  background: rgba(0, 0, 0, 0.8);
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 15px;
+  border: 2px solid #4a7c44;
+}
+
+/* 各ダイスとラベルの塊：縦に並べて中央揃え */
+.diceWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ラベル：10px、白、中央揃え */
+.diceLabel {
+  font-size: 10px;
+  color: #fff;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  font-family: sans-serif; /* 視認性のため */
+}
+
+/* カスタムフェイス画像 */
+.diceCustomFace {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }

@@ -278,7 +278,8 @@ export default function FireworksRoom() {
             </div>
           ))}
 
-          <div className={styles.sidebarLeft}>
+          {/* 左サイドバー */}
+          <aside className={styles.sidebarLeft}>
             <Deck
               socket={socket!}
               roomId={roomId}
@@ -287,37 +288,54 @@ export default function FireworksRoom() {
               playerId={currentPlayerId}
             />
             <div className={styles.diceSection}>
-              <Dice sides={3} socket={socket} diceId="move" roomId={roomId} />
-              <Dice
-                sides={4}
-                socket={socket}
-                diceId="weather"
-                roomId={roomId}
-                customFaces={[
-                  <img
-                    key="f1"
-                    src="/images/fireworks/weather_sunny.png"
-                    className={styles.diceCustomFace}
-                  />,
-                  <img
-                    key="f2"
-                    src="/images/fireworks/weather_cloud.png"
-                    className={styles.diceCustomFace}
-                  />,
-                  <img
-                    key="f3"
-                    src="/images/fireworks/weather_wind.png"
-                    className={styles.diceCustomFace}
-                  />,
-                  <img
-                    key="f4"
-                    src="/images/fireworks/weather_rain.png"
-                    className={styles.diceCustomFace}
-                  />,
-                ]}
-              />
+              <div className={styles.diceWrapper}>
+                <p className={styles.diceLabel}>3面ダイス</p>
+                <Dice sides={3} socket={socket} diceId="move" roomId={roomId} />
+              </div>
+
+              <div className={styles.diceWrapper}>
+                <p className={styles.diceLabel}>4面ダイス</p>
+                <Dice
+                  sides={4}
+                  socket={socket}
+                  diceId="move2"
+                  roomId={roomId}
+                />
+              </div>
+
+              <div className={styles.diceWrapper}>
+                <p className={styles.diceLabel}>天候</p>
+                <Dice
+                  sides={4}
+                  socket={socket}
+                  diceId="weather"
+                  roomId={roomId}
+                  customFaces={[
+                    <img
+                      key="f1"
+                      src="/images/fireworks/weather_sunny.png"
+                      className={styles.diceCustomFace}
+                    />,
+                    <img
+                      key="f2"
+                      src="/images/fireworks/weather_cloud.png"
+                      className={styles.diceCustomFace}
+                    />,
+                    <img
+                      key="f3"
+                      src="/images/fireworks/weather_wind.png"
+                      className={styles.diceCustomFace}
+                    />,
+                    <img
+                      key="f4"
+                      src="/images/fireworks/weather_rain.png"
+                      className={styles.diceCustomFace}
+                    />,
+                  ]}
+                />
+              </div>
             </div>
-          </div>
+          </aside>
 
           <div
             className={`${fieldStyles.baseField} ${fieldStyles[fieldClassName]}`}
