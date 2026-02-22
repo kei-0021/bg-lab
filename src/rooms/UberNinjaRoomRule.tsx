@@ -35,7 +35,7 @@ export default function UberNinjaRoomRule({
             </li>
             <li>
               <strong>其の四：</strong> スクーターは素早い
-              (サイコロで出た目*2で進む)が、環境（昼・夜・霧）に左右される。
+              (サイコロで出た目*2で進む)が、直進のみ行い、環境（昼・夜・霧）に左右される。
             </li>
           </ul>
         </div>

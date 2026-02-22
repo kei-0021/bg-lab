@@ -267,3 +267,21 @@
   opacity: 0.5 !important;
   background-color: currentColor !important;
 }
+
+/* 各ダイスとラベルの塊：縦に並べて中央揃え */
+.diceWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ラベル：10px、白、中央揃え */
+.diceLabel {
+  font-size: 10px;
+  color: #fff;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  font-family: sans-serif; /* 視認性のため */
+}

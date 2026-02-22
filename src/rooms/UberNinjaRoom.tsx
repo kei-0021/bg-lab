@@ -220,37 +220,46 @@ export function UberNinjaRoom() {
             <Deck
               socket={socket!}
               roomId={roomId}
-              deckId="jutsu-scroll"
+              deckId="order"
               name="[ 注文カード ]"
               playerId={currentPlayerId}
             />
             <div className={styles.diceSection}>
-              <Dice
-                sides={4}
-                socket={socket}
-                diceId="action-move"
-                roomId={roomId}
-              />
-              <Dice
-                sides={4}
-                socket={socket}
-                diceId="environment"
-                roomId={roomId}
-                customFaces={[
-                  <div key="e1" className={styles.diceCustomFace}>
-                    ☀️ 昼
-                  </div>,
-                  <div key="e2" className={styles.diceCustomFace}>
-                    🌙 夜
-                  </div>,
-                  <div key="e3" className={styles.diceCustomFace}>
-                    🌫️ 霧
-                  </div>,
-                  <div key="e4" className={styles.diceCustomFace}>
-                    🏮 警戒
-                  </div>,
-                ]}
-              />
+              {/* 移動ダイス */}
+              <div className={styles.diceWrapper}>
+                <p className={styles.diceLabel}>3面ダイス</p>
+                <Dice
+                  sides={3}
+                  socket={socket}
+                  diceId="action-move"
+                  roomId={roomId}
+                />
+              </div>
+
+              {/* 環境ダイス */}
+              <div className={styles.diceWrapper}>
+                <p className={styles.diceLabel}>刻限ダイス</p>
+                <Dice
+                  sides={4}
+                  socket={socket}
+                  diceId="environment"
+                  roomId={roomId}
+                  customFaces={[
+                    <div key="e1" className={styles.diceCustomFace}>
+                      ☀️ 昼
+                    </div>,
+                    <div key="e2" className={styles.diceCustomFace}>
+                      🌙 夜
+                    </div>,
+                    <div key="e3" className={styles.diceCustomFace}>
+                      🌫️ 霧
+                    </div>,
+                    <div key="e4" className={styles.diceCustomFace}>
+                      🏮 警戒
+                    </div>,
+                  ]}
+                />
+              </div>
             </div>
             <div className={styles.tokenPos}>
               <TokenStore
@@ -313,6 +322,22 @@ export function UberNinjaRoom() {
                   scale={scale}
                 />
               ))}
+            </div>
+          ))}
+          {/* 共通の荷物（プレイヤーに依存しない固定8枚） */}
+          {[...Array(8)].map((_, j) => (
+            <div key={`order_${j}`} className={styles.draggableSaturated}>
+              <Draggable
+                pieceId={`white_card_${j}`}
+                socket={socket}
+                roomId={roomId}
+                initialX={800 + j * 5} // 中央付近に少しずらして重ねる例
+                initialY={750 + j * 2}
+                color="#ffffff"
+                size={65}
+                containerRef={containerRef}
+                scale={scale}
+              />
             </div>
           ))}
 
