@@ -1,0 +1,290 @@
+/* src/rooms/UberNinjaRoom.module.css */
+
+/* --- ベースレイアウト --- */
+/* Viewportを削除し、最外周の設定を調整 */
+
+.gameScalableWrapper {
+  background-color: #243520;
+  position: relative;
+  /* 枠線と影を削除し背景に馴染ませる */
+  transform-origin: center center;
+  display: flex;
+  flex-direction: column;
+  width: 1600px;
+  height: 900px;
+  overflow: hidden;
+  margin: auto; /* 中央に配置 */
+}
+
+/* --- ヘッダー --- */
+.ninjaHeader {
+  height: 80px;
+  background: linear-gradient(to bottom, #2d5a27, #1a331a);
+  border-bottom: 3px solid #000;
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+  justify-content: space-between;
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 100;
+}
+
+.logoText {
+  font-size: 2rem;
+  letter-spacing: 0.2em;
+  color: #e6ffcc;
+  text-shadow:
+    2px 2px 0px #000,
+    0 0 12px rgba(100, 200, 80, 0.5);
+  margin: 0;
+}
+
+.headerNav {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.navBtnLobby {
+  background: #000;
+  color: #cdeeb5;
+  border: 2px solid #4a7c44;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  font-weight: bold;
+}
+
+.navBtnLobby:hover {
+  background: #4a7c44;
+  color: #fff;
+}
+
+.navBtnScroll {
+  background: #000;
+  color: #d4af37;
+  border: 2px solid #d4af37;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  font-weight: bold;
+}
+
+.navBtnScroll:hover {
+  background: #d4af37;
+  color: #000;
+}
+
+/* --- メインコンテンツ領域 --- */
+.ninjaMain {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  position: relative;
+  background: rgba(20, 40, 20, 0.3);
+  gap: 10px;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* --- サイドバー --- */
+.sidebarLeft,
+.sidebarRight {
+  width: 350px;
+  background: rgba(0, 5, 0, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid #3a6332;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 10;
+  height: 100%;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+/* --- クナイ残数 (トークン) --- */
+.tokenPos {
+  position: relative;
+  margin-top: auto;
+  background: #6b8e23;
+  padding: 12px 20px;
+  border-radius: 4px;
+  border: 2px solid #1a2e1a;
+  color: #fff;
+  font-weight: bold;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+}
+
+/* --- 中央盤面エリア --- */
+.centerBoard {
+  width: 600px;
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.centerBoard > div {
+  width: 100%;
+  height: 100%;
+}
+
+/* --- パーツ --- */
+.diceSection {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: flex-end;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 15px;
+  border-radius: 8px;
+  border: 2px solid #4a7c44;
+}
+
+.diceWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.diceLabel {
+  font-size: 10px;
+  color: #fff;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  font-family: sans-serif;
+}
+
+.diceCustomFace {
+  background: #4a7c44;
+  color: #fff;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.ninjaPieceWrapper {
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.7));
+}
+
+/* --- 入場画面 --- */
+.ninjaContainer {
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ninjaEntranceWrapper {
+  background: rgba(5, 15, 5, 0.95);
+  padding: 60px;
+  border: 4px solid #5a8c4a;
+  text-align: center;
+}
+
+.ninjaTitle {
+  color: #fff;
+  font-size: 3rem;
+  margin-bottom: 40px;
+  letter-spacing: 0.5em;
+  text-shadow: 0 0 20px #ff3e3e;
+}
+
+.ninjaInput {
+  background: #111;
+  border: 1px solid #444;
+  color: #fff;
+  padding: 15px 25px;
+  font-size: 1.5rem;
+  margin-right: 15px;
+  outline: none;
+}
+
+.ninjaJoinButton {
+  background: #3a6332;
+  color: #fff;
+  border: none;
+  padding: 15px 40px;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 0 #1a2e1a;
+  transition: all 0.2s;
+}
+
+.ninjaJoinButton:hover {
+  background: #ff3e3e;
+  transform: scale(1.05);
+}
+
+/* --- リザルト --- */
+.ninjaResultOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ninjaResultModal {
+  background: #fdf5e6;
+  color: #1a1a1a;
+  padding: 50px;
+  border: 10px double #3d0000;
+  text-align: center;
+}
+
+.ninjaRankItem {
+  display: flex;
+  padding: 15px;
+  margin: 10px 0;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.rank1 {
+  background: linear-gradient(90deg, #fff3b0, transparent);
+  border-left: 5px solid #d4af37;
+}
+
+.draggableSaturated img {
+  opacity: 0.5 !important;
+  background-color: currentColor !important;
+}
+
+/* 各ダイスとラベルの塊：縦に並べて中央揃え */
+.diceWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ラベル：10px、白、中央揃え */
+.diceLabel {
+  font-size: 10px;
+  color: #fff;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  font-family: sans-serif; /* 視認性のため */
+}

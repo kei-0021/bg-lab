@@ -10,7 +10,7 @@
     "jsx": "react-jsx",
     "esModuleInterop": true, // <-- TS1259 エラーの解消
     "resolveJsonModule": true, // <-- TS2732 (JSON) エラーの解消
-    "moduleResolution": "node", // <-- JSONモジュール解決の競合解消
+    "moduleResolution": "Bundler",
 
     "useDefineForClassFields": true,
     "skipLibCheck": true,

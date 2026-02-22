@@ -1,0 +1,66 @@
+[
+  {
+    "id": "card-A-01",
+    "name": "北1",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard"
+  },
+  {
+    "id": "card-A-02",
+    "name": "北2",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard"
+  },
+  {
+    "id": "card-B-01",
+    "name": "東1",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard"
+  },
+  {
+    "id": "card-B-02",
+    "name": "東2",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard"
+  },
+  {
+    "id": "card-C-01",
+    "name": "南1",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard"
+  },
+  {
+    "id": "card-A-03",
+    "name": "南2",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard"
+  },
+  {
+    "id": "card-A-04",
+    "name": "西1",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard"
+  },
+  {
+    "id": "card-B-03",
+    "name": "西2",
+    "location": "deck",
+    "drawLocation": "hand",
+    "playLocation": "field",
+    "fieldBackLocation": "discard"
+  }
+]

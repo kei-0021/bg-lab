@@ -1,0 +1,85 @@
+/* src/rooms/UberNinjaRoomRule.module.css */
+
+.ninjaRuleOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.ninjaScrollContent {
+  background: #fdf5e6; /* 古紙風の色 */
+  width: 600px;
+  padding: 40px;
+  border-left: 25px solid #5a1a1a; /* 巻物の軸（左） */
+  border-right: 25px solid #5a1a1a; /* 巻物の軸（右） */
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+  position: relative;
+  max-height: 85%;
+  overflow-y: auto;
+  border-radius: 4px;
+}
+
+.scrollHeader h2 {
+  text-align: center;
+  border-bottom: 2px solid #3d0000;
+  padding-bottom: 15px;
+  color: #3d0000;
+  font-family: "Hiragino Mincho ProN", "MS Mincho", serif;
+  margin-top: 0;
+}
+
+.scrollBody {
+  margin: 25px 0;
+  line-height: 2.2;
+  color: #1a1a1a;
+  font-size: 1.15rem;
+  font-family: "Hiragino Mincho ProN", "MS Mincho", serif;
+}
+
+.scrollBody ul {
+  list-style: none;
+  padding: 0;
+}
+
+.scrollBody li {
+  margin-bottom: 20px;
+  padding-left: 1.5em;
+  text-indent: -1.5em;
+}
+
+.scrollBody strong {
+  color: #d32f2f;
+  font-size: 1.2rem;
+}
+
+.scrollCloseBtn {
+  display: block;
+  margin: 20px auto 0;
+  background: #3d0000;
+  color: #fff;
+  border: none;
+  padding: 12px 50px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-family: inherit;
+  transition: all 0.2s;
+  box-shadow: 0 4px 0 #000;
+}
+
+.scrollCloseBtn:hover {
+  background: #ff3e3e;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #000;
+}
+
+.scrollCloseBtn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #000;
+}

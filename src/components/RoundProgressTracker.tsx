@@ -8,9 +8,10 @@ interface RoundProgressTrackerProps {
 
 export const RoundProgressTracker: React.FC<RoundProgressTrackerProps> = ({
   currentRound,
-  maxRound = 5,
+  maxRound = 10,
 }) => {
-  const progressWidth = `${((currentRound - 1) / (maxRound - 1)) * 100}%`;
+  const denominator = maxRound > 1 ? maxRound - 1 : 1;
+  const progressWidth = `${(Math.min(currentRound - 1, denominator) / denominator) * 100}%`;
 
   return (
     <div className={styles.container}>
@@ -27,8 +28,11 @@ export const RoundProgressTracker: React.FC<RoundProgressTrackerProps> = ({
           return (
             <div
               key={i}
-              className={styles.point}
-              style={{ background: isActive ? "#ffc300" : "#444" }}
+              className={`${styles.point} ${isActive ? styles.active : ""} ${isCurrent ? styles.current : ""}`}
+              style={{
+                // flexではなく、絶対位置で均等配置
+                left: `${(i / denominator) * 100}%`,
+              }}
             >
               <span
                 className={styles.number}

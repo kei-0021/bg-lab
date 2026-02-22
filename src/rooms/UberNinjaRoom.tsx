@@ -1,0 +1,356 @@
+// src/components/UberNinjaRoom.tsx
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { Player, PlayerWithResources } from "react-game-ui";
+import {
+  Deck,
+  Dice,
+  Draggable,
+  RemoteCursor,
+  ScoreBoard,
+  TokenStore,
+} from "react-game-ui";
+import "react-game-ui/dist/react-game-ui.css";
+import { useNavigate, useParams } from "react-router-dom";
+import GridDeliverRoad from "../components/GridDeliverRoad.js";
+import { useSocket } from "../hooks/useSocket.js";
+import styles from "./UberNinjaRoom.module.css";
+import UberNinjaRoomRule from "./UberNinjaRoomRule.js";
+
+const SERVER_URL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:4000"
+    : "https://bg-lab.onrender.com";
+
+const BASE_WIDTH = 1600;
+const BASE_HEIGHT = 900;
+
+interface TurnUpdatePayload {
+  playerId: string;
+  currentRound: number;
+  currentTurnIndex: number;
+}
+
+export function UberNinjaRoom() {
+  const { roomId } = useParams<{ roomId: string }>();
+  const socket = useSocket(SERVER_URL);
+  const navigate = useNavigate();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const [userName, setUserName] = useState<string>("");
+  const [isJoining, setIsJoining] = useState<boolean>(false);
+  const [hasJoined, setHasJoined] = useState<boolean>(false);
+  const [myPlayerId, setMyPlayerId] = useState<string | null>(null);
+  const [players, setPlayers] = useState<PlayerWithResources[]>([]);
+  const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
+  const [showRules, setShowRules] = useState(false);
+  const [gameResult, setGameResult] = useState<any>(null);
+  const [scale, setScale] = useState<number>(1);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const scaleX = window.innerWidth / BASE_WIDTH;
+      const scaleY = window.innerHeight / BASE_HEIGHT;
+      setScale(Math.min(scaleX, scaleY));
+    };
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const handleJoinRoom = useCallback(() => {
+    if (!socket || userName.trim() === "" || isJoining) return;
+    setIsJoining(true);
+    socket.emit("room:join", {
+      roomId,
+      gamePresetId: "uberninja",
+      playerName: userName.trim(),
+    });
+  }, [socket, roomId, userName, isJoining]);
+
+  useEffect(() => {
+    if (!socket) return;
+    const handleAssignId = (id: Player["id"]) => {
+      setMyPlayerId(id);
+      setHasJoined(true);
+      setIsJoining(false);
+    };
+    const handlePlayersUpdate = (updatedPlayers: PlayerWithResources[]) =>
+      setPlayers(updatedPlayers);
+    const handleGameTurn = (data: TurnUpdatePayload | string) => {
+      if (typeof data === "string") {
+        setCurrentPlayerId(data);
+      } else {
+        setCurrentPlayerId(data.playerId);
+      }
+    };
+    const handleGameEnd = (result: any) => setGameResult(result);
+
+    socket.on("player:assign-id", handleAssignId);
+    socket.on("players:update", handlePlayersUpdate);
+    socket.on("game:turn", handleGameTurn);
+    socket.on("game:end", handleGameEnd);
+
+    return () => {
+      socket.off("player:assign-id", handleAssignId);
+      socket.off("players:update", handlePlayersUpdate);
+      socket.off("game:turn", handleGameTurn);
+      socket.off("game:end", handleGameEnd);
+    };
+  }, [socket]);
+
+  if (!roomId) return null;
+
+  if (!hasJoined) {
+    return (
+      <div className={styles.ninjaContainer}>
+        <div className={styles.ninjaEntranceWrapper}>
+          <h2 className={styles.ninjaTitle}>uber Ninja</h2>
+          <div className={styles.ninjaFormGroup}>
+            <input
+              className={styles.ninjaInput}
+              type="text"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              placeholder="忍名（シノビネーム）"
+              autoFocus
+              onKeyDown={(e) => e.key === "Enter" && handleJoinRoom()}
+            />
+            <button
+              className={styles.ninjaJoinButton}
+              onClick={handleJoinRoom}
+              disabled={isJoining}
+            >
+              {isJoining ? "潜入中..." : "いざ参る"}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    /* ninjaViewportを削除し、直にScalableWrapperを配置（CSS側でmargin: auto等で調整済み想定） */
+    <div
+      className={styles.gameScalableWrapper}
+      ref={containerRef}
+      style={{
+        width: `${BASE_WIDTH}px`,
+        height: `${BASE_HEIGHT}px`,
+        transform: `scale(${scale})`,
+        /* Viewportを消した分、画面中央に置くためのスタイルを念のためインラインでも補強 */
+        position: "absolute",
+        left: "50%",
+        top: "50%",
+        marginLeft: `-${BASE_WIDTH / 2}px`,
+        marginTop: `-${BASE_HEIGHT / 2}px`,
+      }}
+    >
+      {/* リザルトモーダル */}
+      {gameResult && (
+        <div className={styles.ninjaResultOverlay}>
+          <div className={styles.ninjaResultModal}>
+            <div className={styles.ninjaResultHeader}>
+              <span className={styles.ninjaIcon}>⚔️</span>
+              <h2>任務完了!!</h2>
+              <span className={styles.ninjaIcon}>⚔️</span>
+            </div>
+            <p className={styles.ninjaResultMessage}>{gameResult.message}</p>
+            <div className={styles.ninjaRankingList}>
+              {gameResult.rankings?.map((res: any) => (
+                <div
+                  key={res.rank}
+                  className={`${styles.ninjaRankItem} ${styles[`rank${res.rank}`]}`}
+                >
+                  <div className={styles.ninjaRankNum}>{res.rank}位</div>
+                  <div className={styles.ninjaPlayerInfo}>
+                    <span className={styles.ninjaPlayerName}>{res.name}</span>
+                    <span className={styles.ninjaPlayerScore}>
+                      {res.tokens} <small>貫</small>
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button
+              className={styles.ninjaExitButton}
+              onClick={() => navigate("/")}
+            >
+              里を去る
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ルール（巻物）モーダル */}
+      {showRules && <UberNinjaRoomRule setShowRules={setShowRules} />}
+
+      <header className={styles.ninjaHeader}>
+        <div className={styles.headerLogo}>
+          <h1 className={styles.logoText}>🥷 uber Ninja</h1>
+        </div>
+        <div className={styles.headerNav}>
+          <button
+            className={styles.navBtnScroll}
+            onClick={() => setShowRules(true)}
+          >
+            📜 巻物 (ルール)
+          </button>
+          <button onClick={() => navigate("/")} className={styles.navBtnLobby}>
+            撤退
+          </button>
+        </div>
+      </header>
+
+      <main className={styles.ninjaMain}>
+        <RemoteCursor
+          socket={socket!}
+          roomId={roomId}
+          myPlayerId={myPlayerId}
+          players={players.map((p) => ({
+            name: p.name || "Unknown",
+            socketId: String(p.id),
+            color: p.color,
+          }))}
+          scale={scale}
+          fixedContainerRef={containerRef}
+          visible={true}
+          isRelative={false}
+        />
+
+        {/* 左サイドバー */}
+        <aside className={styles.sidebarLeft}>
+          <Deck
+            socket={socket!}
+            roomId={roomId}
+            deckId="order"
+            name="[ 注文カード ]"
+            playerId={currentPlayerId}
+          />
+          <div className={styles.diceSection}>
+            <div className={styles.diceWrapper}>
+              <p className={styles.diceLabel}>3面ダイス</p>
+              <Dice
+                sides={3}
+                socket={socket}
+                diceId="action-move"
+                roomId={roomId}
+              />
+            </div>
+
+            <div className={styles.diceWrapper}>
+              <p className={styles.diceLabel}>刻限ダイス</p>
+              <Dice
+                sides={4}
+                socket={socket}
+                diceId="environment"
+                roomId={roomId}
+                customFaces={[
+                  <div key="e1" className={styles.diceCustomFace}>
+                    ☀️ 昼
+                  </div>,
+                  <div key="e2" className={styles.diceCustomFace}>
+                    🌙 夜
+                  </div>,
+                  <div key="e3" className={styles.diceCustomFace}>
+                    🌫️ 霧
+                  </div>,
+                  <div key="e4" className={styles.diceCustomFace}>
+                    🏮 警戒
+                  </div>,
+                ]}
+              />
+            </div>
+          </div>
+          <div className={styles.tokenPos}>
+            <TokenStore
+              socket={socket!}
+              roomId={roomId}
+              tokenStoreId="KUNAI_COUNT"
+              name="コマ置場"
+            />
+          </div>
+        </aside>
+
+        {/* 中央：配達グリッドボード */}
+        <div className={styles.centerBoard}>
+          <GridDeliverRoad rows={8} cols={8} />
+        </div>
+
+        {players.map((player, i) => (
+          <div key={player.id} className={styles.draggableSaturated}>
+            <Draggable
+              image="/images/uberninja/ninja.svg"
+              mask={true}
+              pieceId={`${player.id}_ninja`}
+              socket={socket}
+              roomId={roomId}
+              initialX={100 + i * 130}
+              initialY={660}
+              color={player.color}
+              size={140}
+              containerRef={containerRef}
+              scale={scale}
+            />
+            <Draggable
+              image="/images/uberninja/scooter.svg"
+              mask={true}
+              pieceId={`${player.id}_scooter`}
+              socket={socket}
+              roomId={roomId}
+              initialX={100 + i * 130}
+              initialY={720}
+              color={player.color}
+              size={140}
+              containerRef={containerRef}
+              scale={scale}
+            />
+            {[...Array(8)].map((_, j) => (
+              <Draggable
+                key={`${player.id}_makibishi_${j}`}
+                image="/images/uberninja/makibishi.svg"
+                pieceId={`${player.id}_makibishi_${j}`}
+                socket={socket}
+                roomId={roomId}
+                initialX={1250 + i * 150 + j * 4}
+                initialY={650 + j * 4}
+                color={player.color}
+                size={65}
+                containerRef={containerRef}
+                scale={scale}
+              />
+            ))}
+          </div>
+        ))}
+
+        {/* 共通の荷物 */}
+        {[...Array(8)].map((_, j) => (
+          <div key={`order_${j}`} className={styles.draggableSaturated}>
+            <Draggable
+              pieceId={`white_card_${j}`}
+              socket={socket}
+              roomId={roomId}
+              initialX={800 + j * 5}
+              initialY={750 + j * 2}
+              color="#ffffff"
+              size={65}
+              containerRef={containerRef}
+              scale={scale}
+            />
+          </div>
+        ))}
+
+        {/* 右サイドバー */}
+        <aside className={styles.sidebarRight}>
+          <ScoreBoard
+            socket={socket!}
+            roomId={roomId}
+            players={players}
+            currentPlayerId={currentPlayerId}
+            myPlayerId={myPlayerId}
+            isDebug={true}
+          />
+        </aside>
+      </main>
+    </div>
+  );
+}

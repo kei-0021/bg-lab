@@ -5,34 +5,36 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "clean": "rimraf dist node_modules/.cache apps/react-game-ui/dist apps/react-game-ui/types",
-    "build": "pnpm --filter react-game-ui run build && vite build",
+    "clean": "rm -rf dist node_modules/.cache",
+    "build": "pnpm --filter react-game-ui run build && vite build && tsc src/server.ts --outDir dist --rootDir . --module NodeNext --target ESNext --moduleResolution NodeNext --allowJs --skipLibCheck --esModuleInterop",
     "preview": "vite preview",
-    "start": "node dist/server.js",
-    "dev:multi": "concurrently \"npm run start\" \"vite --host\""
+    "server": "tsx src/server.ts",
+    "dev:multi": "concurrently \"npm run server\" \"npm run dev\""
   },
   "devDependencies": {
     "@rollup/plugin-replace": "^6.0.3",
-    "@rollup/rollup-linux-x64-gnu": "^4.57.1",
+    "@rollup/rollup-linux-x64-gnu": "^4.58.0",
+    "@types/node": "^25.3.0",
     "@types/react": "^18.3.28",
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react": "^5.1.4",
     "concurrently": "^9.2.1",
     "express": "^5.2.1",
     "prettier": "^3.8.1",
-    "rimraf": "^6.1.2",
+    "rimraf": "^6.1.3",
     "rollup": "4.20.0",
     "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typescript": "~5.8.3",
     "vite": "^7.3.1",
     "vite-plugin-node-polyfills": "^0.24.0",
     "vite-plugin-static-copy": "^3.2.0"
   },
   "dependencies": {
-    "kei-0021@issue-12@latest": "link:github/kei-0021@issue-12@latest",
+    "@types/react-router-dom": "^5.3.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-game-ui": "github:kei-0021/react-game-ui#issue-17",
+    "react-game-ui": "github:kei-0021/react-game-ui#main",
     "react-router-dom": "^7.13.0",
     "socket.io": "^4.8.3",
     "socket.io-client": "^4.8.3"
@@ -45,6 +47,9 @@
     "overrides": {
       "react": "18.3.1",
       "react-dom": "18.3.1"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   }
 }

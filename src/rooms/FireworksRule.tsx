@@ -1,7 +1,8 @@
+// src/components/FireWorksRule.tsx
 import React from "react";
-import "./FireworksRoom.css";
+import { createPortal } from "react-dom";
+import styles from "./FireworksRoomRule.module.css";
 
-// Propsの型を定義
 interface FireWorksRuleProps {
   isOpen: boolean;
   onClose: () => void;
@@ -13,26 +14,29 @@ export const FireWorksRule: React.FC<FireWorksRuleProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  return (
-    <div className="rules-overlay" onClick={onClose}>
-      <div className="rules-content" onClick={(e) => e.stopPropagation()}>
-        <button className="rules-close" onClick={onClose} aria-label="閉じる">
+  return createPortal(
+    <div className={styles.rulesOverlay} onClick={onClose}>
+      <div className={styles.rulesContent} onClick={(e) => e.stopPropagation()}>
+        <button
+          className={styles.rulesClose}
+          onClick={onClose}
+          aria-label="閉じる"
+        >
           ×
         </button>
-        <h2 className="rules-title">🎆 花火大会 遊び方</h2>
-        <hr className="rules-hr" />
+        <h2 className={styles.rulesTitle}>🎆 花火大会 遊び方</h2>
+        <hr className={styles.rulesHr} />
 
-        <div className="rules-body">
+        <div className={styles.rulesBody}>
           <section>
             <h3>1. 勝利条件</h3>
             <p>
-              共通の場にある<strong>「3枚の演目カード」</strong>
-              から1つを選び、条件に合う「花火カード」を並べます。
-              花火大会が終わるまでに最も高いスコアを獲得した職人が勝者です。
+              条件に合う「花火カード」を並べていきます。 花火大会 (10ラウンド)
+              が終わるまでに最も高いスコアを獲得した職人が勝者です。
             </p>
           </section>
 
-          <section className="section-mt">
+          <section className={styles.sectionMt}>
             <h3>2. 手番の開始 </h3>
             <p>手番のアクションを行う前に、以下の処理を順に行います：</p>
             <ul>
@@ -46,7 +50,7 @@ export const FireWorksRule: React.FC<FireWorksRuleProps> = ({
             </ul>
           </section>
 
-          <section className="section-mt">
+          <section className={styles.sectionMt}>
             <h3>3. 手番のアクション</h3>
             <p>
               自分の番では以下のいずれか<strong>ひとつ</strong>を行います：
@@ -64,19 +68,13 @@ export const FireWorksRule: React.FC<FireWorksRuleProps> = ({
               </li>
             </ul>
           </section>
-
-          {/* <section className="section-mt">
-            <h3>3. 秘伝玉（トークン）</h3>
-            <p>
-              職人の魂です。特別な演目の達成や、得点のブーストに使用できます。
-            </p>
-          </section> */}
         </div>
 
-        <button onClick={onClose} className="rules-ok-btn">
+        <button onClick={onClose} className={styles.rulesOkBtn}>
           了解
         </button>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };

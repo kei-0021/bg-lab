@@ -1,0 +1,433 @@
+/* src/rooms/FireworksRoom.module.css */
+
+.fireworksViewport {
+  width: 100vw;
+  height: 100vh;
+  overflow: auto; /* はみ出し時にスクロールを許可 */
+  position: relative;
+  background: #0a0a0a;
+  display: flex;
+  align-items: flex-start; /* スクロール時に上が切れないよう開始位置固定 */
+  justify-content: center;
+}
+
+.fireworksContainer {
+  min-height: 100vh;
+  background: #05010a;
+  font-family: "Shippori Mincho", serif;
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.fireworksEntranceWrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 100%;
+}
+
+.fireworksTitle {
+  color: #fffdf0 !important;
+  letter-spacing: 0.8em;
+  margin-right: -0.8em;
+  font-size: 64px;
+  margin-bottom: 60px;
+  font-weight: 900;
+  text-align: center;
+  text-shadow:
+    0 0 15px rgba(255, 215, 0, 0.9),
+    0 0 30px rgba(255, 215, 0, 0.6),
+    0 0 50px rgba(255, 165, 0, 0.4) !important;
+  font-family: "Sawarabi Mincho", "Yu Mincho", serif;
+}
+
+.fireworksFormGroup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+}
+
+.fireworksInput {
+  padding: 18px 24px;
+  font-size: 24px;
+  background: #ffffff;
+  border: 4px solid #ffc300;
+  color: #000;
+  text-align: center;
+  outline: none;
+  width: 400px;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(255, 195, 0, 0.4);
+}
+
+.fireworksJoinButton {
+  background: #ffc300;
+  color: #000;
+  border: none;
+  padding: 18px 60px;
+  font-size: 26px;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.fireworksJoinButton:hover {
+  background: #fff;
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+}
+
+.fireworksHeader {
+  position: sticky; /* スクロール時に隠れないよう固定 */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 110px;
+  padding: 20px 40px;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent);
+  box-sizing: border-box;
+}
+
+.logoText {
+  color: #ebebeb;
+  margin: 0;
+  font-size: 35px;
+  text-shadow: 0 0 10px rgba(255, 195, 0, 0.8);
+}
+
+.headerLogo {
+  flex: 0 0 300px;
+}
+.headerTracker {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+.headerNav {
+  flex: 0 0 450px;
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.navBtnRules {
+  background: #ffc300;
+  color: #000;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 15px;
+  box-shadow: 0 0 10px rgba(255, 195, 0, 0.4);
+}
+
+.navBtnLobby {
+  background: #000;
+  color: #ffc300;
+  border: 1px solid #ffc300;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.fireworksMain {
+  width: 100%;
+  min-height: min-content; /* 中身のサイズを保証 */
+  display: flex;
+  padding: 80px 20px 40px 20px;
+  box-sizing: border-box;
+  gap: 20px;
+  justify-content: stretch;
+}
+
+.sidebarLeft {
+  flex: 0.7;
+  min-width: 180px;
+  max-width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.fireworksMainField {
+  flex: 3.5;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 500px;
+}
+
+.sidebarRight {
+  flex: 1.2;
+  min-width: 280px;
+  max-width: 450px;
+  flex-shrink: 0;
+}
+
+.tokenPos {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  z-index: 5;
+}
+
+.gameScalableWrapper {
+  position: relative;
+  flex-shrink: 0;
+  transform-origin: top center;
+}
+
+.draggableSaturated > div {
+  filter: saturate(0.8) brightness(1.5) contrast(0.8) !important;
+}
+
+.draggableSaturated img {
+  opacity: 0.4 !important;
+}
+
+.fireworksResultOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  backdrop-filter: blur(10px);
+}
+
+.fireworksResultModal {
+  background: #1a1a2e;
+  border: 3px double #e94560;
+  border-radius: 15px;
+  padding: 40px;
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(233, 69, 96, 0.4);
+}
+
+.fwResultHeader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.fwResultHeader h2 {
+  color: #f9ed69;
+  font-size: 2.2rem;
+  margin: 0;
+  text-shadow: 0 0 10px rgba(249, 237, 105, 0.6);
+}
+
+.fwIcon {
+  font-size: 1.8rem;
+}
+.fwResultMessage {
+  color: #fff;
+  opacity: 0.9;
+  margin-bottom: 30px;
+}
+.fwRankingList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fwRankItem {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px 20px;
+  border-radius: 10px;
+  gap: 20px;
+}
+
+.rank1 {
+  background: rgba(249, 237, 105, 0.15);
+  border: 1px solid #f9ed69;
+}
+.fwRankNum {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #e94560;
+  width: 50px;
+  flex-shrink: 0;
+  margin-right: 15px;
+}
+.fwPlayerInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.fwPlayerName {
+  font-size: 1.2rem;
+  color: #eee;
+}
+.fwPlayerScore {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.fwExitButton {
+  margin-top: 30px;
+  padding: 12px 40px;
+  background: transparent;
+  border: 2px solid #e94560;
+  color: #e94560;
+  border-radius: 50px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.sidebarLeft :global([class*="deckSection"]) {
+  padding: 8px !important;
+  border: 1px solid #444 !important;
+}
+.sidebarLeft :global([class*="deckContainer"]),
+.sidebarLeft :global([class*="deckCard"]),
+.sidebarLeft :global([class*="deckCardFront"]),
+.sidebarLeft :global([class*="cardBack"]) {
+  width: 64px !important;
+  height: 89px !important;
+  min-width: 64px !important;
+  min-height: 89px !important;
+}
+
+.sidebarLeft :global([class*="cardNameText"]),
+.sidebarLeft :global([class*="deckCardFront"]) {
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+}
+.sidebarLeft :global([class*="deckWrapper"]) {
+  gap: 10px !important;
+}
+
+.sidebarRight :global([class*="container"]) {
+  padding: 12px !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+.sidebarRight :global([class*="title"]) {
+  font-size: 1.1em !important;
+  margin-left: 0 !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  width: 100% !important;
+}
+.sidebarRight :global([class*="playerItem"]) {
+  padding: 8px !important;
+  margin-bottom: 8px !important;
+}
+.sidebarRight :global([class*="activePlayer"]) {
+  transform: translateX(0) !important;
+}
+.sidebarRight :global([class*="tokenBadge"]) {
+  width: 24px !important;
+  height: 24px !important;
+  font-size: 0.6em !important;
+  box-shadow: none !important;
+}
+.sidebarRight :global([class*="cardBase"]) {
+  width: 64px !important;
+  height: 89px !important;
+  font-size: 8px !important;
+  padding: 2px !important;
+}
+.sidebarRight :global([class*="tooltip"]) {
+  width: 120px !important;
+  font-size: 10px !important;
+}
+.sidebarRight :global([class*="buttonGroup"]) {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 4px !important;
+  width: 100% !important;
+  justify-content: space-between !important;
+  margin-top: 8px !important;
+}
+.sidebarRight :global([class*="buttonArea"] button) {
+  white-space: nowrap !important;
+  font-size: 8px !important;
+  padding: 6px 1px !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+  letter-spacing: -1px !important;
+}
+
+/* 煙のDraggableを上書き */
+.draggableSmoke [class*="draggable"] {
+  z-index: 9999 !important;
+}
+
+/* プレイヤー駒のDraggableを上書き */
+.draggableSaturated [class*="draggable"] {
+  z-index: 99999 !important;
+}
+
+/* ドラッグ中は問答無用で最前面にする（ライブラリの仕様に合わせる） */
+[class*="draggable"]:active,
+[class*="dragging"] {
+  z-index: 999999 !important;
+}
+
+/* ダイスセクション全体：各セットを横に並べる */
+.diceSection {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: flex-end; /* 底辺を揃える */
+  background: rgba(0, 0, 0, 0.8);
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 15px;
+  border: 2px solid #4a7c44;
+}
+
+/* 各ダイスとラベルの塊：縦に並べて中央揃え */
+.diceWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ラベル：10px、白、中央揃え */
+.diceLabel {
+  font-size: 10px;
+  color: #fff;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  font-family: sans-serif; /* 視認性のため */
+}
+
+/* カスタムフェイス画像 */
+.diceCustomFace {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
