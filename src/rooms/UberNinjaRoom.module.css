@@ -237,3 +237,10 @@
   background: linear-gradient(90deg, #fff3b0, transparent);
   border-left: 5px solid #d4af37;
 }
+
+.draggableSaturated img {
+  /* 0.4だとかなり薄いので、色味を見せたい場合は 0.6〜0.8 推奨 */
+  opacity: 0.5 !important;
+  /* maskとして使う場合、背景色が透過して見える */
+  background-color: currentColor !important;
+}

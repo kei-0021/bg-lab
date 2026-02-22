@@ -244,7 +244,7 @@ export function UberNinjaRoom() {
                 socket={socket!}
                 roomId={roomId}
                 tokenStoreId="KUNAI_COUNT"
-                name="マキビシ"
+                name="コマ置場"
               />
             </div>
           </aside>
@@ -256,49 +256,50 @@ export function UberNinjaRoom() {
 
           {players.map((player, i) => (
             <div key={player.id} className={styles.draggableSaturated}>
+              {/* 忍者 */}
               <Draggable
                 image="/images/uberninja/ninja.svg"
                 mask={true}
-                pieceId={player.id}
+                pieceId={`${player.id}_ninja`}
                 socket={socket}
                 roomId={roomId}
-                initialX={100 + i * 110}
-                initialY={750}
+                initialX={100 + i * 130}
+                initialY={660}
                 color={player.color}
-                size={120}
-                containerRef={containerRef}
-              />
-              <Draggable
-                image="/images/uberninja/scooter.svg"
-                mask={true}
-                pieceId={player.id}
-                socket={socket}
-                roomId={roomId}
-                initialX={100 + i * 110}
-                initialY={750}
-                color={player.color}
-                size={120}
-                containerRef={containerRef}
-              />
-            </div>
-          ))}
-          {/* 撒菱Draggable 10個 - 右下にスタック配置 */}
-          {[...Array(10)].map((_, i) => (
-            <div key={`smoke-${i}`} className={styles.draggableSaturated}>
-              <Draggable
-                image="/images/uberninja/makibishi.svg"
-                pieceId={`smoke-${i}`}
-                socket={socket}
-                roomId={roomId}
-                // 右下付近 (1600x900基準)
-                initialX={1350 + i * 5}
-                // 少しずつずらして重なりを見せる
-                initialY={700 + i * 5}
-                color="grey"
-                size={65}
+                size={140}
                 containerRef={containerRef}
                 scale={scale}
               />
+              {/* スクーター */}
+              <Draggable
+                image="/images/uberninja/scooter.svg"
+                mask={true}
+                pieceId={`${player.id}_scooter`}
+                socket={socket}
+                roomId={roomId}
+                initialX={100 + i * 130}
+                initialY={720}
+                color={player.color}
+                size={140}
+                containerRef={containerRef}
+                scale={scale}
+              />
+              {/* 撒菱（プレイヤーごとに8個） */}
+              {[...Array(8)].map((_, j) => (
+                <Draggable
+                  key={`${player.id}_makibishi_${j}`}
+                  image="/images/uberninja/makibishi.svg"
+                  pieceId={`${player.id}_makibishi_${j}`}
+                  socket={socket}
+                  roomId={roomId}
+                  initialX={1250 + i * 150 + j * 4}
+                  initialY={650 + j * 4}
+                  color={player.color}
+                  size={65}
+                  containerRef={containerRef}
+                  scale={scale}
+                />
+              ))}
             </div>
           ))}
 
