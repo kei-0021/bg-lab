@@ -2,7 +2,6 @@
 .ninjaViewport {
   width: 100vw;
   height: 100vh;
-  /* 蛍光感を抑えた、深く鮮やかな森の緑 */
   background-color: #1a3a1a;
   background-image: radial-gradient(
     circle at 50% 50%,
@@ -17,7 +16,7 @@
 }
 
 .gameScalableWrapper {
-  background-color: #243520; /* 苔むした岩のような緑 */
+  background-color: #243520;
   position: relative;
   box-shadow:
     0 0 80px rgba(0, 0, 0, 0.8),
@@ -26,12 +25,14 @@
   transform-origin: center center;
   display: flex;
   flex-direction: column;
+  width: 1600px;
+  height: 900px;
+  overflow: hidden;
 }
 
 /* --- ヘッダー --- */
 .ninjaHeader {
   height: 80px;
-  /* 落ち着いた常盤色のグラデーション */
   background: linear-gradient(to bottom, #2d5a27, #1a331a);
   border-bottom: 3px solid #000;
   display: flex;
@@ -39,12 +40,15 @@
   padding: 0 30px;
   justify-content: space-between;
   flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 100;
 }
 
 .logoText {
   font-size: 2rem;
   letter-spacing: 0.2em;
-  color: #e6ffcc; /* 柔らかな若葉色 */
+  color: #e6ffcc;
   text-shadow:
     2px 2px 0px #000,
     0 0 12px rgba(100, 200, 80, 0.5);
@@ -54,7 +58,7 @@
 .navBtnLobby {
   background: #000;
   color: #cdeeb5;
-  border: 2px solid #4a7c44; /* 彩度を落とした自然な緑 */
+  border: 2px solid #4a7c44;
   padding: 8px 16px;
   cursor: pointer;
   transition: all 0.2s;
@@ -71,36 +75,36 @@
   display: flex;
   justify-content: space-between;
   align-items: stretch;
-  padding: 20px 40px;
+  padding: 20px; /* パディングを少し詰めて余白を確保 */
   position: relative;
   background: rgba(20, 40, 20, 0.3);
-  gap: 20px;
+  gap: 15px;
+  overflow: hidden;
+  min-height: 0;
 }
 
-/* --- サイドバー --- */
+/* --- サイドバー（サイズアップ版） --- */
 .sidebarLeft,
 .sidebarRight {
-  width: 280px;
-  background: rgba(0, 5, 0, 0.85); /* 漆黒に近い緑黒 */
+  width: 400px; /* 280pxから拡大 */
+  background: rgba(0, 5, 0, 0.85);
   backdrop-filter: blur(10px);
   border: 1px solid #3a6332;
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  position: relative;
-  top: auto;
-  left: auto;
-  right: auto;
   z-index: 10;
+  height: 100%;
+  box-sizing: border-box;
+  flex-shrink: 0; /* サイドバーの幅を死守 */
 }
 
 /* --- クナイ残数 (トークン) --- */
 .tokenPos {
   position: relative;
   margin-top: auto;
-  /* 蛍光を避け、彩度の高い本物の草色（萌黄色）に */
-  background: #6b8e23; /* オリーブドラブ気味の自然な緑 */
+  background: #6b8e23;
   padding: 12px 20px;
   border-radius: 4px;
   border: 2px solid #1a2e1a;
@@ -113,17 +117,24 @@
 
 /* --- 中央盤面エリア --- */
 .centerBoard {
-  flex: 1;
+  flex: 1; /* 残りのスペースをすべて使う */
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 5;
+  height: 100%;
+  min-width: 0; /* フレックスアイテムの縮小を許可 */
+}
+
+/* 盤面の縮尺を少し詰めたい場合はここを調整 */
+.centerBoard > div {
+  transform: scale(0.95); /* 必要に応じて盤面自体を少し縮小 */
 }
 
 /* --- パーツ --- */
 .diceSection {
   display: flex;
-  gap: 15px;
+  gap: 10px;
   justify-content: center;
   background: rgba(0, 0, 0, 0.8);
   padding: 15px;
@@ -132,7 +143,7 @@
 }
 
 .diceCustomFace {
-  background: #4a7c44; /* 落ち着いた木の葉の緑 */
+  background: #4a7c44;
   color: #fff;
   width: 100%;
   height: 100%;

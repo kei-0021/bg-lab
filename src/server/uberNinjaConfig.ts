@@ -30,7 +30,7 @@ export const uberNinjaConfig = {
           backColor: "#0d8999ff",
         },
       ],
-      initialHand: { deckId: "deepSeaAction", count: 8 },
+      initialHand: { deckId: "deepSeaAction", count: 0 },
     };
   },
 };
