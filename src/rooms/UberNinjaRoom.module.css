@@ -1,3 +1,5 @@
+/* src/rooms/UberNinjaRoom.module.css */
+
 /* --- ベースレイアウト --- */
 .ninjaViewport {
   width: 100vw;
@@ -55,6 +57,12 @@
   margin: 0;
 }
 
+.headerNav {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
 .navBtnLobby {
   background: #000;
   color: #cdeeb5;
@@ -62,11 +70,29 @@
   padding: 8px 16px;
   cursor: pointer;
   transition: all 0.2s;
+  font-family: inherit;
+  font-weight: bold;
 }
 
 .navBtnLobby:hover {
   background: #4a7c44;
   color: #fff;
+}
+
+.navBtnScroll {
+  background: #000;
+  color: #d4af37;
+  border: 2px solid #d4af37;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  font-weight: bold;
+}
+
+.navBtnScroll:hover {
+  background: #d4af37;
+  color: #000;
 }
 
 /* --- メインコンテンツ領域 --- */
@@ -75,7 +101,7 @@
   display: flex;
   justify-content: space-between;
   align-items: stretch;
-  padding: 20px; /* パディングを少し詰めて余白を確保 */
+  padding: 20px;
   position: relative;
   background: rgba(20, 40, 20, 0.3);
   gap: 15px;
@@ -86,7 +112,7 @@
 /* --- サイドバー（サイズアップ版） --- */
 .sidebarLeft,
 .sidebarRight {
-  width: 400px; /* 280pxから拡大 */
+  width: 400px;
   background: rgba(0, 5, 0, 0.85);
   backdrop-filter: blur(10px);
   border: 1px solid #3a6332;
@@ -97,7 +123,7 @@
   z-index: 10;
   height: 100%;
   box-sizing: border-box;
-  flex-shrink: 0; /* サイドバーの幅を死守 */
+  flex-shrink: 0;
 }
 
 /* --- クナイ残数 (トークン) --- */
@@ -117,18 +143,17 @@
 
 /* --- 中央盤面エリア --- */
 .centerBoard {
-  flex: 1; /* 残りのスペースをすべて使う */
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 5;
   height: 100%;
-  min-width: 0; /* フレックスアイテムの縮小を許可 */
+  min-width: 0;
 }
 
-/* 盤面の縮尺を少し詰めたい場合はここを調整 */
 .centerBoard > div {
-  transform: scale(0.95); /* 必要に応じて盤面自体を少し縮小 */
+  transform: scale(0.95);
 }
 
 /* --- パーツ --- */
@@ -239,8 +264,6 @@
 }
 
 .draggableSaturated img {
-  /* 0.4だとかなり薄いので、色味を見せたい場合は 0.6〜0.8 推奨 */
   opacity: 0.5 !important;
-  /* maskとして使う場合、背景色が透過して見える */
   background-color: currentColor !important;
 }

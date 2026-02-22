@@ -1,3 +1,4 @@
+// src/components/UberNinjaRoom.tsx
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Player, PlayerWithResources } from "react-game-ui";
 import {
@@ -13,6 +14,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import GridDeliverRoad from "../components/GridDeliverRoad.js";
 import { useSocket } from "../hooks/useSocket.js";
 import styles from "./UberNinjaRoom.module.css";
+import UberNinjaRoomRule from "./UberNinjaRoomRule.js";
 
 const SERVER_URL =
   import.meta.env.MODE === "development"
@@ -40,6 +42,7 @@ export function UberNinjaRoom() {
   const [myPlayerId, setMyPlayerId] = useState<string | null>(null);
   const [players, setPlayers] = useState<PlayerWithResources[]>([]);
   const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
+  const [showRules, setShowRules] = useState(false);
   const [gameResult, setGameResult] = useState<any>(null);
   const [scale, setScale] = useState<number>(1);
 
@@ -101,7 +104,7 @@ export function UberNinjaRoom() {
     return (
       <div className={styles.ninjaContainer}>
         <div className={styles.ninjaEntranceWrapper}>
-          <h2 className={styles.ninjaTitle}>Uber Ninja</h2>
+          <h2 className={styles.ninjaTitle}>uber Ninja</h2>
           <div className={styles.ninjaFormGroup}>
             <input
               className={styles.ninjaInput}
@@ -136,6 +139,7 @@ export function UberNinjaRoom() {
           transform: `scale(${scale})`,
         }}
       >
+        {/* リザルトモーダル */}
         {gameResult && (
           <div className={styles.ninjaResultOverlay}>
             <div className={styles.ninjaResultModal}>
@@ -171,11 +175,21 @@ export function UberNinjaRoom() {
           </div>
         )}
 
+        {/* ルール（巻物）モーダル - 切り出し済み */}
+        {showRules && <UberNinjaRoomRule setShowRules={setShowRules} />}
+
         <header className={styles.ninjaHeader}>
           <div className={styles.headerLogo}>
             <h1 className={styles.logoText}>🥷 uber Ninja</h1>
           </div>
           <div className={styles.headerNav}>
+            {/* 撤退ボタンの左側に配置 */}
+            <button
+              className={styles.navBtnScroll}
+              onClick={() => setShowRules(true)}
+            >
+              📜 巻物 (ルール)
+            </button>
             <button
               onClick={() => navigate("/")}
               className={styles.navBtnLobby}
@@ -212,7 +226,7 @@ export function UberNinjaRoom() {
             />
             <div className={styles.diceSection}>
               <Dice
-                sides={6}
+                sides={4}
                 socket={socket}
                 diceId="action-move"
                 roomId={roomId}
@@ -238,7 +252,6 @@ export function UberNinjaRoom() {
                 ]}
               />
             </div>
-            {/* クナイ残数をサイドバー内の最下部に相対配置 */}
             <div className={styles.tokenPos}>
               <TokenStore
                 socket={socket!}
