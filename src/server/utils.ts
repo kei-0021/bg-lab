@@ -1,5 +1,6 @@
 import * as fs from "fs/promises";
 import path from "path";
+import type { Card, DeckId } from "react-game-ui";
 
 export async function loadJson(
   relativePath: string,
@@ -10,11 +11,28 @@ export async function loadJson(
   return JSON.parse(data);
 }
 
-export function assertCards(cards: any[], deckId: string): any[] {
+export function assertCards(cards: Card[], deckId: DeckId): Card[] {
   return cards.map((c) => {
-    if (!["hand", "field", "drawn"].includes(c.drawLocation)) {
-      throw new Error(`[ASSERT FAILED] deck: ${deckId}, id: ${c.id}`);
+    // まず drawCondition が存在し、配列であるかを確認
+    if (!c.drawCondition || !Array.isArray(c.drawCondition)) {
+      throw new Error(
+        `[ASSERT FAILED] deck: ${deckId}, id: ${c.id}. drawCondition is missing or not an array. Got: ${JSON.stringify(c.drawCondition)}`
+      );
     }
+
+    // 配列であることが確定してから分割代入を行う
+    const [location, state] = c.drawCondition;
+
+    const isValidLocation = ["hand", "field", "discard"].includes(location);
+    const isValidState = ["face", "back"].includes(state);
+
+    if (!isValidLocation || !isValidState) {
+      throw new Error(
+        `[ASSERT FAILED] Invalid values in deck: ${deckId}, cardId: ${c.id}. 
+         Got: [${location}, ${state}]`
+      );
+    }
+
     return { ...c, deckId };
   });
 }

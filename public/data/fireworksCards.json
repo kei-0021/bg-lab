@@ -3,7 +3,7 @@
     "id": "card-A-01",
     "name": "青1",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "face"],
     "playLocation": "field",
     "fieldBackLocation": "discard",
     "frontImage": "/images/fireworks/blue_1.png"
@@ -12,7 +12,7 @@
     "id": "card-A-02",
     "name": "赤1",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "face"],
     "playLocation": "field",
     "fieldBackLocation": "discard",
     "frontImage": "/images/fireworks/red_1.png"
@@ -21,7 +21,7 @@
     "id": "card-B-01",
     "name": "黄1",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "face"],
     "playLocation": "field",
     "fieldBackLocation": "discard",
     "frontImage": "/images/fireworks/orange_1.png"
@@ -30,7 +30,7 @@
     "id": "card-B-02",
     "name": "緑1",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "face"],
     "playLocation": "field",
     "fieldBackLocation": "discard",
     "frontImage": "/images/fireworks/green_1.png"
@@ -39,7 +39,7 @@
     "id": "card-C-01",
     "name": "白1",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "face"],
     "playLocation": "field",
     "fieldBackLocation": "discard",
     "frontImage": "/images/fireworks/white_1.png"
@@ -48,7 +48,7 @@
     "id": "card-A-03",
     "name": "青2",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "face"],
     "playLocation": "field",
     "fieldBackLocation": "discard",
     "frontImage": "/images/fireworks/blue_2.png"
@@ -57,7 +57,7 @@
     "id": "card-A-04",
     "name": "赤2",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "face"],
     "playLocation": "field",
     "fieldBackLocation": "discard",
     "frontImage": "/images/fireworks/red_2.png"
@@ -66,7 +66,7 @@
     "id": "card-B-03",
     "name": "黄2",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "face"],
     "playLocation": "field",
     "fieldBackLocation": "discard",
     "frontImage": "/images/fireworks/orange_2.png"
@@ -75,7 +75,7 @@
     "id": "card-B-04",
     "name": "緑2",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "face"],
     "playLocation": "field",
     "fieldBackLocation": "discard",
     "frontImage": "/images/fireworks/green_2.png"
@@ -84,7 +84,7 @@
     "id": "card-C-02",
     "name": "白2",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "face"],
     "playLocation": "field",
     "fieldBackLocation": "discard",
     "frontImage": "/images/fireworks/white_2.png"
@@ -93,7 +93,7 @@
     "id": "card-A-05",
     "name": "青3",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "face"],
     "playLocation": "field",
     "fieldBackLocation": "discard",
     "frontImage": "/images/fireworks/blue_3.png"
@@ -102,7 +102,7 @@
     "id": "card-A-06",
     "name": "赤3",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "face"],
     "playLocation": "field",
     "fieldBackLocation": "discard",
     "frontImage": "/images/fireworks/red_3.png"
@@ -111,7 +111,7 @@
     "id": "card-B-05",
     "name": "黄3",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "face"],
     "playLocation": "field",
     "fieldBackLocation": "discard",
     "frontImage": "/images/fireworks/orange_3.png"
@@ -120,7 +120,7 @@
     "id": "card-B-06",
     "name": "緑3",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "face"],
     "playLocation": "field",
     "fieldBackLocation": "discard",
     "frontImage": "/images/fireworks/green_3.png"
@@ -129,7 +129,7 @@
     "id": "card-C-03",
     "name": "白3",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "face"],
     "playLocation": "field",
     "fieldBackLocation": "discard",
     "frontImage": "/images/fireworks/white_3.png"
