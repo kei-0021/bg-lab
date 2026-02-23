@@ -284,8 +284,10 @@ export default function FireworksRoom() {
               socket={socket!}
               roomId={roomId}
               deckId="firework"
-              name="[ 花火カード ]"
-              playerId={currentPlayerId}
+              title="[ 花火カード ]"
+              currentPlayerId={currentPlayerId}
+              myPlayerId={myPlayerId}
+              alwaysDraw={true}
             />
             <div className={styles.diceSection}>
               <div className={styles.diceWrapper}>

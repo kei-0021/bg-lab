@@ -223,8 +223,9 @@ export function UberNinjaRoom() {
             socket={socket!}
             roomId={roomId}
             deckId="order"
-            name="[ 注文カード ]"
-            playerId={currentPlayerId}
+            title="[ 注文カード ]"
+            currentPlayerId={currentPlayerId}
+            myPlayerId={myPlayerId}
           />
           <div className={styles.diceSection}>
             <div className={styles.diceWrapper}>
