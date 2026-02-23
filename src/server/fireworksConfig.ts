@@ -1,4 +1,6 @@
-import type { Card, DeckId, RoomState } from "react-game-ui";
+// src/server/fireworksConfig.ts
+
+import type { Card, DeckId, RoomParam, RoomState } from "react-game-ui";
 /**
  * 花火ゲームの固有設定
  */
@@ -25,7 +27,7 @@ export const fireworksConfig = {
     cards: "../public/data/fireworksCards.json",
   },
   // サーバー側でロードしたデータを setup に渡す
-  setup: (loadedData: Record<string, any>, helpers: SetupTools): any => {
+  setup: (loadedData: Record<string, any>, helpers: SetupTools): RoomParam => {
     // 固有ロジック：カードを3セット分複製してユニーク化
     const fireworksCards = helpers.createUniqueCards(
       helpers.assertCards(loadedData.cards, "firework"),
@@ -33,6 +35,7 @@ export const fireworksConfig = {
     );
 
     return {
+      gameId: "fireworks",
       initialDecks: [
         {
           deckId: "firework",
@@ -41,13 +44,15 @@ export const fireworksConfig = {
           backColor: "#000000",
         },
       ],
-      initialResources: [],
-      initialTokenStore: helpers.createTokenStore(
-        "STAR_PARTS",
-        "秘伝玉",
-        [{ id: "STAR_PART", name: "秘伝玉", color: "#FFD700" }],
-        20,
-      ),
+      initialTokenStores: [
+        {
+          tokenStoreId: "STAR_PARTS",
+          name: "秘伝玉",
+          tokens: [
+            { id: "STAR_PART-1", name: "秘伝玉", color: "#FFD700", count: 10 }
+          ],
+        }
+      ],
       initialHand: { deckId: "firework", count: 5 },
       initialBoard: [],
       checkGameEnd: (room: RoomState) =>

@@ -1,3 +1,4 @@
+// src/server.ts
 import path from "path";
 import { GameServer, type GameServerOptions } from "react-game-ui/server";
 import { fileURLToPath } from "url";
@@ -13,7 +14,7 @@ import {
 import { fireworksConfig } from "./server/fireworksConfig.js";
 import { uberNinjaConfig } from "./server/uberNinjaConfig.js";
 
-import type { GameId } from "react-game-ui";
+import type { GameId, RoomParam } from "react-game-ui";
 import { cardEffects } from "../public/data/cardEffects.js";
 import { cellEffects } from "../public/data/cellEffects.js";
 import { customEvents } from "../public/data/customEvents.js";
@@ -29,7 +30,7 @@ const setupTools = {
 };
 
 async function startServer(): Promise<void> {
-  const gamePresets: Record<string, any> = {};
+  const gamePresets: Record<string, RoomParam> = {};
   const configs = [fireworksConfig, uberNinjaConfig];
 
   const isProduction = process.env.NODE_ENV === "production";
