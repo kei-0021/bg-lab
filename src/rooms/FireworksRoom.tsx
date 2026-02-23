@@ -289,27 +289,33 @@ export default function FireworksRoom() {
             />
             <div className={styles.diceSection}>
               <div className={styles.diceWrapper}>
-                <p className={styles.diceLabel}>3面ダイス</p>
-                <Dice sides={3} socket={socket} diceId="move" roomId={roomId} />
+                <Dice
+                  sides={3}
+                  socket={socket}
+                  diceId="move"
+                  roomId={roomId}
+                  title="3面ダイス"
+                />
               </div>
 
               <div className={styles.diceWrapper}>
-                <p className={styles.diceLabel}>4面ダイス</p>
                 <Dice
                   sides={4}
                   socket={socket}
                   diceId="move2"
                   roomId={roomId}
+                  title="4面ダイス"
                 />
               </div>
 
               <div className={styles.diceWrapper}>
-                <p className={styles.diceLabel}>天候ダイス</p>
                 <Dice
                   sides={4}
                   socket={socket}
                   diceId="weather"
                   roomId={roomId}
+                  title="天候ダイス"
+                  tooltipText="快晴・曇り・風・雨"
                   customFaces={[
                     <img
                       key="f1"
