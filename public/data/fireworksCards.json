@@ -15,7 +15,8 @@
     "drawCondition": ["hand", "face"],
     "playLocation": "field",
     "fieldBackLocation": "discard",
-    "frontImage": "/images/fireworks/red_1.png"
+    "freeShape": "true",
+    "frontImage": "/images/fireworks/fireworks_red.png"
   },
   {
     "id": "card-B-01",
