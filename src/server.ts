@@ -1,58 +1,64 @@
 // src/server.ts
 import path from "path";
 import { GameServer, type GameServerOptions } from "react-game-ui/server";
+import {
+  chunkTo2D,
+  generateFromTemplates,
+  loadJsonAssert,
+  replicateData,
+  Validators
+} from "react-game-ui/server-io-utils";
 import { fileURLToPath } from "url";
 
-import {
-  assertCards,
-  createBoardLayout,
-  createTokenStore,
-  createUniqueCards,
-  loadJson,
-} from "./server/utils.js";
+import type { RoomParam } from "react-game-ui";
 
+// 各ゲーム固有のコンフィグ
+import { customEvents } from "../public/data/customEvents.js";
 import { fireworksConfig } from "./server/fireworksConfig.js";
 import { uberNinjaConfig } from "./server/uberNinjaConfig.js";
-
-import type { GameId, RoomParam } from "react-game-ui";
-import { cardEffects } from "../public/data/cardEffects.js";
-import { cellEffects } from "../public/data/cellEffects.js";
-import { customEvents } from "../public/data/customEvents.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+/**
+ * 各Configのsetupに渡すためのツール群
+ * 内部の古い関数から、ライブラリ標準の関数へ差し替え
+ */
 const setupTools = {
-  assertCards,
-  createUniqueCards,
-  createTokenStore,
-  createBoardLayout,
+  assertCards: (data: any): any[] => {
+    if (Validators.isCardArray(data)) return data;
+    throw new Error("Invalid card data");
+  },
+  createUniqueCards: replicateData,
+  createBoardLayout: (base: any[], counts: Record<string, number>, cols: number) =>
+    chunkTo2D(generateFromTemplates(base, counts), cols),
+
+  createTokenStore: (_id: string, _name: string, templates: any[], count: number): any[] => {
+    return replicateData(templates, count);
+  },
 };
 
 async function startServer(): Promise<void> {
   const gamePresets: Record<string, RoomParam> = {};
   const configs = [fireworksConfig, uberNinjaConfig];
-
   const isProduction = process.env.NODE_ENV === "production";
 
   for (const config of configs) {
-    const loadedData: Record<GameId, any> = {};
+    const loadedData: Record<string, any> = {};
+
     for (const [key, relPath] of Object.entries(config.dataFiles)) {
       let finalPath: string;
-
       if (isProduction) {
-        // loadJsonの内部処理に邪魔されないよう、ここですべてを完結させる
         const fileName = path.basename(relPath as string);
         finalPath = path.join(process.cwd(), "dist", "data", fileName);
-
-        // Render環境では絶対パスをそのまま渡すため、第2引数を空にする戦略
-        loadedData[key] = await loadJson(finalPath, "");
       } else {
-        // 開発環境（tsx）
-        loadedData[key] = await loadJson(relPath as string, __dirname);
+        finalPath = path.resolve(__dirname, relPath as string);
       }
+
+      loadedData[key] = await loadJsonAssert(finalPath, (data): data is any => true);
     }
 
+    // ツール群を渡してプリセットを生成
     gamePresets[config.id] = config.setup(loadedData, setupTools);
   }
 
@@ -66,8 +72,6 @@ async function startServer(): Promise<void> {
       "https://bg-lab.onrender.com",
     ],
     gamePresets,
-    cardEffects,
-    cellEffects,
     customEvents,
     initialLogCategories: {
       connection: false,

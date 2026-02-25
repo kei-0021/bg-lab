@@ -5,8 +5,8 @@ import type { Card, DeckId, RoomParam, RoomState } from "react-game-ui";
  * 花火ゲームの固有設定
  */
 interface SetupTools {
-  assertCards: (cards: Card[], deckId: DeckId) => any[];
-  createUniqueCards: (cards: any[], numSets: number) => any[];
+  assertCards: (cards: Card[], deckId: DeckId) => Card[];
+  createUniqueCards: (cards: any[], numSets: number) => Card[];
   createTokenStore: (
     id: string,
     name: string,
@@ -49,7 +49,7 @@ export const fireworksConfig = {
           tokenStoreId: "STAR_PARTS",
           name: "秘伝玉",
           tokens: [
-            { id: "STAR_PART-1", name: "秘伝玉", color: "#FFD700", count: 10 }
+            { id: "STAR_PART-1", name: "秘伝玉", color: "#FFD700", count: 10, imageSrc: "" }
           ],
         }
       ],

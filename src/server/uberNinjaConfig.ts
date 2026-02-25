@@ -1,9 +1,9 @@
 // src/server/uberNinjaConfig.ts
 
-import type { RoomParam } from "react-game-ui";
+import type { Card, DeckId, RoomParam } from "react-game-ui";
 
 interface SetupTools {
-  assertCards: (cards: any[], deckId: string) => any[];
+  assertCards: (cards: Card[], deckId: DeckId) => Card[];
 }
 
 export const uberNinjaConfig = {
