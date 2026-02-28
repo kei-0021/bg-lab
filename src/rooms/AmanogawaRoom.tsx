@@ -93,11 +93,10 @@ export function AmanogawaRoom() {
       return (
         <Draggable
           key={`piece-${i}-${resetCount}`}
-          pieceId={`piece-${i}`}
+          draggableId={`piece-${i}`}
           socket={socket}
           roomId={roomId}
-          initialX={initialX}
-          initialY={initialY}
+          initialXY={{ x: initialX, y: initialY }}
           color={i < 8 ? "#0a192f" : " #94ceee"}
           isTransparent={isTransparent}
           gridBounds={gridBounds}
@@ -141,11 +140,10 @@ export function AmanogawaRoom() {
     const player = (
       <Draggable
         key={`player-${resetCount}`}
-        pieceId={`player`}
+        draggableId={`player`}
         socket={socket}
         roomId={roomId}
-        initialX={0.5 * GAME_WIDTH}
-        initialY={0.8 * GAME_HEIGHT}
+        initialXY={{ x: 0.5 * GAME_WIDTH, y: 0.8 * GAME_HEIGHT }}
         color="white"
         size={80}
         style={{

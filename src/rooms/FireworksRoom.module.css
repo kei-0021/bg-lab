@@ -380,6 +380,9 @@
 /* 煙のDraggableを上書き */
 .draggableSmoke [class*="draggable"] {
   z-index: 9999 !important;
+  font-weight: bold;
+  color: white;
+  font: normal;
 }
 
 /* プレイヤー駒のDraggableを上書き */

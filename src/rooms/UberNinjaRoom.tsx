@@ -282,11 +282,10 @@ export function UberNinjaRoom() {
             <Draggable
               image="/images/uberninja/ninja.svg"
               mask={true}
-              pieceId={`${player.id}_ninja`}
+              draggableId={`${player.id}_ninja`}
               socket={socket}
               roomId={roomId}
-              initialX={100 + i * 130}
-              initialY={660}
+              initialXY={{ x: 100 + i * 130, y: 660 }}
               color={player.color}
               size={140}
               containerRef={containerRef}
@@ -295,11 +294,10 @@ export function UberNinjaRoom() {
             <Draggable
               image="/images/uberninja/scooter.svg"
               mask={true}
-              pieceId={`${player.id}_scooter`}
+              draggableId={`${player.id}_scooter`}
               socket={socket}
               roomId={roomId}
-              initialX={100 + i * 130}
-              initialY={720}
+              initialXY={{ x: 100 + i * 130, y: 720 }}
               color={player.color}
               size={140}
               containerRef={containerRef}
@@ -309,11 +307,10 @@ export function UberNinjaRoom() {
               <Draggable
                 key={`${player.id}_makibishi_${j}`}
                 image="/images/uberninja/makibishi.svg"
-                pieceId={`${player.id}_makibishi_${j}`}
+                draggableId={`${player.id}_makibishi_${j}`}
                 socket={socket}
                 roomId={roomId}
-                initialX={1250 + i * 150 + j * 4}
-                initialY={650 + j * 4}
+                initialXY={{ x: 1250 + i * 150 + j * 4, y: 650 + j * 4 }}
                 color={player.color}
                 size={65}
                 containerRef={containerRef}
@@ -327,11 +324,10 @@ export function UberNinjaRoom() {
         {[...Array(8)].map((_, j) => (
           <div key={`order_${j}`} className={styles.draggableSaturated}>
             <Draggable
-              pieceId={`white_card_${j}`}
+              draggableId={`white_card_${j}`}
               socket={socket}
               roomId={roomId}
-              initialX={800 + j * 5}
-              initialY={750 + j * 2}
+              initialXY={{ x: 800 + j * 5, y: 750 + j * 2 }}
               color="#ffffff"
               size={65}
               containerRef={containerRef}

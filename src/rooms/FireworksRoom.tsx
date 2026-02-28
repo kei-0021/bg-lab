@@ -229,21 +229,19 @@ export default function FireworksRoom() {
 
         {/* 煙Draggable 10個 - 右下にスタック配置 */}
         {[...Array(10)].map((_, i) => (
-          <div key={`smoke-${i}`} className={styles.draggableSmoke}>
-            <Draggable
-              pieceId={`smoke-${i}`}
-              socket={socket}
-              roomId={roomId}
-              // 右下付近 (1600x900基準)
-              initialX={1350 + i * 5}
-              // 少しずつずらして重なりを見せる
-              initialY={700 + i * 5}
-              color="grey"
-              size={70}
-              containerRef={containerRef}
-              scale={scale}
-            />
-          </div>
+          <Draggable
+            key={`smoke-${i}`}
+            draggableId={`smoke-${i}`}
+            socket={socket}
+            roomId={roomId}
+            initialXY={{ x: 1350 + i * 5, y: 700 + i * 5 }}
+            size={{ width: 200, height: 80 }}
+            containerRef={containerRef}
+            scale={scale}
+            style={{
+              border: "1px solid white",
+            }}
+          ></Draggable>
         ))}
 
         <main className={styles.fireworksMain}>
@@ -266,11 +264,10 @@ export default function FireworksRoom() {
               <Draggable
                 image="/images/fireworks/hanabishi.svg"
                 mask={true}
-                pieceId={player.id}
+                draggableId={player.id}
                 socket={socket}
                 roomId={roomId}
-                initialX={100 + i * 110}
-                initialY={750}
+                initialXY={{ x: 100 + i * 110, y: 750 }}
                 color={player.color}
                 size={80}
                 containerRef={containerRef}
