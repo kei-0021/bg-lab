@@ -76,8 +76,8 @@
 
 .baseField :global(.rg-playfield-card-wrapper) {
   position: absolute !important;
-  width: 80px !important;
-  height: 112px !important;
+  width: 100px !important;
+  height: 140px !important;
   flex-shrink: 0 !important;
   transition: none !important;
   cursor: grab;
