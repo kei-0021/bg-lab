@@ -39,7 +39,9 @@ export default function FireworksRoomⅡ() {
   const [showRules, setShowRules] = useState<boolean>(false);
   const [gameResult, setGameResult] = useState<any>(null);
   const [scale, setScale] = useState<number>(1);
-  const [systemMessages, setsystemMessages] = useState<string[]>([]);
+
+  // 配列で管理
+  const [systemMessages, setSystemMessages] = useState<string[]>([]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -47,16 +49,14 @@ export default function FireworksRoomⅡ() {
       const scaleY = window.innerHeight / BASE_HEIGHT;
       setScale(Math.min(scaleX, scaleY));
     };
-    window.addEventListener(
-      "resize",
-      window.innerHeight > 0 ? handleResize : () => {},
-    );
+    window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const addSystemMessage = useCallback((msg: string) => {
-    setsystemMessages((prev) => [msg, ...prev].slice(0, 30));
+  // 配列に追加する関数
+  const updateMessage = useCallback((msg: string) => {
+    setSystemMessages((prev) => [...prev, msg]);
   }, []);
 
   const handleJoinRoom = useCallback(() => {
@@ -67,16 +67,13 @@ export default function FireworksRoomⅡ() {
       gamePresetId: "fireworksⅡ",
       playerName: userName.trim(),
     });
-  }, [socket, roomId, userName, isJoining, addSystemMessage]);
+  }, [socket, roomId, userName, isJoining]);
 
-  const handleAssignId = useCallback(
-    (id: Player["id"]) => {
-      setMyPlayerId(id);
-      setHasJoined(true);
-      setIsJoining(false);
-    },
-    [addSystemMessage],
-  );
+  const handleAssignId = useCallback((id: Player["id"]) => {
+    setMyPlayerId(id);
+    setHasJoined(true);
+    setIsJoining(false);
+  }, []);
 
   const handlePlayersUpdate = useCallback(
     (updatedPlayers: PlayerWithResources[]) => setPlayers(updatedPlayers),
@@ -87,30 +84,29 @@ export default function FireworksRoomⅡ() {
     (data: GameTurnUpdateData) => {
       const nextRound = data.currentRoundIndex + 1;
       if (nextRound !== currentRound) {
-        addSystemMessage(`第 ${nextRound} 演目（ラウンド）開始！`);
-        addSystemMessage(`カードを3枚まで選んでください`);
+        updateMessage(`第 ${nextRound} 演目（ラウンド）開始！`);
+        updateMessage("演目 or カラーカードのどちらかを引いてください");
+        updateMessage("カードを3枚まで選んでください");
       }
       setCurrentPlayerId(data.currentPlayerId);
       setCurrentRound(nextRound);
     },
-    [currentRound, addSystemMessage],
+    [currentRound, updateMessage],
   );
 
   const handleGameEnd = useCallback(
     (result: any) => {
       setGameResult(result);
     },
-    [addSystemMessage],
+    [updateMessage],
   );
 
   useEffect(() => {
     if (!socket) return;
-
     socket.on("player:assign-id", handleAssignId);
     socket.on("players:update", handlePlayersUpdate);
     socket.on("game:turn", handleGameTurn);
     socket.on("game:end", handleGameEnd);
-
     return () => {
       socket.off("player:assign-id", handleAssignId);
       socket.off("players:update", handlePlayersUpdate);
@@ -229,7 +225,10 @@ export default function FireworksRoomⅡ() {
           isOpen={showRules}
           onClose={() => setShowRules(false)}
         />
-        <SystemMessageWindow messages={systemMessages} title="進行アナウンス" />
+
+        {/* メッセージウィンドウに配列を渡す */}
+        <SystemMessageWindow messages={systemMessages} />
+
         <main className={styles.fireworksMain}>
           <RemoteCursor
             socket={socket!}
