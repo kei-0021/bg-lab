@@ -8,10 +8,12 @@ import { Deck, PlayField, RemoteCursor, ScoreBoard } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { RoundProgressTracker } from "../components/RoundProgressTracker";
+import { SystemMessageWindow } from "../components/systemMessageWindow";
 import { useSocket } from "../hooks/useSocket.js";
 import styles from "./FireworksRoom.module.css";
 import fieldStyles from "./FireworksRoomField.module.css";
 import { FireWorksRuleⅡ } from "./FireworksRuleⅡ";
+
 const SERVER_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:4000"
@@ -19,7 +21,6 @@ const SERVER_URL =
 
 const BASE_WIDTH = 1600;
 const BASE_HEIGHT = 900;
-
 const Z_INDEX_CARD = 2000;
 
 export default function FireworksRoomⅡ() {
@@ -38,9 +39,7 @@ export default function FireworksRoomⅡ() {
   const [showRules, setShowRules] = useState<boolean>(false);
   const [gameResult, setGameResult] = useState<any>(null);
   const [scale, setScale] = useState<number>(1);
-  const [fieldClassName, setFieldClassName] = useState<string>(
-    "fireworksRequtangleField",
-  );
+  const [systemMessages, setsystemMessages] = useState<string[]>([]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -48,9 +47,16 @@ export default function FireworksRoomⅡ() {
       const scaleY = window.innerHeight / BASE_HEIGHT;
       setScale(Math.min(scaleX, scaleY));
     };
-    window.addEventListener("resize", handleResize);
+    window.addEventListener(
+      "resize",
+      window.innerHeight > 0 ? handleResize : () => {},
+    );
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const addSystemMessage = useCallback((msg: string) => {
+    setsystemMessages((prev) => [msg, ...prev].slice(0, 30));
   }, []);
 
   const handleJoinRoom = useCallback(() => {
@@ -61,33 +67,41 @@ export default function FireworksRoomⅡ() {
       gamePresetId: "fireworksⅡ",
       playerName: userName.trim(),
     });
-  }, [socket, roomId, userName, isJoining]);
+  }, [socket, roomId, userName, isJoining, addSystemMessage]);
 
-  const handleAssignId = useCallback((id: Player["id"]) => {
-    setMyPlayerId(id);
-    setHasJoined(true);
-    setIsJoining(false);
-  }, []);
+  const handleAssignId = useCallback(
+    (id: Player["id"]) => {
+      setMyPlayerId(id);
+      setHasJoined(true);
+      setIsJoining(false);
+    },
+    [addSystemMessage],
+  );
 
   const handlePlayersUpdate = useCallback(
     (updatedPlayers: PlayerWithResources[]) => setPlayers(updatedPlayers),
     [],
   );
 
-  const handleGameTurn = useCallback((data: GameTurnUpdateData) => {
-    setCurrentPlayerId(data.currentPlayerId);
-    setCurrentRound(data.currentRoundIndex + 1);
-  }, []);
+  const handleGameTurn = useCallback(
+    (data: GameTurnUpdateData) => {
+      const nextRound = data.currentRoundIndex + 1;
+      if (nextRound !== currentRound) {
+        addSystemMessage(`第 ${nextRound} 演目（ラウンド）開始！`);
+        addSystemMessage(`カードを3枚まで選んでください`);
+      }
+      setCurrentPlayerId(data.currentPlayerId);
+      setCurrentRound(nextRound);
+    },
+    [currentRound, addSystemMessage],
+  );
 
-  const handleGameEnd = useCallback((result: any) => setGameResult(result), []);
-
-  const handleFieldSwitch = useCallback(() => {
-    setFieldClassName((prev) =>
-      prev === "fireworksRequtangleField"
-        ? "fireworksCircleField"
-        : "fireworksRequtangleField",
-    );
-  }, []);
+  const handleGameEnd = useCallback(
+    (result: any) => {
+      setGameResult(result);
+    },
+    [addSystemMessage],
+  );
 
   useEffect(() => {
     if (!socket) return;
@@ -96,14 +110,12 @@ export default function FireworksRoomⅡ() {
     socket.on("players:update", handlePlayersUpdate);
     socket.on("game:turn", handleGameTurn);
     socket.on("game:end", handleGameEnd);
-    socket.on("playfield:switch", handleFieldSwitch);
 
     return () => {
       socket.off("player:assign-id", handleAssignId);
       socket.off("players:update", handlePlayersUpdate);
       socket.off("game:turn", handleGameTurn);
       socket.off("game:end", handleGameEnd);
-      socket.off("playfield:switch", handleFieldSwitch);
     };
   }, [
     socket,
@@ -111,7 +123,6 @@ export default function FireworksRoomⅡ() {
     handlePlayersUpdate,
     handleGameTurn,
     handleGameEnd,
-    handleFieldSwitch,
   ]);
 
   if (!roomId) return null;
@@ -218,7 +229,7 @@ export default function FireworksRoomⅡ() {
           isOpen={showRules}
           onClose={() => setShowRules(false)}
         />
-
+        <SystemMessageWindow messages={systemMessages} title="進行アナウンス" />
         <main className={styles.fireworksMain}>
           <RemoteCursor
             socket={socket!}
@@ -267,7 +278,7 @@ export default function FireworksRoomⅡ() {
           </aside>
 
           <div
-            className={`${fieldStyles.baseField} ${fieldStyles[fieldClassName]}`}
+            className={`${fieldStyles.baseField} ${fieldStyles["fireworksRequtangleField"]}`}
           >
             <PlayField
               socket={socket!}
