@@ -8,6 +8,7 @@ export const fireworksⅡConfig: RoomConfig = {
   dataFiles: {
     cards: "../public/data/fireworksCards.json",
     themeCards: "../public/data/fireworksThemeCards.json",
+    colorCards: "../public/data/fireworksColorCards.json",
   },
   // サーバー側でロードしたデータを setup に渡す
   setup: async (loadedData: Record<string, any>): Promise<RoomParam> => {
@@ -35,6 +36,11 @@ export const fireworksⅡConfig: RoomConfig = {
       3,
     );
 
+    const fireworksColorCards = helper.createUniqueCards(
+      helper.initializeCards(helper.assertCards(loadedData.colorCards), themeDefaults),
+      3,
+    );
+
     return {
       gameId: "fireworksⅡ",
       initialDecks: [
@@ -50,12 +56,18 @@ export const fireworksⅡConfig: RoomConfig = {
           cards: fireworksThemeCards,
           backColor: "#752929",
         },
+        {
+          deckId: "color",
+          name: "カラーカード",
+          cards: fireworksColorCards,
+          backColor: "#ffffff",
+        },
       ],
       initialHand: { deckId: "firework", count: 5 },
       initialBoard: [],
       checkGameEnd: (room: RoomState) =>
-        // 終了条件: 10ラウンド終了 (10ラウンド目の最後 かつ 最後のプレイヤーの手番時)
-        room.currentRoundIndex >= 9 &&
+        // 終了条件: 8ラウンド終了 (8ラウンド目の最後 かつ 最後のプレイヤーの手番時)
+        room.currentRoundIndex >= 7 &&
         room.currentTurnIndex == room.initRoomState.players.length - 1,
       onGameEnd: (roomState: RoomState) => {
         const rankings = [...roomState.initRoomState.players]

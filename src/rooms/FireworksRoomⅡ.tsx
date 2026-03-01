@@ -7,7 +7,7 @@ import { RoundProgressTracker } from "../components/RoundProgressTracker";
 import { useSocket } from "../hooks/useSocket.js";
 import styles from "./FireworksRoom.module.css";
 import fieldStyles from "./FireworksRoomField.module.css";
-import { FireWorksRule } from "./FireworksRule";
+import { FireWorksRuleⅡ } from "./FireworksRuleⅡ";
 const SERVER_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:4000"
@@ -65,36 +65,38 @@ export default function FireworksRoomⅡ() {
     });
   }, [socket, roomId, userName, isJoining]);
 
+  const handleAssignId = useCallback((id: Player["id"]) => {
+    setMyPlayerId(id);
+    setHasJoined(true);
+    setIsJoining(false);
+  }, []);
+
+  const handlePlayersUpdate = useCallback(
+    (updatedPlayers: PlayerWithResources[]) => setPlayers(updatedPlayers),
+    [],
+  );
+
+  const handleGameTurn = useCallback((data: TurnUpdatePayload | string) => {
+    if (typeof data === "string") {
+      setCurrentPlayerId(data);
+    } else {
+      setCurrentPlayerId(data.playerId);
+      setCurrentRound(data.currentRound + 1);
+    }
+  }, []);
+
+  const handleGameEnd = useCallback((result: any) => setGameResult(result), []);
+
+  const handleFieldSwitch = useCallback(() => {
+    setFieldClassName((prev) =>
+      prev === "fireworksRequtangleField"
+        ? "fireworksCircleField"
+        : "fireworksRequtangleField",
+    );
+  }, []);
+
   useEffect(() => {
     if (!socket) return;
-
-    const handleAssignId = (id: Player["id"]) => {
-      setMyPlayerId(id);
-      setHasJoined(true);
-      setIsJoining(false);
-    };
-
-    const handlePlayersUpdate = (updatedPlayers: PlayerWithResources[]) =>
-      setPlayers(updatedPlayers);
-
-    const handleGameTurn = (data: TurnUpdatePayload | string) => {
-      if (typeof data === "string") {
-        setCurrentPlayerId(data);
-      } else {
-        setCurrentPlayerId(data.playerId);
-        setCurrentRound(data.currentRound + 1);
-      }
-    };
-
-    const handleGameEnd = (result: any) => setGameResult(result);
-
-    const handleFieldSwitch = () => {
-      setFieldClassName((prev) =>
-        prev === "fireworksRequtangleField"
-          ? "fireworksCircleField"
-          : "fireworksRequtangleField",
-      );
-    };
 
     socket.on("player:assign-id", handleAssignId);
     socket.on("players:update", handlePlayersUpdate);
@@ -109,7 +111,14 @@ export default function FireworksRoomⅡ() {
       socket.off("game:end", handleGameEnd);
       socket.off("playfield:switch", handleFieldSwitch);
     };
-  }, [socket]);
+  }, [
+    socket,
+    handleAssignId,
+    handlePlayersUpdate,
+    handleGameTurn,
+    handleGameEnd,
+    handleFieldSwitch,
+  ]);
 
   if (!roomId) return null;
 
@@ -150,6 +159,7 @@ export default function FireworksRoomⅡ() {
           width: `${BASE_WIDTH}px`,
           height: `${BASE_HEIGHT}px`,
           transform: `scale(${scale})`,
+          willChange: "transform",
         }}
       >
         {gameResult && (
@@ -192,7 +202,7 @@ export default function FireworksRoomⅡ() {
             <h1 className={styles.logoText}>🎆 FIREWORKSⅡ</h1>
           </div>
           <div className={styles.headerTracker}>
-            <RoundProgressTracker currentRound={currentRound} maxRound={10} />
+            <RoundProgressTracker currentRound={currentRound} maxRound={8} />
           </div>
           <div className={styles.headerNav}>
             <button
@@ -210,7 +220,10 @@ export default function FireworksRoomⅡ() {
           </div>
         </header>
 
-        <FireWorksRule isOpen={showRules} onClose={() => setShowRules(false)} />
+        <FireWorksRuleⅡ
+          isOpen={showRules}
+          onClose={() => setShowRules(false)}
+        />
 
         <main className={styles.fireworksMain}>
           <RemoteCursor
@@ -248,13 +261,22 @@ export default function FireworksRoomⅡ() {
               myPlayerId={myPlayerId}
               alwaysDraw={true}
             />
+            <Deck
+              socket={socket!}
+              roomId={roomId}
+              deckId="color"
+              title="[ カラーカード ]"
+              currentPlayerId={currentPlayerId}
+              myPlayerId={myPlayerId}
+              alwaysDraw={true}
+            />
           </aside>
 
           <div
             className={`${fieldStyles.baseField} ${fieldStyles[fieldClassName]}`}
           >
             <PlayField
-              socket={socket}
+              socket={socket!}
               roomId={roomId}
               deckId="firework"
               title=""
@@ -272,6 +294,7 @@ export default function FireworksRoomⅡ() {
               players={players}
               currentPlayerId={currentPlayerId}
               myPlayerId={myPlayerId}
+              playCardLimit={3}
               isDebug={true}
             />
           </div>

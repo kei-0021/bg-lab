@@ -1,0 +1,27 @@
+[
+  {
+    "id": "play-01",
+    "name": "🔴",
+    "description": "🔴を最も多く出した人の勝ち"
+  },
+  {
+    "id": "play-02",
+    "name": "🔵",
+    "description": "🔵を最も多く出した人の勝ち"
+  },
+  {
+    "id": "play-03",
+    "name": "⚪",
+    "description": "⚪を最も多く出した人の勝ち"
+  },
+  {
+    "id": "play-04",
+    "name": "🟡",
+    "description": "🟡を最も多く出した人の勝ち"
+  },
+  {
+    "id": "play-05",
+    "name": "🟢",
+    "description": "🟢を最も多く出した人の勝ち"
+  }
+]
