@@ -25,6 +25,9 @@ const SERVER_URL =
 const BASE_WIDTH = 1600;
 const BASE_HEIGHT = 900;
 
+const Z_INDEX_SMOKE = 1000;
+const Z_INDEX_PLAYER = 2000;
+
 interface TurnUpdatePayload {
   playerId: string;
   currentRound: number;
@@ -230,12 +233,12 @@ export default function FireworksRoom() {
         {/* 煙Draggable 10個 - 右下にスタック配置 */}
         {[...Array(10)].map((_, i) => (
           <Draggable
-            key={`smoke-${i}`}
             draggableId={`smoke-${i}`}
             socket={socket}
             roomId={roomId}
             initialXY={{ x: 1350 + i * 5, y: 700 + i * 5 }}
-            size={{ width: 200, height: 80 }}
+            size={{ width: 360, height: 120 }}
+            zIndex={Z_INDEX_SMOKE}
             containerRef={containerRef}
             scale={scale}
             style={{
@@ -260,7 +263,7 @@ export default function FireworksRoom() {
             isRelative={false}
           />
           {players.map((player, i) => (
-            <div key={player.id} className={styles.draggableSaturated}>
+            <div key={player.id}>
               <Draggable
                 image="/images/fireworks/hanabishi.svg"
                 mask={true}
@@ -269,6 +272,7 @@ export default function FireworksRoom() {
                 roomId={roomId}
                 initialXY={{ x: 100 + i * 110, y: 750 }}
                 color={player.color}
+                zIndex={Z_INDEX_PLAYER}
                 size={80}
                 containerRef={containerRef}
               />

@@ -11,6 +11,7 @@ const SERVER_URL =
 
 const GRID_SIZE = 500;
 const CELL_SIZE = 100;
+
 const GAME_WIDTH = 1000;
 const GAME_HEIGHT = 1200;
 
@@ -92,7 +93,6 @@ export function AmanogawaRoom() {
 
       return (
         <Draggable
-          key={`piece-${i}-${resetCount}`}
           draggableId={`piece-${i}`}
           socket={socket}
           roomId={roomId}
@@ -139,7 +139,6 @@ export function AmanogawaRoom() {
 
     const player = (
       <Draggable
-        key={`player-${resetCount}`}
         draggableId={`player`}
         socket={socket}
         roomId={roomId}

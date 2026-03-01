@@ -305,7 +305,6 @@ export function UberNinjaRoom() {
             />
             {[...Array(8)].map((_, j) => (
               <Draggable
-                key={`${player.id}_makibishi_${j}`}
                 image="/images/uberninja/makibishi.svg"
                 draggableId={`${player.id}_makibishi_${j}`}
                 socket={socket}
