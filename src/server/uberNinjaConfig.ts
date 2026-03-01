@@ -1,19 +1,17 @@
 // src/server/uberNinjaConfig.ts
 
-import type { Card, DeckId, RoomParam } from "react-game-ui";
-import type { Config } from "../types/config";
+import type { RoomParam } from "react-game-ui";
+import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
 
-interface SetupTools {
-  assertCards: (cards: Card[], deckId: DeckId) => Card[];
-}
 
-export const uberNinjaConfig: Config = {
+export const uberNinjaConfig: RoomConfig = {
   gameId: "uberninja",
   dataFiles: {
     orderCards: "../public/data/uberNinjaOrder.json",
   },
-  setup: (data: Record<string, any>, { assertCards }: SetupTools): RoomParam => {
-    const uberNinjaOrderCards = assertCards(data.orderCards, "order");
+  setup: async (loadedData: Record<string, any>): Promise<RoomParam> => {
+    const helper = new SetupHelper()
+    const uberNinjaOrderCards = helper.assertCards(loadedData.orderCards);
 
     return {
       gameId: "uberninja",

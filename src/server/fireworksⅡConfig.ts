@@ -1,37 +1,37 @@
 // src/server/fireworksConfig.ts
 
-import type { Card, DeckId, RoomParam, RoomState } from "react-game-ui";
-import type { Config } from "../types/config";
-/**
- * 花火ゲームの固有設定
- */
-interface SetupTools {
-  assertCards: (cards: Card[], deckId: DeckId) => Card[];
-  createUniqueCards: (cards: any[], numSets: number) => Card[];
-  createTokenStore: (
-    id: string,
-    name: string,
-    templates: any[],
-    count: number,
-  ) => any[];
-  createBoardLayout: (
-    baseCells: any[],
-    cellCounts: Record<string, number>,
-    rows: number,
-    cols: number,
-  ) => any[][];
-}
+import type { Card, RoomParam, RoomState } from "react-game-ui";
+import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
 
-export const fireworksⅡConfig: Config = {
+export const fireworksⅡConfig: RoomConfig = {
   gameId: "fireworksⅡ",
   dataFiles: {
     cards: "../public/data/fireworksCards.json",
+    themeCards: "../public/data/fireworksThemeCards.json",
   },
   // サーバー側でロードしたデータを setup に渡す
-  setup: (loadedData: Record<string, any>, helpers: SetupTools): RoomParam => {
-    // 固有ロジック：カードを3セット分複製してユニーク化
-    const fireworksCards = helpers.createUniqueCards(
-      helpers.assertCards(loadedData.cards, "firework"),
+  setup: async (loadedData: Record<string, any>): Promise<RoomParam> => {
+    const helper = new SetupHelper();
+
+    const defaults: Partial<Card> = {
+      location: 'deck',
+      drawCondition: ['hand', 'back'],
+      playLocation: 'field',
+      fieldBackCondition: ['deck', 'back'],
+    };
+
+    const themeDefaults: Partial<Card> = {
+      location: "deck",
+      drawCondition: ["discard", "face"],
+    };
+
+    const fireworksCards = helper.createUniqueCards(
+      helper.initializeCards(helper.assertCards(loadedData.cards), defaults),
+      3,
+    );
+
+    const fireworksThemeCards = helper.createUniqueCards(
+      helper.initializeCards(helper.assertCards(loadedData.themeCards), themeDefaults),
       3,
     );
 
@@ -44,15 +44,12 @@ export const fireworksⅡConfig: Config = {
           cards: fireworksCards,
           backColor: "#000000",
         },
-      ],
-      initialTokenStores: [
         {
-          tokenStoreId: "STAR_PARTS",
-          name: "秘伝玉",
-          tokens: [
-            { id: "STAR_PART-1", name: "秘伝玉", color: "#FFD700", count: 10, imageSrc: "" }
-          ],
-        }
+          deckId: "theme",
+          name: "演目カード",
+          cards: fireworksThemeCards,
+          backColor: "#752929",
+        },
       ],
       initialHand: { deckId: "firework", count: 5 },
       initialBoard: [],

@@ -1,37 +1,27 @@
 // src/server/fireworksConfig.ts
 
-import type { Card, DeckId, RoomParam, RoomState } from "react-game-ui";
-import type { Config } from "../types/config";
-/**
- * 花火ゲームの固有設定
- */
-interface SetupTools {
-  assertCards: (cards: Card[], deckId: DeckId) => Card[];
-  createUniqueCards: (cards: any[], numSets: number) => Card[];
-  createTokenStore: (
-    id: string,
-    name: string,
-    templates: any[],
-    count: number,
-  ) => any[];
-  createBoardLayout: (
-    baseCells: any[],
-    cellCounts: Record<string, number>,
-    rows: number,
-    cols: number,
-  ) => any[][];
-}
+import type { Card, RoomParam, RoomState } from "react-game-ui";
+import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
 
-export const fireworksConfig: Config = {
+
+export const fireworksConfig: RoomConfig = {
   gameId: "fireworks",
   dataFiles: {
     cards: "../public/data/fireworksCards.json",
   },
   // サーバー側でロードしたデータを setup に渡す
-  setup: (loadedData: Record<string, any>, helpers: SetupTools): RoomParam => {
-    // 固有ロジック：カードを3セット分複製してユニーク化
-    const fireworksCards = helpers.createUniqueCards(
-      helpers.assertCards(loadedData.cards, "firework"),
+  setup: async (loadedData: Record<string, any>): Promise<RoomParam> => {
+    const helper = new SetupHelper();
+
+    const defaults: Partial<Card> = {
+      location: 'deck',
+      drawCondition: ['hand', 'face'],
+      playLocation: 'field',
+      fieldBackCondition: ['deck', 'back'],
+    };
+
+    const fireworksCards = helper.createUniqueCards(
+      helper.initializeCards(helper.assertCards(loadedData.cards), defaults),
       3,
     );
 

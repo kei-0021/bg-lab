@@ -8,7 +8,6 @@ import { useSocket } from "../hooks/useSocket.js";
 import styles from "./FireworksRoom.module.css";
 import fieldStyles from "./FireworksRoomField.module.css";
 import { FireWorksRule } from "./FireworksRule";
-
 const SERVER_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:4000"
@@ -118,7 +117,7 @@ export default function FireworksRoomⅡ() {
     return (
       <div className={styles.fireworksContainer}>
         <div className={styles.fireworksEntranceWrapper}>
-          <h2 className={styles.fireworksTitle}>XX花火大会</h2>
+          <h2 className={styles.fireworksTitle}>XX花火大会Ⅱ</h2>
           <div className={styles.fireworksFormGroup}>
             <input
               className={styles.fireworksInput}
@@ -236,6 +235,15 @@ export default function FireworksRoomⅡ() {
               roomId={roomId}
               deckId="firework"
               title="[ 花火カード ]"
+              currentPlayerId={currentPlayerId}
+              myPlayerId={myPlayerId}
+              alwaysDraw={true}
+            />
+            <Deck
+              socket={socket!}
+              roomId={roomId}
+              deckId="theme"
+              title="[ 演目カード ]"
               currentPlayerId={currentPlayerId}
               myPlayerId={myPlayerId}
               alwaysDraw={true}

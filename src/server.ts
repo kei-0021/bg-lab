@@ -2,11 +2,8 @@
 import path from "path";
 import { GameServer, type GameServerOptions } from "react-game-ui/server";
 import {
-  chunkTo2D,
-  generateFromTemplates,
   loadJsonAssert,
-  replicateData,
-  Validators
+  type RoomConfig
 } from "react-game-ui/server-io-utils";
 import { fileURLToPath } from "url";
 
@@ -17,32 +14,14 @@ import { customEvents } from "../public/data/customEvents.js";
 import { fireworksConfig } from "./server/fireworksConfig.js";
 import { fireworksⅡConfig } from "./server/fireworksⅡConfig.js";
 import { uberNinjaConfig } from "./server/uberNinjaConfig.js";
-import type { Config } from "./types/config.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-/**
- * 各Configのsetupに渡すためのツール群
- * 内部の古い関数から、ライブラリ標準の関数へ差し替え
- */
-const setupTools = {
-  assertCards: (data: any): any[] => {
-    if (Validators.isCardArray(data)) return data;
-    throw new Error("Invalid card data");
-  },
-  createUniqueCards: replicateData,
-  createBoardLayout: (base: any[], counts: Record<string, number>, cols: number) =>
-    chunkTo2D(generateFromTemplates(base, counts), cols),
-
-  createTokenStore: (_id: string, _name: string, templates: any[], count: number): any[] => {
-    return replicateData(templates, count);
-  },
-};
 
 async function startServer(): Promise<void> {
   const gamePresets: Record<string, RoomParam> = {};
-  const configs: Config[] = [fireworksConfig, fireworksⅡConfig, uberNinjaConfig];
+  const configs: RoomConfig[] = [fireworksConfig, fireworksⅡConfig, uberNinjaConfig];
   const isProduction = process.env.NODE_ENV === "production";
 
   for (const config of configs) {
@@ -61,7 +40,7 @@ async function startServer(): Promise<void> {
     }
 
     // ツール群を渡してプリセットを生成
-    gamePresets[config.gameId] = config.setup(loadedData, setupTools);
+    gamePresets[config.gameId] = await config.setup(loadedData);
   }
 
   const options: GameServerOptions = {
