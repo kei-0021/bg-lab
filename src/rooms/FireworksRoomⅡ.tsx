@@ -1,10 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type {
-  GameTurnUpdateData,
-  Player,
-  PlayerWithResources,
-  RoomJoinData,
-} from "react-game-ui";
+import type { GameTurnUpdateData, Player, RoomJoinData } from "react-game-ui";
 import { Deck, PlayField, RemoteCursor, ScoreBoard } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
@@ -34,7 +29,7 @@ export default function FireworksRoomⅡ() {
   const [isJoining, setIsJoining] = useState<boolean>(false);
   const [hasJoined, setHasJoined] = useState<boolean>(false);
   const [myPlayerId, setMyPlayerId] = useState<string | null>(null);
-  const [players, setPlayers] = useState<PlayerWithResources[]>([]);
+  const [players, setPlayers] = useState<Player[]>([]);
   const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
   const [currentRound, setCurrentRound] = useState<number>(1);
   const [showRules, setShowRules] = useState<boolean>(false);
@@ -77,7 +72,7 @@ export default function FireworksRoomⅡ() {
   }, []);
 
   const handlePlayersUpdate = useCallback(
-    (updatedPlayers: PlayerWithResources[]) => setPlayers(updatedPlayers),
+    (updatedPlayers: Player[]) => setPlayers(updatedPlayers),
     [],
   );
 

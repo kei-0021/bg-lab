@@ -1,11 +1,6 @@
 // src/components/UberNinjaRoom.tsx
 import { useCallback, useEffect, useRef, useState } from "react";
-import type {
-  GameTurnUpdateData,
-  Player,
-  PlayerWithResources,
-  RoomJoinData,
-} from "react-game-ui";
+import type { GameTurnUpdateData, Player, RoomJoinData } from "react-game-ui";
 import {
   Deck,
   Dice,
@@ -39,7 +34,7 @@ export function UberNinjaRoom() {
   const [isJoining, setIsJoining] = useState<boolean>(false);
   const [hasJoined, setHasJoined] = useState<boolean>(false);
   const [myPlayerId, setMyPlayerId] = useState<string | null>(null);
-  const [players, setPlayers] = useState<PlayerWithResources[]>([]);
+  const [players, setPlayers] = useState<Player[]>([]);
   const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
   const [showRules, setShowRules] = useState(false);
   const [gameResult, setGameResult] = useState<any>(null);
@@ -73,7 +68,7 @@ export function UberNinjaRoom() {
       setHasJoined(true);
       setIsJoining(false);
     };
-    const handlePlayersUpdate = (updatedPlayers: PlayerWithResources[]) =>
+    const handlePlayersUpdate = (updatedPlayers: Player[]) =>
       setPlayers(updatedPlayers);
     const handleGameTurn = (data: GameTurnUpdateData) => {
       setCurrentPlayerId(data.currentPlayerId);
