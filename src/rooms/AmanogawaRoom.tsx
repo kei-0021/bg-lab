@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { RoomJoinData } from "react-game-ui";
 import { Draggable, RemoteCursor } from "react-game-ui";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSocket } from "../hooks/useSocket";
 import "./AmanogawaRoom.css";
-
 const SERVER_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:4000"
@@ -69,9 +69,9 @@ export function AmanogawaRoom() {
     setIsJoining(true);
     socket.emit("room:join", {
       roomId,
-      gamePresetId: "amanogawa",
+      gameId: "amanogawa",
       playerName: userName.trim(),
-    });
+    } as RoomJoinData);
   };
 
   const gridBounds = useMemo(

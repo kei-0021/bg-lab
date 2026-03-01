@@ -3,6 +3,7 @@ import type {
   GameTurnUpdateData,
   Player,
   PlayerWithResources,
+  RoomJoinData,
 } from "react-game-ui";
 import { Deck, PlayField, RemoteCursor, ScoreBoard } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
@@ -64,9 +65,9 @@ export default function FireworksRoomⅡ() {
     setIsJoining(true);
     socket.emit("room:join", {
       roomId,
-      gamePresetId: "fireworksⅡ",
+      gameId: "fireworksⅡ",
       playerName: userName.trim(),
-    });
+    } as RoomJoinData);
   }, [socket, roomId, userName, isJoining]);
 
   const handleAssignId = useCallback((id: Player["id"]) => {

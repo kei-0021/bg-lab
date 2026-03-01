@@ -3,6 +3,7 @@ import type {
   GameTurnUpdateData,
   Player,
   PlayerWithResources,
+  RoomJoinData,
 } from "react-game-ui";
 import {
   Deck,
@@ -74,9 +75,9 @@ export default function FireworksRoom() {
     setIsJoining(true);
     socket.emit("room:join", {
       roomId,
-      gamePresetId: "fireworks",
+      gameId: "fireworks",
       playerName: userName.trim(),
-    });
+    } as RoomJoinData);
   }, [socket, roomId, userName, isJoining]);
 
   useEffect(() => {

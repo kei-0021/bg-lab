@@ -4,6 +4,7 @@ import type {
   GameTurnUpdateData,
   Player,
   PlayerWithResources,
+  RoomJoinData,
 } from "react-game-ui";
 import {
   Deck,
@@ -60,9 +61,9 @@ export function UberNinjaRoom() {
     setIsJoining(true);
     socket.emit("room:join", {
       roomId,
-      gamePresetId: "uberninja",
+      gameId: "uberninja",
       playerName: userName.trim(),
-    });
+    } as RoomJoinData);
   }, [socket, roomId, userName, isJoining]);
 
   useEffect(() => {
