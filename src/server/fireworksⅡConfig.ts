@@ -22,8 +22,8 @@ interface SetupTools {
   ) => any[][];
 }
 
-export const fireworksConfig: Config = {
-  gameId: "fireworks",
+export const fireworksⅡConfig: Config = {
+  gameId: "fireworksⅡ",
   dataFiles: {
     cards: "../public/data/fireworksCards.json",
   },
@@ -36,7 +36,7 @@ export const fireworksConfig: Config = {
     );
 
     return {
-      gameId: "fireworks",
+      gameId: "fireworksⅡ",
       initialDecks: [
         {
           deckId: "firework",

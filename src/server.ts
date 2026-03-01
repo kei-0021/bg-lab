@@ -15,7 +15,9 @@ import type { RoomParam } from "react-game-ui";
 // 各ゲーム固有のコンフィグ
 import { customEvents } from "../public/data/customEvents.js";
 import { fireworksConfig } from "./server/fireworksConfig.js";
+import { fireworksⅡConfig } from "./server/fireworksⅡConfig.js";
 import { uberNinjaConfig } from "./server/uberNinjaConfig.js";
+import type { Config } from "./types/config.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -40,7 +42,7 @@ const setupTools = {
 
 async function startServer(): Promise<void> {
   const gamePresets: Record<string, RoomParam> = {};
-  const configs = [fireworksConfig, uberNinjaConfig];
+  const configs: Config[] = [fireworksConfig, fireworksⅡConfig, uberNinjaConfig];
   const isProduction = process.env.NODE_ENV === "production";
 
   for (const config of configs) {
@@ -59,7 +61,7 @@ async function startServer(): Promise<void> {
     }
 
     // ツール群を渡してプリセットを生成
-    gamePresets[config.id] = config.setup(loadedData, setupTools);
+    gamePresets[config.gameId] = config.setup(loadedData, setupTools);
   }
 
   const options: GameServerOptions = {

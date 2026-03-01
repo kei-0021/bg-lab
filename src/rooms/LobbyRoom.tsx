@@ -11,6 +11,7 @@ const SERVER_URL =
 
 const GAME_DISPLAY_NAMES: Record<string, string> = {
   fireworks: "FireWorks",
+  fireworksⅡ: "FireWorksⅡ",
   amanogawa: "Amanogawa",
   uberninja: "UberNinja",
 };
@@ -18,6 +19,7 @@ const GAME_DISPLAY_NAMES: Record<string, string> = {
 // アイコン用のマッピング
 const GAME_ICONS: Record<string, string> = {
   fireworks: "🎆",
+  fireworksⅡ: "🎆",
   amanogawa: "🌟",
   uberninja: "🥷",
 };

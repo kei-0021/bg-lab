@@ -1,13 +1,14 @@
 // src/server/uberNinjaConfig.ts
 
 import type { Card, DeckId, RoomParam } from "react-game-ui";
+import type { Config } from "../types/config";
 
 interface SetupTools {
   assertCards: (cards: Card[], deckId: DeckId) => Card[];
 }
 
-export const uberNinjaConfig = {
-  id: "uberninja",
+export const uberNinjaConfig: Config = {
+  gameId: "uberninja",
   dataFiles: {
     orderCards: "../public/data/uberNinjaOrder.json",
   },
