@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { Player, PlayerWithResources } from "react-game-ui";
+import type {
+  GameTurnUpdateData,
+  Player,
+  PlayerWithResources,
+} from "react-game-ui";
 import {
   Deck,
   Dice,
@@ -28,12 +32,6 @@ const BASE_HEIGHT = 900;
 const Z_INDEX_SMOKE = 1000;
 const Z_INDEX_CARD = 2000;
 const Z_INDEX_PLAYER = 3000;
-
-interface TurnUpdatePayload {
-  playerId: string;
-  currentRound: number;
-  currentTurnIndex: number;
-}
 
 export default function FireworksRoom() {
   const { roomId } = useParams<{ roomId: string }>();
@@ -93,13 +91,9 @@ export default function FireworksRoom() {
     const handlePlayersUpdate = (updatedPlayers: PlayerWithResources[]) =>
       setPlayers(updatedPlayers);
 
-    const handleGameTurn = (data: TurnUpdatePayload | string) => {
-      if (typeof data === "string") {
-        setCurrentPlayerId(data);
-      } else {
-        setCurrentPlayerId(data.playerId);
-        setCurrentRound(data.currentRound + 1);
-      }
+    const handleGameTurn = (data: GameTurnUpdateData) => {
+      setCurrentPlayerId(data.currentPlayerId);
+      setCurrentRound(data.currentRoundIndex + 1);
     };
 
     const handleGameEnd = (result: any) => setGameResult(result);

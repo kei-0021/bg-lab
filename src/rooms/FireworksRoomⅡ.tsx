@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { Player, PlayerWithResources } from "react-game-ui";
+import type {
+  GameTurnUpdateData,
+  Player,
+  PlayerWithResources,
+} from "react-game-ui";
 import { Deck, PlayField, RemoteCursor, ScoreBoard } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
@@ -17,12 +21,6 @@ const BASE_WIDTH = 1600;
 const BASE_HEIGHT = 900;
 
 const Z_INDEX_CARD = 2000;
-
-interface TurnUpdatePayload {
-  playerId: string;
-  currentRound: number;
-  currentTurnIndex: number;
-}
 
 export default function FireworksRoomⅡ() {
   const { roomId } = useParams<{ roomId: string }>();
@@ -76,13 +74,9 @@ export default function FireworksRoomⅡ() {
     [],
   );
 
-  const handleGameTurn = useCallback((data: TurnUpdatePayload | string) => {
-    if (typeof data === "string") {
-      setCurrentPlayerId(data);
-    } else {
-      setCurrentPlayerId(data.playerId);
-      setCurrentRound(data.currentRound + 1);
-    }
+  const handleGameTurn = useCallback((data: GameTurnUpdateData) => {
+    setCurrentPlayerId(data.currentPlayerId);
+    setCurrentRound(data.currentRoundIndex + 1);
   }, []);
 
   const handleGameEnd = useCallback((result: any) => setGameResult(result), []);

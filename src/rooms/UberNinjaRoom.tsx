@@ -1,6 +1,10 @@
 // src/components/UberNinjaRoom.tsx
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { Player, PlayerWithResources } from "react-game-ui";
+import type {
+  GameTurnUpdateData,
+  Player,
+  PlayerWithResources,
+} from "react-game-ui";
 import {
   Deck,
   Dice,
@@ -23,12 +27,6 @@ const SERVER_URL =
 
 const BASE_WIDTH = 1600;
 const BASE_HEIGHT = 900;
-
-interface TurnUpdatePayload {
-  playerId: string;
-  currentRound: number;
-  currentTurnIndex: number;
-}
 
 export function UberNinjaRoom() {
   const { roomId } = useParams<{ roomId: string }>();
@@ -76,12 +74,8 @@ export function UberNinjaRoom() {
     };
     const handlePlayersUpdate = (updatedPlayers: PlayerWithResources[]) =>
       setPlayers(updatedPlayers);
-    const handleGameTurn = (data: TurnUpdatePayload | string) => {
-      if (typeof data === "string") {
-        setCurrentPlayerId(data);
-      } else {
-        setCurrentPlayerId(data.playerId);
-      }
+    const handleGameTurn = (data: GameTurnUpdateData) => {
+      setCurrentPlayerId(data.currentPlayerId);
     };
     const handleGameEnd = (result: any) => setGameResult(result);
 
