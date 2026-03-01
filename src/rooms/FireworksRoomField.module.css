@@ -116,10 +116,6 @@
   width: 100% !important;
 }
 
-.fireworksRequtangleField :global(.rg-playfield-container) {
-  z-index: 5 !important;
-}
-
 /* --- CircleField --- */
 .fireworksCircleField :global(.rg-playfield) {
   width: 600px !important;

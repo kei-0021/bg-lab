@@ -384,12 +384,6 @@
   font: normal;
 }
 
-/* ドラッグ中は問答無用で最前面にする（ライブラリの仕様に合わせる） */
-[class*="draggable"]:active,
-[class*="dragging"] {
-  z-index: 999999 !important;
-}
-
 /* ダイスセクション全体：各セットを横に並べる */
 .diceSection {
   display: flex;

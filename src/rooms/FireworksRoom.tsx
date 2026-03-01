@@ -26,7 +26,8 @@ const BASE_WIDTH = 1600;
 const BASE_HEIGHT = 900;
 
 const Z_INDEX_SMOKE = 1000;
-const Z_INDEX_PLAYER = 2000;
+const Z_INDEX_CARD = 2000;
+const Z_INDEX_PLAYER = 3000;
 
 interface TurnUpdatePayload {
   playerId: string;
@@ -241,8 +242,14 @@ export default function FireworksRoom() {
             zIndex={Z_INDEX_SMOKE}
             containerRef={containerRef}
             scale={scale}
+            isTransparent={true}
             style={{
-              border: "1px solid white",
+              // 枠線を白の 50% 透明にする
+              border: "1px solid rgba(255, 255, 255, 0.5)",
+
+              // もし背景も半透明にするなら（例：黒の 30%）
+              background: "rgba(0, 0, 0, 0.4)",
+              backdropFilter: "blur(1px)",
             }}
           ></Draggable>
         ))}
@@ -357,6 +364,7 @@ export default function FireworksRoom() {
               players={players}
               myPlayerId={myPlayerId}
               layoutMode="free"
+              baseZIndex={Z_INDEX_CARD}
             />
             {fieldClassName !== "fireworksCircleField" && <LaunchArea />}
           </div>
