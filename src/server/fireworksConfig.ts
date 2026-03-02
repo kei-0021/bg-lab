@@ -46,12 +46,12 @@ export const fireworksConfig: RoomConfig = {
       ],
       initialHand: { deckId: "firework", count: 5 },
       initialBoard: [],
-      checkGameEnd: (room: RoomState) =>
+      checkGameEnd: (state: RoomState) =>
         // 終了条件: 10ラウンド終了 (10ラウンド目の最後 かつ 最後のプレイヤーの手番時)
-        room.currentRoundIndex >= 9 &&
-        room.currentTurnIndex == room.initRoomState.players.length - 1,
-      onGameEnd: (roomState: RoomState) => {
-        const rankings = [...roomState.initRoomState.players]
+        state.currentRoundIndex >= 9 &&
+        state.currentTurnIndex == state.initRoomState.players.length - 1,
+      onGameEnd: (state: RoomState) => {
+        const rankings = [...state.initRoomState.players]
           .sort((a: any, b: any) => b.tokens.length - a.tokens.length)
           .map((player: any, index: number) => ({
             rank: index + 1,
@@ -61,7 +61,7 @@ export const fireworksConfig: RoomConfig = {
         return {
           message: "全演目の打ち上げが終了しました。本日の最優秀職人は…",
           rankings,
-          finalRound: roomState.currentRoundIndex,
+          finalRound: state.currentRoundIndex,
         };
       },
     };

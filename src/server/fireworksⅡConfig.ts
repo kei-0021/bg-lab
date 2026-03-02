@@ -1,6 +1,6 @@
 // src/server/fireworksConfig.ts
 
-import type { Card, RoomParam, RoomState } from "react-game-ui";
+import type { Card, DeckDrawData, RoomParam, RoomState } from "react-game-ui";
 import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
 
 export const fireworksⅡConfig: RoomConfig = {
@@ -65,12 +65,17 @@ export const fireworksⅡConfig: RoomConfig = {
       ],
       initialHand: { deckId: "firework", count: 5 },
       initialBoard: [],
-      checkGameEnd: (room: RoomState) =>
+      onDeckDraw: (_param: RoomParam, _state: RoomState, data: DeckDrawData) => {
+        if (['theme', 'color'].includes(data.deckId)) {
+          process.stdout.write(`${data.deckId}）のカードを表にしました。続いてカードを3枚まで出してください\n`);
+        }
+      },
+      checkGameEnd: (state: RoomState) =>
         // 終了条件: 8ラウンド終了 (8ラウンド目の最後 かつ 最後のプレイヤーの手番時)
-        room.currentRoundIndex >= 7 &&
-        room.currentTurnIndex == room.initRoomState.players.length - 1,
-      onGameEnd: (roomState: RoomState) => {
-        const rankings = [...roomState.initRoomState.players]
+        state.currentRoundIndex >= 7 &&
+        state.currentTurnIndex == state.initRoomState.players.length - 1,
+      onGameEnd: (state: RoomState) => {
+        const rankings = [...state.initRoomState.players]
           .sort((a: any, b: any) => b.tokens.length - a.tokens.length)
           .map((player: any, index: number) => ({
             rank: index + 1,
@@ -80,7 +85,7 @@ export const fireworksⅡConfig: RoomConfig = {
         return {
           message: "全演目の打ち上げが終了しました。本日の最優秀職人は…",
           rankings,
-          finalRound: roomState.currentRoundIndex,
+          finalRound: state.currentRoundIndex,
         };
       },
     };
