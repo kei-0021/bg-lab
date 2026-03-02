@@ -49,9 +49,9 @@ export const fireworksConfig: RoomConfig = {
       checkGameEnd: (state: RoomState) =>
         // 終了条件: 10ラウンド終了 (10ラウンド目の最後 かつ 最後のプレイヤーの手番時)
         state.currentRoundIndex >= 9 &&
-        state.currentTurnIndex == state.initRoomState.players.length - 1,
+        state.currentTurnIndex == state.players.length - 1,
       onGameEnd: (state: RoomState) => {
-        const rankings = [...state.initRoomState.players]
+        const rankings = [...state.players]
           .sort((a: any, b: any) => b.tokens.length - a.tokens.length)
           .map((player: any, index: number) => ({
             rank: index + 1,
