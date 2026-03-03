@@ -23,7 +23,7 @@ importers:
         version: 18.3.1(react@18.3.1)
       react-game-ui:
         specifier: github:kei-0021/react-game-ui#issue-18
-        version: https://codeload.github.com/kei-0021/react-game-ui/tar.gz/17b5cc1e33083dc5fc5cc120ad1c464db5954ab6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: https://codeload.github.com/kei-0021/react-game-ui/tar.gz/39033cf625548fdf0f24975215f2f56795aa4790(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-router-dom:
         specifier: ^7.13.1
         version: 7.13.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1398,8 +1398,8 @@ packages:
     resolution: {integrity: sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg==}
     engines: {node: '>= 0.4'}
 
-  postcss@8.5.6:
-    resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
+  postcss@8.5.8:
+    resolution: {integrity: sha512-OW/rX8O/jXnm82Ey1k44pObPtdblfiuWnrd8X7GJ7emImCOstunGbXUpp7HdBrFQX6rJzn3sPT397Wp5aCwCHg==}
     engines: {node: ^10 || ^12 || >=14}
 
   prettier@3.8.1:
@@ -1451,8 +1451,8 @@ packages:
     peerDependencies:
       react: 18.3.1
 
-  react-game-ui@https://codeload.github.com/kei-0021/react-game-ui/tar.gz/17b5cc1e33083dc5fc5cc120ad1c464db5954ab6:
-    resolution: {tarball: https://codeload.github.com/kei-0021/react-game-ui/tar.gz/17b5cc1e33083dc5fc5cc120ad1c464db5954ab6}
+  react-game-ui@https://codeload.github.com/kei-0021/react-game-ui/tar.gz/39033cf625548fdf0f24975215f2f56795aa4790:
+    resolution: {tarball: https://codeload.github.com/kei-0021/react-game-ui/tar.gz/39033cf625548fdf0f24975215f2f56795aa4790}
     version: 1.0.0
     peerDependencies:
       react: 18.3.1
@@ -3138,7 +3138,7 @@ snapshots:
 
   possible-typed-array-names@1.1.0: {}
 
-  postcss@8.5.6:
+  postcss@8.5.8:
     dependencies:
       nanoid: 3.3.11
       picocolors: 1.1.1
@@ -3196,7 +3196,7 @@ snapshots:
       react: 18.3.1
       scheduler: 0.23.2
 
-  react-game-ui@https://codeload.github.com/kei-0021/react-game-ui/tar.gz/17b5cc1e33083dc5fc5cc120ad1c464db5954ab6(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  react-game-ui@https://codeload.github.com/kei-0021/react-game-ui/tar.gz/39033cf625548fdf0f24975215f2f56795aa4790(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       express: 5.2.1
       react: 18.3.1
@@ -3631,7 +3631,7 @@ snapshots:
       esbuild: 0.27.3
       fdir: 6.5.0(picomatch@4.0.3)
       picomatch: 4.0.3
-      postcss: 8.5.6
+      postcss: 8.5.8
       rollup: 4.59.0
       tinyglobby: 0.2.15
     optionalDependencies:

@@ -1,11 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { GameTurnUpdateData, Player, RoomJoinData } from "react-game-ui";
+import type {
+  GamePhaseUpdateData,
+  GameTurnUpdateData,
+  Player,
+  RoomJoinData,
+} from "react-game-ui";
 import { Deck, PlayField, RemoteCursor, ScoreBoard } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { RoundProgressTracker } from "../components/RoundProgressTracker";
 import { SystemMessageWindow } from "../components/systemMessageWindow";
 import { useSocket } from "../hooks/useSocket.js";
+import { FireworksⅡPhase } from "../types/phase";
 import styles from "./FireworksRoom.module.css";
 import fieldStyles from "./FireworksRoomField.module.css";
 import { FireWorksRuleⅡ } from "./FireworksRuleⅡ";
@@ -31,13 +37,13 @@ export default function FireworksRoomⅡ() {
   const [myPlayerId, setMyPlayerId] = useState<string | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
   const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
+
   const [currentRound, setCurrentRound] = useState<number>(1);
+  const [systemMessages, setSystemMessages] = useState<string[]>([]);
+
   const [showRules, setShowRules] = useState<boolean>(false);
   const [gameResult, setGameResult] = useState<any>(null);
   const [scale, setScale] = useState<number>(1);
-
-  // 配列で管理
-  const [systemMessages, setSystemMessages] = useState<string[]>([]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -82,12 +88,27 @@ export default function FireworksRoomⅡ() {
       if (nextRound !== currentRound) {
         updateMessage(`第 ${nextRound} 演目（ラウンド）開始！`);
         updateMessage("演目 or カラーカードのどちらかを引いてください");
-        updateMessage("カードを3枚まで選んでください");
       }
       setCurrentPlayerId(data.currentPlayerId);
       setCurrentRound(nextRound);
     },
-    [currentRound, updateMessage],
+    [currentRound],
+  );
+
+  const handlePhaseChanged = useCallback(
+    (data: GamePhaseUpdateData) => {
+      const phaseName = (data.newPhase as any)?.name;
+      if (String(phaseName) === String(FireworksⅡPhase.PLANNING)) {
+        updateMessage("演目 or カラーカードのどちらかを引いてください");
+      }
+      if (String(phaseName) === String(FireworksⅡPhase.SETUP)) {
+        updateMessage("カードを3枚まで選んでください");
+      }
+      if (String(phaseName) === String(FireworksⅡPhase.EVALUATION)) {
+        updateMessage("今ラウンドで最大評価を得たのは...");
+      }
+    },
+    [updateMessage],
   );
 
   const handleGameEnd = useCallback(
@@ -101,11 +122,13 @@ export default function FireworksRoomⅡ() {
     if (!socket) return;
     socket.on("player:assign-id", handleAssignId);
     socket.on("players:update", handlePlayersUpdate);
+    socket.on("game:phase:update", handlePhaseChanged);
     socket.on("game:turn", handleGameTurn);
     socket.on("game:end", handleGameEnd);
     return () => {
       socket.off("player:assign-id", handleAssignId);
       socket.off("players:update", handlePlayersUpdate);
+      socket.off("game:phase:update", handlePhaseChanged);
       socket.off("game:turn", handleGameTurn);
       socket.off("game:end", handleGameEnd);
     };
@@ -113,6 +136,7 @@ export default function FireworksRoomⅡ() {
     socket,
     handleAssignId,
     handlePlayersUpdate,
+    handlePhaseChanged,
     handleGameTurn,
     handleGameEnd,
   ]);

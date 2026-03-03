@@ -1,8 +1,8 @@
 // src/server/fireworksConfig.ts
 
-import type { Card, DeckDrawData, RoomManager, RoomParam, RoomState } from "react-game-ui";
+import type { Card, CardPlayData, DeckDrawData, RoomManager, RoomParam, RoomState } from "react-game-ui";
 import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
-import { FireworksⅡPhase } from "../types/phase";
+import { FireworksⅡPhase } from "../types/phase.js";
 
 export const fireworksⅡConfig: RoomConfig = {
   gameId: "fireworksⅡ",
@@ -68,9 +68,11 @@ export const fireworksⅡConfig: RoomConfig = {
       initialBoard: [],
       onDeckDraw: (_state: RoomState, manager: RoomManager, data: DeckDrawData) => {
         if (['theme', 'color'].includes(data.deckId)) {
-          process.stdout.write(`(${data.deckId}）のカードを表にしました。続いてカードを3枚まで出してください\n`);
           manager.updatePhase(FireworksⅡPhase.SETUP)
         }
+      },
+      onCardPlay: (_state: RoomState, manager: RoomManager, _data: CardPlayData) => {
+        manager.updatePhase(FireworksⅡPhase.EVALUATION)
       },
       checkGameEnd: (state: RoomState) =>
         // 終了条件: 8ラウンド終了 (8ラウンド目の最後 かつ 最後のプレイヤーの手番時)
