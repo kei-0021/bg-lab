@@ -3,6 +3,9 @@
 import type { Card, CardPlayData, DeckDrawData, GameParam, RoomManager, RoomState } from "react-game-ui";
 import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
 import { FireworksⅡPhase } from "../types/phase.js";
+import { scoreCalculator } from "./scoreCalculator.js";
+
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const fireworksⅡConfig: RoomConfig = {
   gameId: "fireworksⅡ",
@@ -71,18 +74,52 @@ export const fireworksⅡConfig: RoomConfig = {
           manager.updatePhase(FireworksⅡPhase.SETUP)
         }
       },
-      onCardPlay: (state: RoomState, manager: RoomManager, _data: CardPlayData) => {
-        // 全てのプレーヤーがカードを出したかどうかを確認
-        const cards = state.playFieldCards["firework"] ?? [];
-        const submittedPlayerIds = new Set(cards.map(card => card.ownerId));
-        if (submittedPlayerIds.size === state.players.length) {
-          manager.updatePhase(FireworksⅡPhase.EVALUATION);
+      onCardPlay: async (state: RoomState, manager: RoomManager, _data: CardPlayData) => {
+        const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+        const deckId = "firework";
+
+        // 全員がカードを出したかチェック
+        const cards = state.playFieldCards[deckId] ?? [];
+        const submittedPlayerIds = new Set(cards.map(card => card.ownerId).filter(id => id !== null));
+        if (submittedPlayerIds.size !== state.players.length) return;
+
+        // 全員出揃ったら評価フェーズへ
+        manager.updatePhase(FireworksⅡPhase.EVALUATION);
+        await sleep(500);
+
+        // 特定の色（例：「赤」）の最多賞を計算して加点
+        // 捨て札の山（配列）を取得
+        const discardStack = state.discardPile["color"] ?? [];
+
+        if (discardStack.length > 0) {
+          const lastCard = discardStack.at(-1);
+          if (lastCard?.name) {
+            // 絵文字をそのまま色名として扱う
+            // 例: "🔵" が取れる
+            const targetEmoji = lastCard.name;
+
+            // 手札側の名前に合わせるためのマッピング
+            const colorMap: Record<string, string> = {
+              "🔵": "青",
+              "🔴": "赤",
+              "🟡": "黄",
+              "🟢": "緑",
+              "⚪": "白"
+            };
+
+            const targetColor = colorMap[targetEmoji] || targetEmoji;
+            const winnerId = scoreCalculator(state, "firework", targetColor);
+
+            if (winnerId) {
+              await sleep(1000);
+              manager.addScore(winnerId, 1);
+            }
+          }
         }
       },
       onNextRound: async (state: RoomState, manager: RoomManager) => {
         manager.updatePhase(FireworksⅡPhase.PLANNING);
         // 手札がないなら5枚配布する
-        const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         for (const player of state.players) {
           if ((player.cards?.length ?? 0) === 0) {
             for (let i = 0; i < 5; i++) {
@@ -95,6 +132,11 @@ export const fireworksⅡConfig: RoomConfig = {
           }
         }
         // 場のカードを捨て札に移動する
+        const cardsInField = [...(state.playFieldCards["firework"] ?? [])];
+        for (const card of cardsInField) {
+          manager.moveFromField("firework", card.id, null);
+          await sleep(100);
+        }
       },
       checkGameEnd: (state: RoomState) =>
         // 終了条件: 8ラウンド終了 (8ラウンド目の最後 かつ 最後のプレイヤーの手番時)
