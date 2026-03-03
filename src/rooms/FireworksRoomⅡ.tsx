@@ -106,6 +106,7 @@ export default function FireworksRoomⅡ() {
       }
       if (String(phaseName) === String(FireworksⅡPhase.EVALUATION)) {
         updateMessage("全員がカードを出し終えました！");
+        updateMessage("演目カード or カラーカードのもう一方を表にしてください");
         updateMessage("今ラウンドで最大評価を得たのは...");
       }
     },

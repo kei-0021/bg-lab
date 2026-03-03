@@ -79,6 +79,9 @@ export const fireworksⅡConfig: RoomConfig = {
           manager.updatePhase(FireworksⅡPhase.EVALUATION);
         }
       },
+      onNextRound: (_state: RoomState, manager: RoomManager) => {
+        manager.updatePhase(FireworksⅡPhase.PLANNING)
+      },
       checkGameEnd: (state: RoomState) =>
         // 終了条件: 8ラウンド終了 (8ラウンド目の最後 かつ 最後のプレイヤーの手番時)
         state.currentRoundIndex >= 7 &&
