@@ -79,8 +79,22 @@ export const fireworksⅡConfig: RoomConfig = {
           manager.updatePhase(FireworksⅡPhase.EVALUATION);
         }
       },
-      onNextRound: (_state: RoomState, manager: RoomManager) => {
-        manager.updatePhase(FireworksⅡPhase.PLANNING)
+      onNextRound: async (state: RoomState, manager: RoomManager) => {
+        manager.updatePhase(FireworksⅡPhase.PLANNING);
+        // 手札がないなら5枚配布する
+        const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+        for (const player of state.players) {
+          if ((player.cards?.length ?? 0) === 0) {
+            for (let i = 0; i < 5; i++) {
+              manager.drawCard("firework", ["hand", "back"], player.id);
+              manager.emitDeckUpdate("firework");
+              manager.emitPlayerUpdate();
+              await sleep(300);
+            }
+            console.log(`[NextRound] ${player.name} に1枚ずつ補充しました`);
+          }
+        }
+        // 場のカードを捨て札に移動する
       },
       checkGameEnd: (state: RoomState) =>
         // 終了条件: 8ラウンド終了 (8ラウンド目の最後 かつ 最後のプレイヤーの手番時)

@@ -87,6 +87,7 @@ export default function FireworksRoomⅡ() {
       const nextRound = data.currentRoundIndex + 1;
       if (nextRound !== currentRound) {
         updateMessage(`第 ${nextRound} 演目（ラウンド）開始！`);
+        updateMessage("カードがないプレイヤーに5枚配布します");
         updateMessage("演目 or カラーカードのどちらかを引いてください");
       }
       setCurrentPlayerId(data.currentPlayerId);
