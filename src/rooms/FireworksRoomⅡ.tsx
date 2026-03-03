@@ -105,6 +105,7 @@ export default function FireworksRoomⅡ() {
         updateMessage("カードを3枚まで選んでください");
       }
       if (String(phaseName) === String(FireworksⅡPhase.EVALUATION)) {
+        updateMessage("全員がカードを出し終えました！");
         updateMessage("今ラウンドで最大評価を得たのは...");
       }
     },

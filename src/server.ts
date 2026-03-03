@@ -7,7 +7,7 @@ import {
 } from "react-game-ui/server-io-utils";
 import { fileURLToPath } from "url";
 
-import type { RoomParam } from "react-game-ui";
+import type { GameParam } from "react-game-ui";
 
 // 各ゲーム固有のコンフィグ
 import { customEvents } from "../public/data/customEvents.js";
@@ -20,7 +20,7 @@ const __dirname = path.dirname(__filename);
 
 
 async function startServer(): Promise<void> {
-  const gamePresets: Record<string, RoomParam> = {};
+  const gameParams: Record<string, GameParam> = {};
   const configs: RoomConfig[] = [fireworksConfig, fireworksⅡConfig, uberNinjaConfig];
   const isProduction = process.env.NODE_ENV === "production";
 
@@ -40,7 +40,7 @@ async function startServer(): Promise<void> {
     }
 
     // ツール群を渡してプリセットを生成
-    gamePresets[config.gameId] = await config.setup(loadedData);
+    gameParams[config.gameId] = await config.setup(loadedData);
   }
 
   const options: GameServerOptions = {
@@ -52,7 +52,7 @@ async function startServer(): Promise<void> {
       "http://localhost:4000",
       "https://bg-lab.onrender.com",
     ],
-    gamePresets,
+    gameParams,
     customEvents,
     initialLogCategories: {
       connection: false,

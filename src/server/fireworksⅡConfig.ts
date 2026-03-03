@@ -1,6 +1,6 @@
 // src/server/fireworksConfig.ts
 
-import type { Card, CardPlayData, DeckDrawData, RoomManager, RoomParam, RoomState } from "react-game-ui";
+import type { Card, CardPlayData, DeckDrawData, GameParam, RoomManager, RoomState } from "react-game-ui";
 import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
 import { FireworksⅡPhase } from "../types/phase.js";
 
@@ -12,7 +12,7 @@ export const fireworksⅡConfig: RoomConfig = {
     colorCards: "../public/data/fireworksColorCards.json",
   },
   // サーバー側でロードしたデータを setup に渡す
-  setup: async (loadedData: Record<string, any>): Promise<RoomParam> => {
+  setup: async (loadedData: Record<string, any>): Promise<GameParam> => {
     const helper = new SetupHelper();
 
     const defaults: Partial<Card> = {
@@ -71,8 +71,13 @@ export const fireworksⅡConfig: RoomConfig = {
           manager.updatePhase(FireworksⅡPhase.SETUP)
         }
       },
-      onCardPlay: (_state: RoomState, manager: RoomManager, _data: CardPlayData) => {
-        manager.updatePhase(FireworksⅡPhase.EVALUATION)
+      onCardPlay: (state: RoomState, manager: RoomManager, _data: CardPlayData) => {
+        // 全てのプレーヤーがカードを出したかどうかを確認
+        const cards = state.playFieldCards["firework"] ?? [];
+        const submittedPlayerIds = new Set(cards.map(card => card.ownerId));
+        if (submittedPlayerIds.size === state.players.length) {
+          manager.updatePhase(FireworksⅡPhase.EVALUATION);
+        }
       },
       checkGameEnd: (state: RoomState) =>
         // 終了条件: 8ラウンド終了 (8ラウンド目の最後 かつ 最後のプレイヤーの手番時)

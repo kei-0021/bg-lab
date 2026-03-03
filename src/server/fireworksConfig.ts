@@ -1,6 +1,6 @@
 // src/server/fireworksConfig.ts
 
-import type { Card, RoomParam, RoomState } from "react-game-ui";
+import type { Card, GameParam, RoomState } from "react-game-ui";
 import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
 
 
@@ -10,7 +10,7 @@ export const fireworksConfig: RoomConfig = {
     cards: "../public/data/fireworksCards.json",
   },
   // サーバー側でロードしたデータを setup に渡す
-  setup: async (loadedData: Record<string, any>): Promise<RoomParam> => {
+  setup: async (loadedData: Record<string, any>): Promise<GameParam> => {
     const helper = new SetupHelper();
 
     const defaults: Partial<Card> = {
