@@ -1,17 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type {
-  GamePhaseUpdateData,
-  GameTurnUpdateData,
-  Player,
-  RoomJoinData,
+import type { GameTurnUpdateData, Player, RoomJoinData } from "react-game-ui";
+import {
+  Deck,
+  PlayField,
+  RemoteCursor,
+  ScoreBoard,
+  SystemMessageWindow,
 } from "react-game-ui";
-import { Deck, PlayField, RemoteCursor, ScoreBoard } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { RoundProgressTracker } from "../components/RoundProgressTracker";
-import { SystemMessageWindow } from "../components/systemMessageWindow";
 import { useSocket } from "../hooks/useSocket.js";
-import { FireworksⅡPhase } from "../types/phase";
 import styles from "./FireworksRoom.module.css";
 import fieldStyles from "./FireworksRoomField.module.css";
 import { FireWorksRuleⅡ } from "./FireworksRuleⅡ";
@@ -39,7 +38,6 @@ export default function FireworksRoomⅡ() {
   const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
 
   const [currentRound, setCurrentRound] = useState<number>(1);
-  const [systemMessages, setSystemMessages] = useState<string[]>([]);
 
   const [showRules, setShowRules] = useState<boolean>(false);
   const [gameResult, setGameResult] = useState<any>(null);
@@ -54,11 +52,6 @@ export default function FireworksRoomⅡ() {
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // 配列に追加する関数
-  const updateMessage = useCallback((msg: string) => {
-    setSystemMessages((prev) => [...prev, msg]);
   }, []);
 
   const handleJoinRoom = useCallback(() => {
@@ -86,9 +79,6 @@ export default function FireworksRoomⅡ() {
     (data: GameTurnUpdateData) => {
       const nextRound = data.currentRoundIndex + 1;
       if (nextRound !== currentRound) {
-        updateMessage(`第 ${nextRound} 演目（ラウンド）開始！`);
-        updateMessage("カードがないプレイヤーに5枚配布します");
-        updateMessage("演目 or カラーカードのどちらかを引いてください");
       }
       setCurrentPlayerId(data.currentPlayerId);
       setCurrentRound(nextRound);
@@ -96,42 +86,19 @@ export default function FireworksRoomⅡ() {
     [currentRound],
   );
 
-  const handlePhaseChanged = useCallback(
-    (data: GamePhaseUpdateData) => {
-      const phaseName = (data.newPhase as any)?.name;
-      if (String(phaseName) === String(FireworksⅡPhase.PLANNING)) {
-        updateMessage("演目 or カラーカードのどちらかを引いてください");
-      }
-      if (String(phaseName) === String(FireworksⅡPhase.SETUP)) {
-        updateMessage("カードを3枚まで選んでください");
-      }
-      if (String(phaseName) === String(FireworksⅡPhase.EVALUATION)) {
-        updateMessage("全員がカードを出し終えました！");
-        updateMessage("演目カード or カラーカードのもう一方を表にしてください");
-        updateMessage("今ラウンドで最大評価を得たのは...");
-      }
-    },
-    [updateMessage],
-  );
-
-  const handleGameEnd = useCallback(
-    (result: any) => {
-      setGameResult(result);
-    },
-    [updateMessage],
-  );
+  const handleGameEnd = useCallback((result: any) => {
+    setGameResult(result);
+  }, []);
 
   useEffect(() => {
     if (!socket) return;
     socket.on("player:assign-id", handleAssignId);
     socket.on("players:update", handlePlayersUpdate);
-    socket.on("game:phase:update", handlePhaseChanged);
     socket.on("game:turn", handleGameTurn);
     socket.on("game:end", handleGameEnd);
     return () => {
       socket.off("player:assign-id", handleAssignId);
       socket.off("players:update", handlePlayersUpdate);
-      socket.off("game:phase:update", handlePhaseChanged);
       socket.off("game:turn", handleGameTurn);
       socket.off("game:end", handleGameEnd);
     };
@@ -139,7 +106,6 @@ export default function FireworksRoomⅡ() {
     socket,
     handleAssignId,
     handlePlayersUpdate,
-    handlePhaseChanged,
     handleGameTurn,
     handleGameEnd,
   ]);
@@ -249,8 +215,12 @@ export default function FireworksRoomⅡ() {
           onClose={() => setShowRules(false)}
         />
 
-        {/* メッセージウィンドウに配列を渡す */}
-        <SystemMessageWindow messages={systemMessages} />
+        {/* メッセージウィンドウ */}
+        <SystemMessageWindow
+          socket={socket}
+          roomId={roomId}
+          displayDuration={5000}
+        />
 
         <main className={styles.fireworksMain}>
           <RemoteCursor

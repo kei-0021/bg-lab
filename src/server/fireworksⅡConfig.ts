@@ -72,6 +72,7 @@ export const fireworksⅡConfig: RoomConfig = {
       onDeckDraw: (_state: RoomState, manager: RoomManager, data: DeckDrawData) => {
         if (['theme', 'color'].includes(data.deckId)) {
           manager.updatePhase(FireworksⅡPhase.SETUP)
+          manager.emitSystemMessage("カードを3枚まで選んでください", true);
         }
       },
       onCardPlay: async (state: RoomState, manager: RoomManager, _data: CardPlayData) => {
@@ -85,12 +86,17 @@ export const fireworksⅡConfig: RoomConfig = {
 
         // 全員出揃ったら評価フェーズへ
         manager.updatePhase(FireworksⅡPhase.EVALUATION);
-        await sleep(500);
+        manager.emitSystemMessage("全員がカードを出し終えました！");
+        await sleep(2000);
+        manager.emitSystemMessage("演目カード or カラーカードのもう一方を表にしてください");
+        await sleep(2000);
 
         // 特定の色（例：「赤」）の最多賞を計算して加点
         // 捨て札の山（配列）を取得
         const discardStack = state.discardPile["color"] ?? [];
 
+        manager.emitSystemMessage("今ラウンドで最大評価を得たのは...", true);
+        await sleep(2000);
         if (discardStack.length > 0) {
           const lastCard = discardStack.at(-1);
           if (lastCard?.name) {
@@ -111,14 +117,20 @@ export const fireworksⅡConfig: RoomConfig = {
             const winnerId = scoreCalculator(state, "firework", targetColor);
 
             if (winnerId) {
-              await sleep(1000);
               manager.addScore(winnerId, 1);
+              await sleep(2000);
+              manager.emitSystemMessage(`${winnerId} だ!`, true);
+            } else {
+              manager.emitSystemMessage("いなかった!", true);
             }
           }
+        } else {
+          manager.emitSystemMessage("いなかった!", true);
         }
       },
       onNextRound: async (state: RoomState, manager: RoomManager) => {
         manager.updatePhase(FireworksⅡPhase.PLANNING);
+        manager.emitSystemMessage(`第 ${state.currentRoundIndex + 1} 演目（ラウンド）開始！`)
         // 手札がないなら5枚配布する
         for (const player of state.players) {
           if ((player.cards?.length ?? 0) === 0) {
@@ -128,7 +140,7 @@ export const fireworksⅡConfig: RoomConfig = {
               manager.emitPlayerUpdate();
               await sleep(300);
             }
-            console.log(`[NextRound] ${player.name} に1枚ずつ補充しました`);
+            manager.emitSystemMessage(`${player.name} に5枚のカードを補充しました`);
           }
         }
         // 場のカードを捨て札に移動する
@@ -137,6 +149,7 @@ export const fireworksⅡConfig: RoomConfig = {
           manager.moveFromField("firework", card.id, null);
           await sleep(100);
         }
+        manager.emitSystemMessage("演目 or カラーカードのどちらかを引いてください", true);
       },
       checkGameEnd: (state: RoomState) =>
         // 終了条件: 8ラウンド終了 (8ラウンド目の最後 かつ 最後のプレイヤーの手番時)
