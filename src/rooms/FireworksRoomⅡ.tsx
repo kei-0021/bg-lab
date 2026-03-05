@@ -70,6 +70,10 @@ export default function FireworksRoomⅡ() {
     setIsJoining(false);
   }, []);
 
+  const onClientReady = () => {
+    socket.emit("client:ready", roomId);
+  };
+
   const handlePlayersUpdate = useCallback(
     (updatedPlayers: Player[]) => setPlayers(updatedPlayers),
     [],
@@ -93,11 +97,13 @@ export default function FireworksRoomⅡ() {
   useEffect(() => {
     if (!socket) return;
     socket.on("player:assign-id", handleAssignId);
+    socket.on("client:ready-to-sync", onClientReady);
     socket.on("players:update", handlePlayersUpdate);
     socket.on("game:turn", handleGameTurn);
     socket.on("game:end", handleGameEnd);
     return () => {
       socket.off("player:assign-id", handleAssignId);
+      socket.off("client:ready-to-sync", onClientReady);
       socket.off("players:update", handlePlayersUpdate);
       socket.off("game:turn", handleGameTurn);
       socket.off("game:end", handleGameEnd);
@@ -292,6 +298,7 @@ export default function FireworksRoomⅡ() {
               currentPlayerId={currentPlayerId}
               myPlayerId={myPlayerId}
               playCardLimit={3}
+              roundSkipbutton={true}
             />
           </div>
         </main>

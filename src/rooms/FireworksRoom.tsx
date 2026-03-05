@@ -84,6 +84,10 @@ export default function FireworksRoom() {
       setIsJoining(false);
     };
 
+    const onClientReady = () => {
+      socket.emit("client:ready", roomId);
+    };
+
     const handlePlayersUpdate = (updatedPlayers: Player[]) =>
       setPlayers(updatedPlayers);
 
@@ -103,6 +107,7 @@ export default function FireworksRoom() {
     };
 
     socket.on("player:assign-id", handleAssignId);
+    socket.on("client:ready-to-sync", onClientReady);
     socket.on("players:update", handlePlayersUpdate);
     socket.on("game:turn", handleGameTurn);
     socket.on("game:end", handleGameEnd);

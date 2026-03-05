@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { RoomJoinData } from "react-game-ui";
+import type { Player, RoomJoinData } from "react-game-ui";
 import { Draggable, RemoteCursor } from "react-game-ui";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSocket } from "../hooks/useSocket";
@@ -47,20 +47,31 @@ export function AmanogawaRoom() {
   useEffect(() => {
     if (!socket || !roomId) return;
 
-    socket.on("player:assign-id", (id: string) => {
+    const handleAssignId = useCallback((id: Player["id"]) => {
       setMyPlayerId(id);
       setHasJoined(true);
       setIsJoining(false);
-    });
-    socket.on("players:update", (updatedPlayers: any[]) =>
-      setPlayers(updatedPlayers),
+    }, []);
+
+    const onClientReady = () => {
+      socket.emit("client:ready", roomId);
+    };
+
+    const handlePlayersUpdate = useCallback(
+      (updatedPlayers: Player[]) => setPlayers(updatedPlayers),
+      [],
     );
+
+    socket.on("player:assign-id", handleAssignId);
+    socket.on("client:ready-to-sync", onClientReady);
+    socket.on("players:update", handlePlayersUpdate);
     socket.on("reset:draggable", () => setResetCount((prev) => prev + 1));
 
     return () => {
-      socket.off("player:assign-id");
-      socket.off("players:update");
-      socket.off("reset:draggable");
+      socket.off("player:assign-id", handleAssignId);
+      socket.off("client:ready-to-sync", onClientReady);
+      socket.off("players:update", handlePlayersUpdate);
+      socket.off("reset:draggable", () => setResetCount((prev) => prev + 1));
     };
   }, [socket, roomId, resetCount]);
 

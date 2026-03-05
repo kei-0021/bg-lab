@@ -165,6 +165,7 @@ export const fireworksⅡConfig: RoomConfig = {
       onNextRound: async (state: RoomState, manager: RoomManager) => {
         manager.updatePhase(FireworksⅡPhase.PLANNING);
         manager.emitSystemMessage(`第 ${state.currentRoundIndex + 1} 演目（ラウンド）開始！`)
+        await sleep(1500);
         // 場のカードを捨て札に移動する
         const cardsInField = [...(state.playFieldCards["firework"] ?? [])];
         for (const card of cardsInField) {
@@ -186,9 +187,8 @@ export const fireworksⅡConfig: RoomConfig = {
         manager.emitSystemMessage("演目 or カラーカードのどちらかを引いてください", true);
       },
       checkGameEnd: (state: RoomState) =>
-        // 終了条件: 8ラウンド終了 (8ラウンド目の最後 かつ 最後のプレイヤーの手番時)
-        state.currentRoundIndex >= 7 &&
-        state.currentTurnIndex == state.players.length - 1,
+        // 終了条件: 8ラウンド終了
+        state.currentRoundIndex >= 7,
       onGameEnd: (state: RoomState) => {
         const rankings = [...state.players]
           .sort((a: any, b: any) => b.tokens.length - a.tokens.length)
