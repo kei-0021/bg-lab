@@ -3,7 +3,7 @@
 import type { Card, CardPlayData, DeckDrawData, GameParam, RoomManager, RoomState } from "react-game-ui";
 import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
 import { FireworksⅡPhase } from "../types/phase.js";
-import { scoreCalculator } from "./scoreCalculator.js";
+import { colorScoreCalculator, maxScoreCalculator, mostFrequentNumberCalculator } from "./scoreCalculator.js";
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -87,24 +87,51 @@ export const fireworksⅡConfig: RoomConfig = {
         // 全員出揃ったら評価フェーズへ
         manager.updatePhase(FireworksⅡPhase.EVALUATION);
         manager.emitSystemMessage("全員がカードを出し終えました！");
-        await sleep(2000);
-        manager.emitSystemMessage("演目カード or カラーカードのもう一方を表にしてください");
+        await sleep(1500);
+
+        manager.emitSystemMessage("演目カード or カラーカードのどちらか一方をオープンします");
         await sleep(2000);
 
-        // 特定の色（例：「赤」）の最多賞を計算して加点
-        // 捨て札の山（配列）を取得
-        const discardStack = state.discardPile["color"] ?? [];
+        const discardThemeStack = state.discardPile["theme"] ?? [];
+        const discardColorStack = state.discardPile["color"] ?? [];
 
-        manager.emitSystemMessage("今ラウンドで最大評価を得たのは...", true);
+        // 1. 演目賞の発表
+        manager.emitSystemMessage("【演目賞】の発表です...", true);
         await sleep(2000);
-        if (discardStack.length > 0) {
-          const lastCard = discardStack.at(-1);
+
+        if (discardThemeStack.length > 0) {
+          const lastCard = discardThemeStack.at(-1);
           if (lastCard?.name) {
-            // 絵文字をそのまま色名として扱う
-            // 例: "🔵" が取れる
-            const targetEmoji = lastCard.name;
+            const targetTheme = lastCard.name;
+            const winners = targetTheme === "大輪"
+              ? maxScoreCalculator(state, "firework")
+              : mostFrequentNumberCalculator(state, "firework");
 
-            // 手札側の名前に合わせるためのマッピング
+            if (winners.length > 0) {
+              const winnerNames = winners.join(", ");
+              manager.emitSystemMessage("演目賞獲得！");
+              await sleep(1500);
+              manager.emitSystemMessage(`最も ${targetTheme} の条件を満たしたのは ${winnerNames} だ! +1点!`, true);
+              winners.forEach((winnerId) => manager.addScore(winnerId, 1));
+              await sleep(2000);
+            } else {
+              manager.emitSystemMessage("該当者なし！", true);
+              await sleep(2000);
+            }
+          }
+        } else {
+          manager.emitSystemMessage("演目カードが提示されていません。", true);
+          await sleep(2000);
+        }
+
+        // 2. カラー賞の発表
+        manager.emitSystemMessage("続いて【カラー賞】の発表です...", true);
+        await sleep(2000);
+
+        if (discardColorStack.length > 0) {
+          const lastCard = discardColorStack.at(-1);
+          if (lastCard?.name) {
+            const targetEmoji = lastCard.name;
             const colorMap: Record<string, string> = {
               "🔵": "青",
               "🔴": "赤",
@@ -114,23 +141,36 @@ export const fireworksⅡConfig: RoomConfig = {
             };
 
             const targetColor = colorMap[targetEmoji] || targetEmoji;
-            const winnerId = scoreCalculator(state, "firework", targetColor);
+            const winners = colorScoreCalculator(state, "firework", targetColor);
 
-            if (winnerId) {
-              manager.addScore(winnerId, 1);
+            if (winners.length > 0) {
+              const winnerNames = winners.join(", ");
+              manager.emitSystemMessage("カラー賞獲得！");
+              await sleep(1500);
+              manager.emitSystemMessage(`最も多く ${targetColor} を出したのは ${winnerNames} だ! +1点!`, true);
+              winners.forEach((winnerId) => manager.addScore(winnerId, 1));
               await sleep(2000);
-              manager.emitSystemMessage(`${winnerId} だ!`, true);
             } else {
-              manager.emitSystemMessage("いなかった!", true);
+              manager.emitSystemMessage("該当者なし！", true);
+              await sleep(2000);
             }
           }
         } else {
-          manager.emitSystemMessage("いなかった!", true);
+          manager.emitSystemMessage("カラーカードが提示されていません。", true);
+          await sleep(2000);
         }
+
+        manager.emitSystemMessage("全評価終了。次の演目へ準備してください。");
       },
       onNextRound: async (state: RoomState, manager: RoomManager) => {
         manager.updatePhase(FireworksⅡPhase.PLANNING);
         manager.emitSystemMessage(`第 ${state.currentRoundIndex + 1} 演目（ラウンド）開始！`)
+        // 場のカードを捨て札に移動する
+        const cardsInField = [...(state.playFieldCards["firework"] ?? [])];
+        for (const card of cardsInField) {
+          manager.moveFromField("firework", card.id, null);
+          await sleep(100);
+        }
         // 手札がないなら5枚配布する
         for (const player of state.players) {
           if ((player.cards?.length ?? 0) === 0) {
@@ -142,12 +182,6 @@ export const fireworksⅡConfig: RoomConfig = {
             }
             manager.emitSystemMessage(`${player.name} に5枚のカードを補充しました`);
           }
-        }
-        // 場のカードを捨て札に移動する
-        const cardsInField = [...(state.playFieldCards["firework"] ?? [])];
-        for (const card of cardsInField) {
-          manager.moveFromField("firework", card.id, null);
-          await sleep(100);
         }
         manager.emitSystemMessage("演目 or カラーカードのどちらかを引いてください", true);
       },
