@@ -47,31 +47,29 @@ export function AmanogawaRoom() {
   useEffect(() => {
     if (!socket || !roomId) return;
 
-    const handleAssignId = useCallback((id: Player["id"]) => {
+    const handleAssignId = (id: Player["id"]) => {
       setMyPlayerId(id);
       setHasJoined(true);
       setIsJoining(false);
-    }, []);
+    };
 
     const onClientReady = () => {
       socket.emit("client:ready", roomId);
     };
 
-    const handlePlayersUpdate = useCallback(
-      (updatedPlayers: Player[]) => setPlayers(updatedPlayers),
-      [],
-    );
+    const handlePlayersUpdate = (updatedPlayers: Player[]) =>
+      setPlayers(updatedPlayers);
 
     socket.on("player:assign-id", handleAssignId);
     socket.on("client:ready-to-sync", onClientReady);
     socket.on("players:update", handlePlayersUpdate);
-    socket.on("reset:draggable", () => setResetCount((prev) => prev + 1));
+    socket.on("reset:draggable");
 
     return () => {
       socket.off("player:assign-id", handleAssignId);
       socket.off("client:ready-to-sync", onClientReady);
       socket.off("players:update", handlePlayersUpdate);
-      socket.off("reset:draggable", () => setResetCount((prev) => prev + 1));
+      socket.off("reset:draggable");
     };
   }, [socket, roomId, resetCount]);
 
