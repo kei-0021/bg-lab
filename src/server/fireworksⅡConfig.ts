@@ -108,11 +108,11 @@ export const fireworksⅡConfig: RoomConfig = {
               : mostFrequentNumberCalculator(state, "firework");
 
             if (winners.length > 0) {
-              const winnerNames = winners.join(", ");
+              const winnerNames = winners.map(w => w.playerName).join(", ");
               manager.emitSystemMessage("演目賞獲得！");
               await sleep(1500);
               manager.emitSystemMessage(`最も ${targetTheme} の条件を満たしたのは ${winnerNames} だ! +1点!`, true);
-              winners.forEach((winnerId) => manager.addScore(winnerId, 1));
+              winners.forEach((winner) => manager.addScore(winner.playerId, 1));
               await sleep(2000);
             } else {
               manager.emitSystemMessage("該当者なし！", true);
@@ -144,11 +144,11 @@ export const fireworksⅡConfig: RoomConfig = {
             const winners = colorScoreCalculator(state, "firework", targetColor);
 
             if (winners.length > 0) {
-              const winnerNames = winners.join(", ");
+              const winnerNames = winners.map(w => w.playerName).join(", ");
               manager.emitSystemMessage("カラー賞獲得！");
               await sleep(1500);
               manager.emitSystemMessage(`最も多く ${targetColor} を出したのは ${winnerNames} だ! +1点!`, true);
-              winners.forEach((winnerId) => manager.addScore(winnerId, 1));
+              winners.forEach((winner) => manager.addScore(winner.playerId, 1));
               await sleep(2000);
             } else {
               manager.emitSystemMessage("該当者なし！", true);

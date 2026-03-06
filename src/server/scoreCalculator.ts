@@ -1,17 +1,25 @@
 import type { RoomState } from "react-game-ui";
 
 /**
+ * プレイヤーのIDと名前を保持する型
+ */
+export interface Winner {
+    playerId: string;
+    playerName: string;
+}
+
+/**
  * 指定された色の中で、最多出展者を計算する（同点の場合は全員抽出）
  * @param state - ルームの状態
  * @param deckId - 対象のデッキID
  * @param targetColor - 判定したい色（"赤", "青" など）
- * @returns 勝者のプレイヤーIDの配列
+ * @returns 勝者のプレイヤー情報（IDと名前）の配列
  */
 export const colorScoreCalculator = (
     state: RoomState,
     deckId: string,
     targetColor: string
-): string[] => {
+): Winner[] => {
     const fieldCards = state.playFieldCards[deckId] ?? [];
 
     // { "playerA": 3, "playerB": 3, "playerC": 1 }
@@ -39,19 +47,22 @@ export const colorScoreCalculator = (
     // 2. 最大枚数と同じカウントを持つプレイヤーをすべて抽出
     return Object.entries(playerCounts)
         .filter(([_, count]) => count === maxCount)
-        .map(([playerId, _]) => playerId);
+        .map(([playerId, _]) => ({
+            playerId,
+            playerName: state.players.find(p => p.id === playerId)?.name ?? "Unknown"
+        }));
 };
 
 /**
  * フィールドに出されたカードの中で、最大数値を出したプレイヤー全員を抽出する
  * @param state - ルームの状態
  * @param deckId - 対象のデッキID
- * @returns 最大値を出したプレイヤーIDの配列
+ * @returns 最大値を出したプレイヤー情報（IDと名前）の配列
  */
 export const maxScoreCalculator = (
     state: RoomState,
     deckId: string
-): string[] => {
+): Winner[] => {
     const fieldCards = state.playFieldCards[deckId] ?? [];
 
     // 各プレイヤーがその場に出した最大値を記録
@@ -84,19 +95,22 @@ export const maxScoreCalculator = (
     // 全体の最大値と同じ数値を持っているプレイヤーをすべて抽出
     return Object.entries(playerMaxValues)
         .filter(([_, max]) => max === overallMaxValue)
-        .map(([playerId, _]) => playerId);
+        .map(([playerId, _]) => ({
+            playerId,
+            playerName: state.players.find(p => p.id === playerId)?.name ?? "Unknown"
+        }));
 };
 
 /**
  * フィールドに出されたカードの中で、同じ番号を最も多く出したプレイヤー全員を抽出する
  * @param state - ルームの状態
  * @param deckId - 対象のデッキID
- * @returns 最多枚数出したプレイヤーIDの配列
+ * @returns 最多枚数出したプレイヤー情報（IDと名前）の配列
  */
 export const mostFrequentNumberCalculator = (
     state: RoomState,
     deckId: string
-): string[] => {
+): Winner[] => {
     const fieldCards = state.playFieldCards[deckId] ?? [];
 
     // { "playerA": { "1": 3, "5": 1 }, "playerB": { "1": 1 } }
@@ -128,12 +142,15 @@ export const mostFrequentNumberCalculator = (
     if (maxOccurrence === 0) return [];
 
     // 最多回数を出したプレイヤーを特定
-    const winners: string[] = [];
+    const winners: Winner[] = [];
     Object.entries(playerNumberCounts).forEach(([playerId, counts]) => {
         // そのプレイヤーが持っているカウントの中に、全体最多と一致するものがあるか
         const hasMax = Object.values(counts).some(count => count === maxOccurrence);
         if (hasMax) {
-            winners.push(playerId);
+            winners.push({
+                playerId,
+                playerName: state.players.find(p => p.id === playerId)?.name ?? "Unknown"
+            });
         }
     });
 
