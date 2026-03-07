@@ -262,7 +262,7 @@ export function UberNinjaRoom() {
               socket={socket!}
               roomId={roomId}
               tokenStoreId="KUNAI_COUNT"
-              name="コマ置場"
+              title="コマ置場"
             />
           </div>
         </aside>

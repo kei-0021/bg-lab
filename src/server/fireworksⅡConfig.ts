@@ -89,9 +89,6 @@ export const fireworksⅡConfig: RoomConfig = {
         manager.emitSystemMessage("全員がカードを出し終えました！");
         await sleep(1500);
 
-        manager.emitSystemMessage("演目カード or カラーカードのどちらか一方をオープンします");
-        await sleep(2000);
-
         const discardThemeStack = state.discardPile["theme"] ?? [];
         const discardColorStack = state.discardPile["color"] ?? [];
 
@@ -160,7 +157,7 @@ export const fireworksⅡConfig: RoomConfig = {
           await sleep(2000);
         }
 
-        manager.emitSystemMessage("全評価終了。次の演目へ準備してください。");
+        manager.emitSystemMessage("全評価終了。次の演目へ準備してください。", true);
       },
       onNextRound: async (state: RoomState, manager: RoomManager) => {
         manager.updatePhase(FireworksⅡPhase.PLANNING);

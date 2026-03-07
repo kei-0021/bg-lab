@@ -301,7 +301,6 @@
 }
 
 .sidebarLeft :global([class*="deckSection"]) {
-  padding: 8px !important;
   border: 1px solid #444 !important;
 }
 .sidebarLeft :global([class*="deckContainer"]),
@@ -318,9 +317,6 @@
 .sidebarLeft :global([class*="deckCardFront"]) {
   font-size: 11px !important;
   line-height: 1.2 !important;
-}
-.sidebarLeft :global([class*="deckWrapper"]) {
-  gap: 10px !important;
 }
 
 .sidebarRight :global([class*="container"]) {
