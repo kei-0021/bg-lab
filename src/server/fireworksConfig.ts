@@ -3,7 +3,6 @@
 import type { Card, GameParam, RoomState } from "react-game-ui";
 import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
 
-
 export const fireworksConfig: RoomConfig = {
   gameId: "fireworks",
   dataFiles: {
@@ -14,10 +13,10 @@ export const fireworksConfig: RoomConfig = {
     const helper = new SetupHelper();
 
     const defaults: Partial<Card> = {
-      location: 'deck',
-      drawCondition: ['hand', 'face'],
-      playLocation: 'field',
-      fieldBackCondition: ['deck', 'back'],
+      location: "deck",
+      drawCondition: ["hand", "face"],
+      playLocation: "field",
+      fieldBackCondition: ["deck", "back"],
     };
 
     const fireworksCards = helper.createUniqueCards(
@@ -40,9 +39,15 @@ export const fireworksConfig: RoomConfig = {
           tokenStoreId: "STAR_PARTS",
           name: "秘伝玉",
           tokens: [
-            { id: "STAR_PART-1", name: "秘伝玉", color: "#FFD700", count: 10, imageSrc: "" }
+            {
+              id: "STAR_PART-1",
+              name: "秘伝玉",
+              color: "#FFD700",
+              count: 10,
+              imageSrc: "",
+            },
           ],
-        }
+        },
       ],
       initialHand: { deckId: "firework", count: 5 },
       initialBoard: [],

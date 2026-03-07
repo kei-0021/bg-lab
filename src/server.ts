@@ -1,10 +1,7 @@
 // src/server.ts
 import path from "path";
 import { GameServer, type GameServerOptions } from "react-game-ui/server";
-import {
-  loadJsonAssert,
-  type RoomConfig
-} from "react-game-ui/server-io-utils";
+import { loadJsonAssert, type RoomConfig } from "react-game-ui/server-io-utils";
 import { fileURLToPath } from "url";
 
 import type { GameParam } from "react-game-ui";
@@ -18,10 +15,13 @@ import { uberNinjaConfig } from "./server/uberNinjaConfig.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
 async function startServer(): Promise<void> {
   const gameParams: Record<string, GameParam> = {};
-  const configs: RoomConfig[] = [fireworksConfig, fireworksⅡConfig, uberNinjaConfig];
+  const configs: RoomConfig[] = [
+    fireworksConfig,
+    fireworksⅡConfig,
+    uberNinjaConfig,
+  ];
   const isProduction = process.env.NODE_ENV === "production";
 
   for (const config of configs) {
@@ -36,7 +36,10 @@ async function startServer(): Promise<void> {
         finalPath = path.resolve(__dirname, relPath as string);
       }
 
-      loadedData[key] = await loadJsonAssert(finalPath, (data): data is any => true);
+      loadedData[key] = await loadJsonAssert(
+        finalPath,
+        (data): data is any => true,
+      );
     }
 
     // ツール群を渡してプリセットを生成
