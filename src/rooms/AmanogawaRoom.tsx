@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { Player, RoomJoinData } from "react-game-ui";
 import { Draggable, RemoteCursor } from "react-game-ui";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSocket } from "../hooks/useSocket";
 import "./AmanogawaRoom.css";
-
 const SERVER_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:4000"
@@ -11,6 +11,7 @@ const SERVER_URL =
 
 const GRID_SIZE = 500;
 const CELL_SIZE = 100;
+
 const GAME_WIDTH = 1000;
 const GAME_HEIGHT = 1200;
 
@@ -46,19 +47,28 @@ export function AmanogawaRoom() {
   useEffect(() => {
     if (!socket || !roomId) return;
 
-    socket.on("player:assign-id", (id: string) => {
+    const handleAssignId = (id: Player["id"]) => {
       setMyPlayerId(id);
       setHasJoined(true);
       setIsJoining(false);
-    });
-    socket.on("players:update", (updatedPlayers: any[]) =>
-      setPlayers(updatedPlayers),
-    );
-    socket.on("reset:draggable", () => setResetCount((prev) => prev + 1));
+    };
+
+    const onClientReady = () => {
+      socket.emit("client:ready", roomId);
+    };
+
+    const handlePlayersUpdate = (updatedPlayers: Player[]) =>
+      setPlayers(updatedPlayers);
+
+    socket.on("player:assign-id", handleAssignId);
+    socket.on("client:ready-to-sync", onClientReady);
+    socket.on("players:update", handlePlayersUpdate);
+    socket.on("reset:draggable");
 
     return () => {
-      socket.off("player:assign-id");
-      socket.off("players:update");
+      socket.off("player:assign-id", handleAssignId);
+      socket.off("client:ready-to-sync", onClientReady);
+      socket.off("players:update", handlePlayersUpdate);
       socket.off("reset:draggable");
     };
   }, [socket, roomId, resetCount]);
@@ -68,9 +78,9 @@ export function AmanogawaRoom() {
     setIsJoining(true);
     socket.emit("room:join", {
       roomId,
-      gamePresetId: "amanogawa",
+      gameId: "amanogawa",
       playerName: userName.trim(),
-    });
+    } as RoomJoinData);
   };
 
   const gridBounds = useMemo(
@@ -92,12 +102,10 @@ export function AmanogawaRoom() {
 
       return (
         <Draggable
-          key={`piece-${i}-${resetCount}`}
-          pieceId={`piece-${i}`}
+          draggableId={`piece-${i}`}
           socket={socket}
           roomId={roomId}
-          initialX={initialX}
-          initialY={initialY}
+          initialXY={{ x: initialX, y: initialY }}
           color={i < 8 ? "#0a192f" : " #94ceee"}
           isTransparent={isTransparent}
           gridBounds={gridBounds}
@@ -140,12 +148,10 @@ export function AmanogawaRoom() {
 
     const player = (
       <Draggable
-        key={`player-${resetCount}`}
-        pieceId={`player`}
+        draggableId={`player`}
         socket={socket}
         roomId={roomId}
-        initialX={0.5 * GAME_WIDTH}
-        initialY={0.8 * GAME_HEIGHT}
+        initialXY={{ x: 0.5 * GAME_WIDTH, y: 0.8 * GAME_HEIGHT }}
         color="white"
         size={80}
         style={{

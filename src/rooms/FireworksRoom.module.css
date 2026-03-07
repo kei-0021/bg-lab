@@ -102,7 +102,7 @@
 .logoText {
   color: #ebebeb;
   margin: 0;
-  font-size: 35px;
+  font-size: 30px;
   text-shadow: 0 0 10px rgba(255, 195, 0, 0.8);
 }
 
@@ -301,7 +301,6 @@
 }
 
 .sidebarLeft :global([class*="deckSection"]) {
-  padding: 8px !important;
   border: 1px solid #444 !important;
 }
 .sidebarLeft :global([class*="deckContainer"]),
@@ -318,9 +317,6 @@
 .sidebarLeft :global([class*="deckCardFront"]) {
   font-size: 11px !important;
   line-height: 1.2 !important;
-}
-.sidebarLeft :global([class*="deckWrapper"]) {
-  gap: 10px !important;
 }
 
 .sidebarRight :global([class*="container"]) {
@@ -379,18 +375,9 @@
 
 /* 煙のDraggableを上書き */
 .draggableSmoke [class*="draggable"] {
-  z-index: 9999 !important;
-}
-
-/* プレイヤー駒のDraggableを上書き */
-.draggableSaturated [class*="draggable"] {
-  z-index: 99999 !important;
-}
-
-/* ドラッグ中は問答無用で最前面にする（ライブラリの仕様に合わせる） */
-[class*="draggable"]:active,
-[class*="dragging"] {
-  z-index: 999999 !important;
+  font-weight: bold;
+  color: white;
+  font: normal;
 }
 
 /* ダイスセクション全体：各セットを横に並べる */
@@ -430,4 +417,11 @@
   height: 100%;
   object-fit: contain;
   display: block;
+}
+
+.sidebarRight {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 300px;
 }

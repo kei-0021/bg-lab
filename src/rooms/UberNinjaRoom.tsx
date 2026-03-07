@@ -1,6 +1,6 @@
 // src/components/UberNinjaRoom.tsx
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { Player, PlayerWithResources } from "react-game-ui";
+import type { GameTurnUpdateData, Player, RoomJoinData } from "react-game-ui";
 import {
   Deck,
   Dice,
@@ -24,12 +24,6 @@ const SERVER_URL =
 const BASE_WIDTH = 1600;
 const BASE_HEIGHT = 900;
 
-interface TurnUpdatePayload {
-  playerId: string;
-  currentRound: number;
-  currentTurnIndex: number;
-}
-
 export function UberNinjaRoom() {
   const { roomId } = useParams<{ roomId: string }>();
   const socket = useSocket(SERVER_URL);
@@ -40,7 +34,7 @@ export function UberNinjaRoom() {
   const [isJoining, setIsJoining] = useState<boolean>(false);
   const [hasJoined, setHasJoined] = useState<boolean>(false);
   const [myPlayerId, setMyPlayerId] = useState<string | null>(null);
-  const [players, setPlayers] = useState<PlayerWithResources[]>([]);
+  const [players, setPlayers] = useState<Player[]>([]);
   const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
   const [showRules, setShowRules] = useState(false);
   const [gameResult, setGameResult] = useState<any>(null);
@@ -62,9 +56,9 @@ export function UberNinjaRoom() {
     setIsJoining(true);
     socket.emit("room:join", {
       roomId,
-      gamePresetId: "uberninja",
+      gameId: "uberninja",
       playerName: userName.trim(),
-    });
+    } as RoomJoinData);
   }, [socket, roomId, userName, isJoining]);
 
   useEffect(() => {
@@ -74,24 +68,25 @@ export function UberNinjaRoom() {
       setHasJoined(true);
       setIsJoining(false);
     };
-    const handlePlayersUpdate = (updatedPlayers: PlayerWithResources[]) =>
+    const onClientReady = () => {
+      socket.emit("client:ready", roomId);
+    };
+    const handlePlayersUpdate = (updatedPlayers: Player[]) =>
       setPlayers(updatedPlayers);
-    const handleGameTurn = (data: TurnUpdatePayload | string) => {
-      if (typeof data === "string") {
-        setCurrentPlayerId(data);
-      } else {
-        setCurrentPlayerId(data.playerId);
-      }
+    const handleGameTurn = (data: GameTurnUpdateData) => {
+      setCurrentPlayerId(data.currentPlayerId);
     };
     const handleGameEnd = (result: any) => setGameResult(result);
 
     socket.on("player:assign-id", handleAssignId);
+    socket.on("client:ready-to-sync", onClientReady);
     socket.on("players:update", handlePlayersUpdate);
     socket.on("game:turn", handleGameTurn);
     socket.on("game:end", handleGameEnd);
 
     return () => {
       socket.off("player:assign-id", handleAssignId);
+      socket.off("client:ready-to-sync", onClientReady);
       socket.off("players:update", handlePlayersUpdate);
       socket.off("game:turn", handleGameTurn);
       socket.off("game:end", handleGameEnd);
@@ -223,8 +218,9 @@ export function UberNinjaRoom() {
             socket={socket!}
             roomId={roomId}
             deckId="order"
-            name="[ 注文カード ]"
-            playerId={currentPlayerId}
+            title="[ 注文カード ]"
+            currentPlayerId={currentPlayerId}
+            myPlayerId={myPlayerId}
           />
           <div className={styles.diceSection}>
             <div className={styles.diceWrapper}>
@@ -266,7 +262,7 @@ export function UberNinjaRoom() {
               socket={socket!}
               roomId={roomId}
               tokenStoreId="KUNAI_COUNT"
-              name="コマ置場"
+              title="コマ置場"
             />
           </div>
         </aside>
@@ -281,11 +277,10 @@ export function UberNinjaRoom() {
             <Draggable
               image="/images/uberninja/ninja.svg"
               mask={true}
-              pieceId={`${player.id}_ninja`}
+              draggableId={`${player.id}_ninja`}
               socket={socket}
               roomId={roomId}
-              initialX={100 + i * 130}
-              initialY={660}
+              initialXY={{ x: 100 + i * 130, y: 660 }}
               color={player.color}
               size={140}
               containerRef={containerRef}
@@ -294,11 +289,10 @@ export function UberNinjaRoom() {
             <Draggable
               image="/images/uberninja/scooter.svg"
               mask={true}
-              pieceId={`${player.id}_scooter`}
+              draggableId={`${player.id}_scooter`}
               socket={socket}
               roomId={roomId}
-              initialX={100 + i * 130}
-              initialY={720}
+              initialXY={{ x: 100 + i * 130, y: 720 }}
               color={player.color}
               size={140}
               containerRef={containerRef}
@@ -306,13 +300,11 @@ export function UberNinjaRoom() {
             />
             {[...Array(8)].map((_, j) => (
               <Draggable
-                key={`${player.id}_makibishi_${j}`}
                 image="/images/uberninja/makibishi.svg"
-                pieceId={`${player.id}_makibishi_${j}`}
+                draggableId={`${player.id}_makibishi_${j}`}
                 socket={socket}
                 roomId={roomId}
-                initialX={1250 + i * 150 + j * 4}
-                initialY={650 + j * 4}
+                initialXY={{ x: 1250 + i * 150 + j * 4, y: 650 + j * 4 }}
                 color={player.color}
                 size={65}
                 containerRef={containerRef}
@@ -326,11 +318,10 @@ export function UberNinjaRoom() {
         {[...Array(8)].map((_, j) => (
           <div key={`order_${j}`} className={styles.draggableSaturated}>
             <Draggable
-              pieceId={`white_card_${j}`}
+              draggableId={`white_card_${j}`}
               socket={socket}
               roomId={roomId}
-              initialX={800 + j * 5}
-              initialY={750 + j * 2}
+              initialXY={{ x: 800 + j * 5, y: 750 + j * 2 }}
               color="#ffffff"
               size={65}
               containerRef={containerRef}

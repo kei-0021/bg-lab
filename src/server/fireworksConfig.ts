@@ -1,38 +1,31 @@
-import type { Card, DeckId, RoomState } from "react-game-ui";
-/**
- * 花火ゲームの固有設定
- */
-interface SetupTools {
-  assertCards: (cards: Card[], deckId: DeckId) => any[];
-  createUniqueCards: (cards: any[], numSets: number) => any[];
-  createTokenStore: (
-    id: string,
-    name: string,
-    templates: any[],
-    count: number,
-  ) => any[];
-  createBoardLayout: (
-    baseCells: any[],
-    cellCounts: Record<string, number>,
-    rows: number,
-    cols: number,
-  ) => any[][];
-}
+// src/server/fireworksConfig.ts
 
-export const fireworksConfig = {
-  id: "fireworks",
+import type { Card, GameParam, RoomState } from "react-game-ui";
+import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
+
+export const fireworksConfig: RoomConfig = {
+  gameId: "fireworks",
   dataFiles: {
     cards: "../public/data/fireworksCards.json",
   },
   // サーバー側でロードしたデータを setup に渡す
-  setup: (loadedData: Record<string, any>, helpers: SetupTools): any => {
-    // 固有ロジック：カードを3セット分複製してユニーク化
-    const fireworksCards = helpers.createUniqueCards(
-      helpers.assertCards(loadedData.cards, "firework"),
+  setup: async (loadedData: Record<string, any>): Promise<GameParam> => {
+    const helper = new SetupHelper();
+
+    const defaults: Partial<Card> = {
+      location: "deck",
+      drawCondition: ["hand", "face"],
+      playLocation: "field",
+      fieldBackCondition: ["deck", "back"],
+    };
+
+    const fireworksCards = helper.createUniqueCards(
+      helper.initializeCards(helper.assertCards(loadedData.cards), defaults),
       3,
     );
 
     return {
+      gameId: "fireworks",
       initialDecks: [
         {
           deckId: "firework",
@@ -41,21 +34,29 @@ export const fireworksConfig = {
           backColor: "#000000",
         },
       ],
-      initialResources: [],
-      initialTokenStore: helpers.createTokenStore(
-        "STAR_PARTS",
-        "秘伝玉",
-        [{ id: "STAR_PART", name: "秘伝玉", color: "#FFD700" }],
-        20,
-      ),
+      initialTokenStores: [
+        {
+          tokenStoreId: "STAR_PARTS",
+          name: "秘伝玉",
+          tokens: [
+            {
+              id: "STAR_PART-1",
+              name: "秘伝玉",
+              color: "#FFD700",
+              count: 10,
+              imageSrc: "",
+            },
+          ],
+        },
+      ],
       initialHand: { deckId: "firework", count: 5 },
       initialBoard: [],
-      checkGameEnd: (room: RoomState) =>
+      checkGameEnd: (state: RoomState) =>
         // 終了条件: 10ラウンド終了 (10ラウンド目の最後 かつ 最後のプレイヤーの手番時)
-        room.currentRoundIndex >= 9 &&
-        room.currentTurnIndex == room.initRoomState.players.length - 1,
-      onGameEnd: (roomState: RoomState) => {
-        const rankings = [...roomState.initRoomState.players]
+        state.currentRoundIndex >= 9 &&
+        state.currentTurnIndex == state.players.length - 1,
+      onGameEnd: (state: RoomState) => {
+        const rankings = [...state.players]
           .sort((a: any, b: any) => b.tokens.length - a.tokens.length)
           .map((player: any, index: number) => ({
             rank: index + 1,
@@ -65,7 +66,7 @@ export const fireworksConfig = {
         return {
           message: "全演目の打ち上げが終了しました。本日の最優秀職人は…",
           rankings,
-          finalRound: roomState.currentRoundIndex,
+          finalRound: state.currentRoundIndex,
         };
       },
     };

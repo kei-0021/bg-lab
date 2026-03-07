@@ -1,12 +1,11 @@
 /* src/rooms/FireworksRoomField.module.css */
 
 .baseField :global(.rg-playfield) {
+  box-sizing: border-box !important;
   position: relative !important;
-  margin: 0 auto !important;
-  display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  padding: 0 !important;
+  padding-left: 30px;
   /* MainField側の背景定義を優先して継承 */
   background-color: black !important;
   background: #05010a;
@@ -40,7 +39,6 @@
   height: 4px !important;
   background: #ffc300 !important;
   box-shadow: 0 0 15px #ffc300 !important;
-  z-index: 10 !important;
   pointer-events: none !important;
 }
 
@@ -50,49 +48,6 @@
   inset: 0 !important;
   opacity: 0.05 !important;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E") !important;
-  pointer-events: none !important;
-  z-index: 1 !important;
-}
-
-.baseField :global(.rg-playfield-title) {
-  font-size: 30px !important;
-  position: absolute !important;
-  top: 20px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  margin: 0 !important;
-  z-index: 1 !important;
-  pointer-events: none !important;
-}
-
-.baseField :global(.rg-playfield-container) {
-  width: 100% !important;
-  height: 100% !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  overflow: visible !important;
-}
-
-.baseField :global(.rg-playfield-card-wrapper) {
-  position: absolute !important;
-  width: 80px !important;
-  height: 112px !important;
-  flex-shrink: 0 !important;
-  transition: none !important;
-  cursor: grab;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.baseField :global(.rg-playfield-card-wrapper img) {
-  pointer-events: none;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
-.baseField :global(.rg-card-text-content) {
-  font-size: 25px !important;
   pointer-events: none !important;
 }
 
@@ -114,10 +69,6 @@
 .fireworksRequtangleField :global(.rg-playfield)::after {
   left: 0 !important;
   width: 100% !important;
-}
-
-.fireworksRequtangleField :global(.rg-playfield-container) {
-  z-index: 5 !important;
 }
 
 /* --- CircleField --- */

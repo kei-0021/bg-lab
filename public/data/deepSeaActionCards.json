@@ -7,7 +7,7 @@
     "movement": 1,
     "description": "隣接マスへ1マス移動し、裏向きタイルを表にする。バッテリーを1消費する。",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "back"],
     "playLocation": "field",
     "playBackLocation": "hand"
   },
@@ -19,7 +19,7 @@
     "movement": 1,
     "description": "隣接マスへ1マス移動し、裏向きタイルを表にする。バッテリーを1消費する。",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "back"],
     "playLocation": "field",
     "playBackLocation": "hand"
   },
@@ -31,7 +31,7 @@
     "movement": 1,
     "description": "隣接マスへ1マス移動する。移動先は必ず表向きタイルであること。バッテリー消費なし。",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "back"],
     "playLocation": "field",
     "playBackLocation": "hand"
   },
@@ -43,7 +43,7 @@
     "movement": 1,
     "description": "隣接マスへ1マス移動する。移動先は必ず表向きタイルであること。バッテリー消費なし。",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "back"],
     "playLocation": "field",
     "playBackLocation": "hand"
   },
@@ -55,7 +55,7 @@
     "movement": 0,
     "description": "移動を行わず、バッテリーを2個回復する。さらに、隣接する裏向きタイルすべてを確認し、情報を得る。",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "back"],
     "playLocation": "field",
     "playBackLocation": "hand"
   },
@@ -67,7 +67,7 @@
     "movement": 0,
     "description": "移動を行わず、現在地で遺物トークンの回収、または地形データの収集を行う。",
     "location": "deck",
-    "drawLocation": "hand",
+    "drawCondition": ["hand", "back"],
     "playLocation": "field",
     "playBackLocation": "hand"
   }
