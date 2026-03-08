@@ -319,6 +319,10 @@ export default function FireworksRoomⅡ() {
               playCardButton={false}
               holdButton={true}
               roundSkipbutton={true}
+              enabled={[
+                FireworksⅡPhase.SETUP.name,
+                FireworksⅡPhase.EVALUATION.name,
+              ].includes(currentPhase.name)}
             />
           </div>
         </main>
