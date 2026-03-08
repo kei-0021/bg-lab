@@ -298,6 +298,7 @@ export default function FireworksRoomⅡ() {
               currentPlayerId={currentPlayerId}
               myPlayerId={myPlayerId}
               playCardLimit={3}
+              playCardButton={false}
               holdButton={true}
               roundSkipbutton={true}
             />
