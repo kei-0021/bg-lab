@@ -2,11 +2,11 @@
 
 import type {
   Card,
-  CardPlayData,
   DeckDrawData,
   GameParam,
+  Player,
   RoomManager,
-  RoomState,
+  RoomState
 } from "react-game-ui";
 import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
 import { FireworksⅡPhase } from "../types/phase.js";
@@ -96,21 +96,12 @@ export const fireworksⅡConfig: RoomConfig = {
           manager.emitSystemMessage("カードを3枚まで選んでください", true);
         }
       },
-      onCardPlay: async (
+      onAllPlayersCardHold: async (
         state: RoomState,
         manager: RoomManager,
-        _data: CardPlayData,
       ) => {
-        const sleep = (ms: number) =>
-          new Promise((resolve) => setTimeout(resolve, ms));
-        const deckId = "firework";
-
-        // 全員がカードを出したかチェック
-        const cards = state.playFieldCards[deckId] ?? [];
-        const submittedPlayerIds = new Set(
-          cards.map((card) => card.ownerId).filter((id) => id !== null),
-        );
-        if (submittedPlayerIds.size !== state.players.length) return;
+        manager.unholdCards()
+        await sleep(1500);
 
         // 全員出揃ったら評価フェーズへ
         manager.updatePhase(FireworksⅡPhase.EVALUATION);
@@ -238,10 +229,10 @@ export const fireworksⅡConfig: RoomConfig = {
       onGameEnd: (state: RoomState) => {
         const rankings = [...state.players]
           .sort((a: any, b: any) => b.tokens.length - a.tokens.length)
-          .map((player: any, index: number) => ({
+          .map((player: Player, index: number) => ({
             rank: index + 1,
             name: player.name,
-            tokens: player.tokens.length,
+            tokens: player.score,
           }));
         return {
           message: "全演目の打ち上げが終了しました。本日の最優秀職人は…",
