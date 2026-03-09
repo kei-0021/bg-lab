@@ -324,22 +324,22 @@ export default function FireworksRoom() {
                   customFaces={[
                     <img
                       key="f1"
-                      src="/images/fireworks/weather_sunny.png"
+                      src="/images/fireworks/weather/sunny.png"
                       className={styles.diceCustomFace}
                     />,
                     <img
                       key="f2"
-                      src="/images/fireworks/weather_cloud.png"
+                      src="/images/fireworks/weather/cloud.png"
                       className={styles.diceCustomFace}
                     />,
                     <img
                       key="f3"
-                      src="/images/fireworks/weather_wind.png"
+                      src="/images/fireworks/weather/wind.png"
                       className={styles.diceCustomFace}
                     />,
                     <img
                       key="f4"
-                      src="/images/fireworks/weather_rain.png"
+                      src="/images/fireworks/weather/rain.png"
                       className={styles.diceCustomFace}
                     />,
                   ]}
