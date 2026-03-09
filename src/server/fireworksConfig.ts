@@ -36,17 +36,9 @@ export const fireworksConfig: RoomConfig = {
       ],
       initialTokenStores: [
         {
-          tokenStoreId: "STAR_PARTS",
-          name: "秘伝玉",
-          tokens: [
-            {
-              id: "STAR_PART-1",
-              name: "秘伝玉",
-              color: "#FFD700",
-              count: 10,
-              imageSrc: "",
-            },
-          ],
+          tokenStoreId: "goldfish",
+          name: "金魚",
+          tokens: helper.createTokenStore([{ id: "goldfish", name: "金魚" }], 20, "/images/fireworks/goldfish.png", "#ffffff7c",),
         },
       ],
       initialHand: { deckId: "firework", count: 5 },

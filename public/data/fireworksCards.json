@@ -8,7 +8,7 @@
     "id": "card-A-02",
     "name": "赤1",
     "freeShape": "true",
-    "frontImage": "/images/fireworks/circle/red_1.png"
+    "frontImage": "/images/fireworks/basic/red_1.png"
   },
   {
     "id": "card-B-01",
@@ -43,7 +43,7 @@
   {
     "id": "card-B-04",
     "name": "緑2",
-    "frontImage": "/images/fireworks/basic/green_2.png"
+    "frontImage": "/images/fireworks/clear/green_2.png"
   },
   {
     "id": "card-C-02",

@@ -7,6 +7,7 @@ import {
   PlayField,
   RemoteCursor,
   ScoreBoard,
+  TokenStore,
 } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
@@ -375,6 +376,12 @@ export default function FireworksRoom() {
             />
           </div>
         </main>
+        <TokenStore
+          socket={socket}
+          roomId={roomId}
+          tokenStoreId="goldfish"
+          title="金魚トークン"
+        />
       </div>
     </div>
   );
