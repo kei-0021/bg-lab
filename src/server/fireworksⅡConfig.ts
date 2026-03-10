@@ -110,7 +110,7 @@ export const fireworksⅡConfig: RoomConfig = {
         const discardColorStack = state.discardPile["color"] ?? [];
 
         // 1. 演目賞の発表
-        await manager.emitSystemMessage("【演目賞】の発表です...", 2000, true);
+        await manager.emitSystemMessage("【演目賞】の発表です...", 1500, true);
 
         if (discardThemeStack.length > 0) {
           const lastCard = discardThemeStack.at(-1);
@@ -131,15 +131,15 @@ export const fireworksⅡConfig: RoomConfig = {
                 true,
               );
             } else {
-              await manager.emitSystemMessage("該当者なし！", 2000, true);
+              await manager.emitSystemMessage("該当者なし！", 1500, true);
             }
           }
         } else {
-          await manager.emitSystemMessage("演目カードが提示されていません。", 2000, true);
+          await manager.emitSystemMessage("演目カードが提示されていません。", 1500, true);
         }
 
         // 2. カラー賞の発表
-        await manager.emitSystemMessage("続いて【カラー賞】の発表です...", 2000, true);
+        await manager.emitSystemMessage("続いて【カラー賞】の発表です...", 1500, true);
 
         if (discardColorStack.length > 0) {
           const lastCard = discardColorStack.at(-1);
@@ -162,7 +162,7 @@ export const fireworksⅡConfig: RoomConfig = {
 
             if (winners.length > 0) {
               const winnerNames = winners.map((w) => w.playerName).join(", ");
-              await manager.emitSystemMessage("カラー賞獲得！", 2000);
+              await manager.emitSystemMessage("カラー賞獲得！", 1500);
               winners.forEach((winner) => manager.addScore(winner.playerId, 1));
               await manager.emitSystemMessage(
                 `最も多く ${targetColor} を出したのは ${winnerNames} だ! +1点!`,
@@ -170,11 +170,11 @@ export const fireworksⅡConfig: RoomConfig = {
                 true,
               );
             } else {
-              await manager.emitSystemMessage("該当者なし！", 2000, true);
+              await manager.emitSystemMessage("該当者なし！", 1500, true);
             }
           }
         } else {
-          await manager.emitSystemMessage("カラーカードが提示されていません。", 2000, true);
+          await manager.emitSystemMessage("カラーカードが提示されていません。", 1500, true);
         }
 
         manager.emitSystemMessage(
@@ -192,7 +192,7 @@ export const fireworksⅡConfig: RoomConfig = {
         const cardsInField = [...(state.playFieldCards["firework"] ?? [])];
         for (const card of cardsInField) {
           manager.moveFromField("firework", card.id, null);
-          await manager.sleep(200);
+          await manager.sleep(100);
         }
         // 手札がないなら5枚配布する
         for (const player of state.players) {

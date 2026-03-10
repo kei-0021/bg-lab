@@ -2,13 +2,13 @@
   {
     "id": "play-01",
     "name": "スターマイン",
-    "description": "同じ数字を最も多く出した人の勝ち",
+    "description": "同じ数字を最も多く出した人に得点",
     "frontImage": "/images/fireworks/theme/starmine.png"
   },
   {
     "id": "play-02",
     "name": "大輪",
-    "description": "最も大きな数字を出した人が勝ち (出した枚数は関係ない)",
+    "description": "最も大きな数字を出した人に得点 (出した枚数は無関係)",
     "frontImage": "/images/fireworks/theme/tairinn.png"
   }
 ]
