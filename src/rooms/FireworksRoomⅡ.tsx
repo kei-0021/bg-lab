@@ -316,9 +316,14 @@ export default function FireworksRoomⅡ() {
               currentPlayerId={currentPlayerId}
               myPlayerId={myPlayerId}
               playCardLimit={3}
-              playCardButton={false}
-              holdButton={true}
-              roundSkipbutton={true}
+              playCardButton={[false, true]}
+              holdButton={[true, true]}
+              roundSkipButton={[
+                true,
+                [FireworksⅡPhase.WAITINGFORNEXTROUND.name].includes(
+                  currentPhase.name,
+                ),
+              ]}
               enabled={[
                 FireworksⅡPhase.SETUP.name,
                 FireworksⅡPhase.EVALUATION.name,

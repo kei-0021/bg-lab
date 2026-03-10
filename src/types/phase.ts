@@ -30,12 +30,11 @@ export class FireworksⅡPhase extends Phase {
   })();
 
   /**
-   * 【最終フェーズ】
-   * 全ラウンドが終了し、最終的な順位や表彰を行う段階。
-   * 大会の締めくくり。
+   * 【待機フェーズ】
+   * 次のラウンドへの待機段階。
    */
-  static readonly FINAL = new (class extends FireworksⅡPhase {
-    readonly name = "final";
+  static readonly WAITINGFORNEXTROUND = new (class extends FireworksⅡPhase {
+    readonly name = "waitingfornextround";
   })();
 
   readonly name: string = "base";

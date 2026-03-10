@@ -182,6 +182,9 @@ export const fireworksⅡConfig: RoomConfig = {
           0,
           true,
         );
+
+        // 待機フェーズへ
+        manager.updatePhase(FireworksⅡPhase.WAITINGFORNEXTROUND);
       },
       onNextRound: async (state: RoomState, manager: RoomManager) => {
         manager.updatePhase(FireworksⅡPhase.PLANNING);

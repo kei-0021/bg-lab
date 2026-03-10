@@ -63,7 +63,9 @@ export function AmanogawaRoom() {
     socket.on("player:assign-id", handleAssignId);
     socket.on("client:ready-to-sync", onClientReady);
     socket.on("players:update", handlePlayersUpdate);
-    socket.on("reset:draggable");
+    socket.on("reset:draggable", () => {
+      console.log("サーバーからの指示でドラッグ状態をリセットしました");
+    });
 
     return () => {
       socket.off("player:assign-id", handleAssignId);
