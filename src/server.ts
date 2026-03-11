@@ -17,7 +17,9 @@ async function startServer(): Promise<void> {
 
   // プロジェクトのルートディレクトリ (/workspaces/bg-lab)
   const rootDir = process.cwd();
-  const serverDirPath = path.join(__dirname, "server");
+  const serverDirPath = isProduction
+    ? path.join(rootDir, "dist", "src", "server")
+    : path.join(rootDir, "src", "server");
 
   const files = fs.readdirSync(serverDirPath);
   const configFiles = files.filter(f => f.endsWith("Config.ts") || f.endsWith("Config.js"));
