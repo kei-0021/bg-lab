@@ -24,7 +24,7 @@ export const FireWorksRuleⅡ: React.FC<FireWorksRuleProps> = ({
         >
           ×
         </button>
-        <h2 className={styles.rulesTitle}>🎆 花火大会 遊び方</h2>
+        <h2 className={styles.rulesTitle}>🎆 FireworkⅡ 遊び方</h2>
         <hr className={styles.rulesHr} />
 
         <div className={styles.rulesBody}>
@@ -54,14 +54,14 @@ export const FireWorksRuleⅡ: React.FC<FireWorksRuleProps> = ({
               </li>
               <li>
                 <strong>判定：</strong>{" "}
-                判定カードの表になっていない方を表にします。判定カードそれぞれにおいて、全員の出したカードの中で最も条件に当てはまる人に+1点します。同率は全員に+1点とします
+                場の判定カードそれぞれにおいて、全員の出したカードの中で最も条件に当てはまる人に+1点します。同率は全員に+1点とします。
               </li>
             </ul>
           </section>
         </div>
 
         <button onClick={onClose} className={styles.rulesOkBtn}>
-          了解
+          閉じる
         </button>
       </div>
     </div>,
