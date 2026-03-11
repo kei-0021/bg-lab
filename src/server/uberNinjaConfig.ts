@@ -6,7 +6,7 @@ import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
 export const uberNinjaConfig: RoomConfig = {
   gameId: "uberninja",
   dataFiles: {
-    orderCards: "../public/data/uberNinjaOrder.json",
+    orderCards: "../public/data/uberninja/uberNinjaOrderCards.json",
   },
   setup: async (loadedData: Record<string, any>): Promise<GameParam> => {
     const helper = new SetupHelper();
@@ -22,7 +22,6 @@ export const uberNinjaConfig: RoomConfig = {
           backColor: "rgb(11, 108, 26)",
         },
       ],
-      initialHand: { deckId: "deepSeaAction", count: 0 },
     };
   },
 };

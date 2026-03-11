@@ -6,7 +6,7 @@ import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
 export const fireworksConfig: RoomConfig = {
   gameId: "fireworks",
   dataFiles: {
-    cards: "../public/data/fireworksCards.json",
+    cards: "../public/data/fireworks/fireworksCards.json",
   },
   // サーバー側でロードしたデータを setup に渡す
   setup: async (loadedData: Record<string, any>): Promise<GameParam> => {

@@ -19,9 +19,9 @@ import {
 export const fireworksⅡConfig: RoomConfig = {
   gameId: "fireworksⅡ",
   dataFiles: {
-    cards: "../public/data/fireworksCards.json",
-    themeCards: "../public/data/fireworksThemeCards.json",
-    colorCards: "../public/data/fireworksColorCards.json",
+    cards: "../public/data/fireworks/fireworksCards.json",
+    themeCards: "../public/data/fireworks/fireworksThemeCards.json",
+    colorCards: "../public/data/fireworks/fireworksColorCards.json",
   },
   // サーバー側でロードしたデータを setup に渡す
   setup: async (loadedData: Record<string, any>): Promise<GameParam> => {
