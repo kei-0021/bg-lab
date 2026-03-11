@@ -11,12 +11,12 @@ import {
 } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
+import { FireWorksRule } from "../components/FireworksRule";
 import { LaunchArea } from "../components/LaunchArea";
 import { RoundProgressTracker } from "../components/RoundProgressTracker";
 import { useSocket } from "../hooks/useSocket.js";
 import styles from "./FireworksRoom.module.css";
 import fieldStyles from "./FireworksRoomField.module.css";
-import { FireWorksRule } from "./FireworksRule";
 
 const SERVER_URL =
   import.meta.env.MODE === "development"

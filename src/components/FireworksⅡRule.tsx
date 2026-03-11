@@ -8,7 +8,7 @@ interface FireWorksRuleProps {
   onClose: () => void;
 }
 
-export const FireWorksRuleⅡ: React.FC<FireWorksRuleProps> = ({
+export const FireWorksⅡRule: React.FC<FireWorksRuleProps> = ({
   isOpen,
   onClose,
 }) => {

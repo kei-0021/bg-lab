@@ -12,9 +12,9 @@ import {
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
 import GridDeliverRoad from "../components/GridDeliverRoad.js";
+import UberNinjaRoomRule from "../components/UberNinjaRoomRule.js";
 import { useSocket } from "../hooks/useSocket.js";
 import styles from "./UberNinjaRoom.module.css";
-import UberNinjaRoomRule from "./UberNinjaRoomRule.js";
 
 const SERVER_URL =
   import.meta.env.MODE === "development"

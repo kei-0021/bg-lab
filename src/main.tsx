@@ -1,24 +1,43 @@
+// src/main.tsx
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { AmanogawaRoom } from "./rooms/AmanogawaRoom.js";
-import FireworksRoom from "./rooms/FireworksRoom.js";
-import FireworksRoomⅡ from "./rooms/FireworksRoomⅡ.js";
 import LobbyRoom from "./rooms/LobbyRoom.js";
-import { UberNinjaRoom } from "./rooms/UberNinjaRoom.js";
+
+const roomModules = import.meta.glob("./rooms/*Room.tsx", { eager: true });
+
+const autoRoutes = Object.entries(roomModules)
+  .filter(([path]) => !path.includes("LobbyRoom"))
+  .map(([path, module]: [string, any]) => {
+    const rawFileName = path.split("/").pop()?.replace(".tsx", "") || "";
+
+    // パスを小文字化
+    const routePath = rawFileName.replace("Room", "").toLowerCase();
+
+    const RoomComponent =
+      module[rawFileName] ||
+      module.default ||
+      Object.values(module).find((val) => typeof val === "function");
+
+    return {
+      path: `/${routePath}/:roomId`,
+      Component: RoomComponent,
+      key: rawFileName,
+    };
+  })
+  .filter((route) => route.Component);
+
+console.log(`Total games registered: ${autoRoutes.length}`);
+console.table(autoRoutes.map((r) => ({ file: r.key, url: r.path })));
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        {/* ロビー */}
         <Route path="/" element={<LobbyRoom />} />
-
-        {/* 各ゲームルーム */}
-        <Route path="/fireworks/:roomId" element={<FireworksRoom />} />
-        <Route path="/fireworksⅡ/:roomId" element={<FireworksRoomⅡ />} />
-        <Route path="/amanogawa/:roomId" element={<AmanogawaRoom />} />
-        <Route path="/uberninja/:roomId" element={<UberNinjaRoom />} />
+        {autoRoutes.map(({ path, Component, key }) => (
+          <Route key={key} path={path} element={<Component />} />
+        ))}
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,

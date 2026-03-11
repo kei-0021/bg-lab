@@ -13,12 +13,12 @@ import {
 } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
+import { FireWorksⅡRule } from "../components/FireworksⅡRule";
 import { RoundProgressTracker } from "../components/RoundProgressTracker";
 import { useSocket } from "../hooks/useSocket.js";
 import { FireworksⅡPhase } from "../types/phase";
 import styles from "./FireworksRoom.module.css";
 import fieldStyles from "./FireworksRoomField.module.css";
-import { FireWorksRuleⅡ } from "./FireworksRuleⅡ";
 
 const SERVER_URL =
   import.meta.env.MODE === "development"
@@ -29,7 +29,7 @@ const BASE_WIDTH = 1600;
 const BASE_HEIGHT = 900;
 const Z_INDEX_CARD = 2000;
 
-export default function FireworksRoomⅡ() {
+export default function FireworksⅡRoom() {
   const { roomId } = useParams<{ roomId: string }>();
   const socket = useSocket(SERVER_URL);
   const navigate = useNavigate();
@@ -231,7 +231,7 @@ export default function FireworksRoomⅡ() {
           </div>
         </header>
 
-        <FireWorksRuleⅡ
+        <FireWorksⅡRule
           isOpen={showRules}
           onClose={() => setShowRules(false)}
         />
