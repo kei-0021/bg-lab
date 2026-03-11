@@ -1,54 +1,64 @@
 // src/server.ts
+import fs from "fs";
 import path from "path";
 import { GameServer, type GameServerOptions } from "react-game-ui/server";
 import { loadJsonAssert, type RoomConfig } from "react-game-ui/server-io-utils";
 import { fileURLToPath } from "url";
 
 import type { GameParam } from "react-game-ui";
-
-// 各ゲーム固有のコンフィグ
 import { customEvents } from "../public/data/customEvents.js";
-import { fireworksConfig } from "./server/fireworksConfig.js";
-import { fireworksⅡConfig } from "./server/fireworksⅡConfig.js";
-import { uberNinjaConfig } from "./server/uberNinjaConfig.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function startServer(): Promise<void> {
   const gameParams: Record<string, GameParam> = {};
-  const configs: RoomConfig[] = [
-    fireworksConfig,
-    fireworksⅡConfig,
-    uberNinjaConfig,
-  ];
   const isProduction = process.env.NODE_ENV === "production";
 
-  for (const config of configs) {
-    const loadedData: Record<string, any> = {};
+  // プロジェクトのルートディレクトリ (/workspaces/bg-lab)
+  const rootDir = process.cwd();
+  const serverDirPath = path.join(__dirname, "server");
 
-    for (const [key, relPath] of Object.entries(config.dataFiles)) {
-      let finalPath: string;
-      if (isProduction) {
-        const fileName = path.basename(relPath as string);
-        finalPath = path.join(process.cwd(), "dist", "data", fileName);
-      } else {
-        finalPath = path.resolve(__dirname, relPath as string);
+  const files = fs.readdirSync(serverDirPath);
+  const configFiles = files.filter(f => f.endsWith("Config.ts") || f.endsWith("Config.js"));
+
+  for (const file of configFiles) {
+    const modulePath = `./server/${file}`;
+    const module = await import(modulePath);
+
+    const configName = file.replace(/\.(ts|js)$/, "");
+    const config: RoomConfig = module[configName] || module.default;
+
+    if (config && config.gameId) {
+      console.log(`Config detected: ${configName} (gameId: ${config.gameId})`);
+
+      const loadedData: Record<string, any> = {};
+
+      for (const [key, relPath] of Object.entries(config.dataFiles)) {
+        let finalPath: string;
+        if (isProduction) {
+          // basenameではなく、data/以降の階層を維持して抽出
+          const dataRelativePath = (relPath as string).split("data/")[1];
+          finalPath = path.join(rootDir, "dist", "data", dataRelativePath);
+        } else {
+          const dataRelativePath = (relPath as string).split("public/")[1];
+          finalPath = path.join(rootDir, "public", dataRelativePath);
+        }
+
+        loadedData[key] = await loadJsonAssert(
+          finalPath,
+          (_data): _data is any => true,
+        );
       }
 
-      loadedData[key] = await loadJsonAssert(
-        finalPath,
-        (data): data is any => true,
-      );
+      // ツール群を渡してプリセットを生成
+      gameParams[config.gameId] = await config.setup(loadedData);
     }
-
-    // ツール群を渡してプリセットを生成
-    gameParams[config.gameId] = await config.setup(loadedData);
   }
 
   const options: GameServerOptions = {
     port: Number(process.env.PORT) || 4000,
-    clientDistPath: path.join(process.cwd(), "dist"),
+    clientDistPath: path.join(rootDir, "dist"),
     libDistPath: __dirname,
     corsOrigins: [
       "http://localhost:5173",
