@@ -9,20 +9,19 @@ const roomModules = import.meta.glob("./rooms/*Room.tsx", { eager: true });
 const autoRoutes = Object.entries(roomModules)
   .filter(([path]) => !path.includes("LobbyRoom"))
   .map(([path, module]: [string, any]) => {
-    const rawFileName = path.split("/").pop()?.replace(".tsx", "") || "";
-
+    const fileName = path.split("/").pop()?.replace(".tsx", "") || "";
     // パスを小文字化
-    const routePath = rawFileName.replace("Room", "").toLowerCase();
+    const routePath = fileName.replace(/Room$/, "").toLowerCase();
 
     const RoomComponent =
-      module[rawFileName] ||
+      module[fileName] ||
       module.default ||
       Object.values(module).find((val) => typeof val === "function");
 
     return {
       path: `/${routePath}/:roomId`,
       Component: RoomComponent,
-      key: rawFileName,
+      key: fileName,
     };
   })
   .filter((route) => route.Component);
