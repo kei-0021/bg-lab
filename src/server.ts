@@ -1,4 +1,4 @@
-// src/server.ts
+import fs from "fs";
 import path from "path";
 import { GameServer, type GameServerOptions } from "react-game-ui/server";
 import { loadJsonAssert, type RoomConfig } from "react-game-ui/server-io-utils";
@@ -15,15 +15,27 @@ async function startServer(): Promise<void> {
   const isProduction = process.env.NODE_ENV === "production";
   const rootDir = process.cwd();
 
-  // ディレクトリの実体を見に行くのではなく、Vite/TypeScriptの解決ルートで一括取得
-  // これなら dist/src/server フォルダが物理的に存在しなくても、中身の JS があれば動く
-  const configModules = import.meta.glob("./server/*Config.{ts,js}", { eager: true });
+  // 本番環境ではコンパイル済みの js が入っている dist/src/server を見に行く
+  const serverDirPath = isProduction
+    ? path.join(rootDir, "dist", "src", "server")
+    : path.join(rootDir, "src", "server");
 
-  for (const pathKey in configModules) {
-    const module = configModules[pathKey] as any;
+  // ディレクトリ存在チェック
+  let files: string[] = [];
+  if (fs.existsSync(serverDirPath)) {
+    files = fs.readdirSync(serverDirPath);
+  } else {
+    console.error(`Directory not found: ${serverDirPath}`);
+  }
 
-    // ファイル名からConfig名を取得
-    const configName = pathKey.split('/').pop()?.replace(/\.(ts|js)$/, "") || "";
+  const configFiles = files.filter(f => f.endsWith("Config.ts") || f.endsWith("Config.js"));
+
+  for (const file of configFiles) {
+    // コンパイル後の .js を読み込むための相対パス
+    const modulePath = `./server/${file.replace(/\.ts$/, ".js")}`;
+    const module = await import(modulePath);
+
+    const configName = file.replace(/\.(ts|js)$/, "");
     const config: RoomConfig = module[configName] || module.default;
 
     if (config && config.gameId) {
@@ -32,7 +44,7 @@ async function startServer(): Promise<void> {
       const loadedData: Record<string, any> = {};
 
       for (const [key, relPath] of Object.entries(config.dataFiles)) {
-        // パス解決：data/以降の階層を維持
+        // public/data/ または dist/data/ 以降のパスを抽出
         const dataPath = (relPath as string).split("data/")[1];
         const finalPath = path.join(
           rootDir,
