@@ -1,12 +1,14 @@
 // src/server.ts
-import fs from "fs";
 import path from "path";
 import { GameServer, type GameServerOptions } from "react-game-ui/server";
-import { loadJsonAssert, type RoomConfig } from "react-game-ui/server-io-utils";
+import { loadJsonAssert } from "react-game-ui/server-io-utils";
 import { fileURLToPath } from "url";
 
 import type { GameParam } from "react-game-ui";
 import { customEvents } from "../public/data/customEvents.js";
+
+// 直接インポート
+import { fireworksConfig } from "./server/fireworksConfig.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,38 +16,26 @@ const __dirname = path.dirname(__filename);
 async function startServer(): Promise<void> {
   const gameParams: Record<string, GameParam> = {};
   const isProduction = process.env.NODE_ENV === "production";
-
-  // プロジェクトのルートディレクトリ (/workspaces/bg-lab)
   const rootDir = process.cwd();
-  const serverDirPath = isProduction
-    ? path.join(rootDir, "dist", "src", "server")
-    : path.join(rootDir, "src", "server");
 
-  const files = fs.readdirSync(serverDirPath);
-  const configFiles = files.filter(f => f.endsWith("Config.ts") || f.endsWith("Config.js"));
+  // フォルダスキャンをやめて、配列で回す（ENOENTを回避）
+  const configs = [fireworksConfig];
 
-  for (const file of configFiles) {
-    const modulePath = `./server/${file}`;
-    const module = await import(modulePath);
-
-    const configName = file.replace(/\.(ts|js)$/, "");
-    const config: RoomConfig = module[configName] || module.default;
-
+  for (const config of configs) {
     if (config && config.gameId) {
-      console.log(`Config detected: ${configName} (gameId: ${config.gameId})`);
+      console.log(`Config detected: (gameId: ${config.gameId})`);
 
       const loadedData: Record<string, any> = {};
 
       for (const [key, relPath] of Object.entries(config.dataFiles)) {
-        let finalPath: string;
-        if (isProduction) {
-          // basenameではなく、data/以降の階層を維持して抽出
-          const dataRelativePath = (relPath as string).split("data/")[1];
-          finalPath = path.join(rootDir, "dist", "data", dataRelativePath);
-        } else {
-          const dataRelativePath = (relPath as string).split("public/")[1];
-          finalPath = path.join(rootDir, "public", dataRelativePath);
-        }
+        // パス解決：data/以降の階層を維持
+        const dataPath = (relPath as string).split("data/")[1];
+        const finalPath = path.join(
+          rootDir,
+          isProduction ? "dist" : "public",
+          "data",
+          dataPath
+        );
 
         loadedData[key] = await loadJsonAssert(
           finalPath,
