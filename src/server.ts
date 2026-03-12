@@ -1,14 +1,11 @@
 // src/server.ts
 import path from "path";
 import { GameServer, type GameServerOptions } from "react-game-ui/server";
-import { loadJsonAssert } from "react-game-ui/server-io-utils";
+import { loadJsonAssert, type RoomConfig } from "react-game-ui/server-io-utils";
 import { fileURLToPath } from "url";
 
 import type { GameParam } from "react-game-ui";
 import { customEvents } from "../public/data/customEvents.js";
-
-// 直接インポート
-import { fireworksConfig } from "./server/fireworksConfig.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,12 +15,19 @@ async function startServer(): Promise<void> {
   const isProduction = process.env.NODE_ENV === "production";
   const rootDir = process.cwd();
 
-  // フォルダスキャンをやめて、配列で回す（ENOENTを回避）
-  const configs = [fireworksConfig];
+  // ディレクトリの実体を見に行くのではなく、Vite/TypeScriptの解決ルートで一括取得
+  // これなら dist/src/server フォルダが物理的に存在しなくても、中身の JS があれば動く
+  const configModules = import.meta.glob("./server/*Config.{ts,js}", { eager: true });
 
-  for (const config of configs) {
+  for (const pathKey in configModules) {
+    const module = configModules[pathKey] as any;
+
+    // ファイル名からConfig名を取得
+    const configName = pathKey.split('/').pop()?.replace(/\.(ts|js)$/, "") || "";
+    const config: RoomConfig = module[configName] || module.default;
+
     if (config && config.gameId) {
-      console.log(`Config detected: (gameId: ${config.gameId})`);
+      console.log(`Config detected: ${configName} (gameId: ${config.gameId})`);
 
       const loadedData: Record<string, any> = {};
 
