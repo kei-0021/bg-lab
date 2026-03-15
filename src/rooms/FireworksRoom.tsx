@@ -244,22 +244,29 @@ export default function FireworksRoom() {
             isRelative={false}
           />
 
-          {[...Array(2)].map((_, i) => (
-            <Draggable
-              image={`/images/fireworks/clear/film_1.png`}
-              draggableId={`film-${i}`}
-              socket={socket}
-              roomId={roomId}
-              color="transparent"
-              initialXY={{ x: 1350 + i * 5, y: 850 + i * 5 }}
-              zIndex={Z_INDEX_FILM}
-              containerRef={containerRef}
-              size={{ width: 360, height: 120 }}
-              style={{
-                border: "0.5px solid white",
-              }}
-            />
-          ))}
+          {[...Array(4)]
+            .map((_, i) => ({ id: i, sort: Math.random() })) // ランダム値を持たせる
+            .sort((a, b) => a.sort - b.sort) // シャッフル
+            .map(({ id }) => (
+              <Draggable
+                key={`film-${id}`}
+                // バッククォートの中で ${id + 1} とすれば 1, 2... と展開される
+                image={`/images/fireworks/clear/film_${id + 1}.png`}
+                draggableId={`film-${id}`}
+                socket={socket}
+                roomId={roomId}
+                color="transparent"
+                initialXY={{ x: 1350 + id * 5, y: 850 + id * 5 }}
+                zIndex={Z_INDEX_FILM + id}
+                containerRef={containerRef}
+                size={{ width: 360, height: 120 }}
+                style={{
+                  border: "0.5px solid white",
+                  borderRadius: "0.2px",
+                }}
+                isDebug={true}
+              />
+            ))}
 
           {/* {players.map((player, i) => (
             <div key={player.id}>
