@@ -50,6 +50,7 @@ export const fireworksConfig: RoomConfig = {
       ],
       initialHand: { deckId: "firework", count: 5 },
       initialBoard: { fireworksBoard: fireworksBoard },
+      pieceImage: "/images/fireworks/hanabishi.svg",
       checkGameEnd: (state: RoomState) =>
         // 終了条件: 10ラウンド終了 (10ラウンド目の最後 かつ 最後のプレイヤーの手番時)
         state.currentRoundIndex >= 9 &&

@@ -379,7 +379,9 @@ export default function FireworksRoom() {
               socket={socket}
               roomId={roomId}
               boardId={"fireworksBoard"}
+              players={players}
               myPlayerId={myPlayerId}
+              allowPieceDrag={true}
               renderCell={(_cellData, _row, _col) => null}
               width={380}
               height={240}

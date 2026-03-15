@@ -83,7 +83,6 @@ export const fireworksⅡConfig: RoomConfig = {
         },
       ],
       initialHand: { deckId: "firework", count: 5 },
-      initialBoard: [],
       onDeckDraw: (
         _state: RoomState,
         manager: RoomManager,
