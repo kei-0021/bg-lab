@@ -246,21 +246,22 @@ export default function FireworksRoom() {
             visible={true}
             isRelative={false}
           />
+          {/* 左側のセット用シャッフルデータ */}
+          {(() => {
+            const leftData = [...Array(4)]
+              .map((_, i) => ({ id: i, sort: Math.random() }))
+              .sort((a, b) => a.sort - b.sort);
 
-          {[...Array(4)]
-            .map((_, i) => ({ id: i, sort: Math.random() })) // ランダム値を持たせる
-            .sort((a, b) => a.sort - b.sort) // シャッフル
-            .map(({ id }) => (
+            return leftData.map(({ id }, index) => (
               <Draggable
-                key={`film-${id}`}
-                // バッククォートの中で ${id + 1} とすれば 1, 2... と展開される
+                key={`film-left-${id}`}
                 image={`/images/fireworks/clear/film_${id + 1}.png`}
                 draggableId={`film-${id}`}
                 socket={socket}
                 roomId={roomId}
                 color="transparent"
-                initialXY={{ x: 1350 + id * 5, y: 850 + id * 5 }}
-                zIndex={Z_INDEX_FILM + id}
+                initialXY={{ x: 1350 + index * 5, y: 850 + index * 5 }}
+                zIndex={Z_INDEX_FILM + index}
                 containerRef={containerRef}
                 size={{ width: 360, height: 120 }}
                 style={{
@@ -268,7 +269,34 @@ export default function FireworksRoom() {
                   borderRadius: "0.2px",
                 }}
               />
-            ))}
+            ));
+          })()}
+
+          {/* 右側のセット用シャッフルデータ */}
+          {(() => {
+            const rightData = [...Array(4)]
+              .map((_, i) => ({ id: i, sort: Math.random() }))
+              .sort((a, b) => a.sort - b.sort);
+
+            return rightData.map(({ id }, index) => (
+              <Draggable
+                key={`film-right-${id}`}
+                image={`/images/fireworks/clear/film_${id + 1}.png`}
+                draggableId={`film-${id + 4}`}
+                socket={socket}
+                roomId={roomId}
+                color="transparent"
+                initialXY={{ x: 950 + index * 5, y: 850 + index * 5 }}
+                zIndex={Z_INDEX_FILM + index + 4}
+                containerRef={containerRef}
+                size={{ width: 360, height: 120 }}
+                style={{
+                  border: "0.5px solid white",
+                  borderRadius: "0.2px",
+                }}
+              />
+            ));
+          })()}
 
           {/* {players.map((player, i) => (
             <div key={player.id}>
