@@ -3,6 +3,7 @@ import type { GameTurnUpdateData, Player, RoomJoinData } from "react-game-ui";
 import {
   Deck,
   Dice,
+  Draggable,
   GridBoard,
   PlayField,
   RemoteCursor,
@@ -26,9 +27,9 @@ const SERVER_URL =
 const BASE_WIDTH = 1600;
 const BASE_HEIGHT = 900;
 
-// const Z_INDEX_SMOKE = 1000;
+const Z_INDEX_FILM = 1000;
 const Z_INDEX_CARD = 2000;
-const Z_INDEX_PLAYER = 3000;
+// const Z_INDEX_PLAYER = 3000;
 
 export default function FireworksRoom() {
   const { roomId } = useParams<{ roomId: string }>();
@@ -227,29 +228,6 @@ export default function FireworksRoom() {
 
         <FireWorksRule isOpen={showRules} onClose={() => setShowRules(false)} />
 
-        {/* 煙Draggable 10個 - 右下にスタック配置 */}
-        {/* {[...Array(10)].map((_, i) => (
-          <Draggable
-            draggableId={`smoke-${i}`}
-            socket={socket}
-            roomId={roomId}
-            initialXY={{ x: 1350 + i * 5, y: 700 + i * 5 }}
-            size={{ width: 360, height: 120 }}
-            zIndex={Z_INDEX_SMOKE}
-            containerRef={containerRef}
-            scale={scale}
-            isTransparent={true}
-            style={{
-              // 枠線を白の 50% 透明にする
-              border: "1px solid rgba(255, 255, 255, 0.5)",
-
-              // もし背景も半透明にするなら（例：黒の 30%）
-              background: "rgba(0, 0, 0, 0.4)",
-              backdropFilter: "blur(1px)",
-            }}
-          ></Draggable>
-        ))} */}
-
         <main className={styles.fireworksMain}>
           <RemoteCursor
             socket={socket!}
@@ -265,6 +243,24 @@ export default function FireworksRoom() {
             visible={true}
             isRelative={false}
           />
+
+          {[...Array(2)].map((_, i) => (
+            <Draggable
+              image={`/images/fireworks/clear/film_1.png`}
+              draggableId={`film-${i}`}
+              socket={socket}
+              roomId={roomId}
+              color="transparent"
+              initialXY={{ x: 1350 + i * 5, y: 850 + i * 5 }}
+              zIndex={Z_INDEX_FILM}
+              containerRef={containerRef}
+              size={{ width: 360, height: 120 }}
+              style={{
+                border: "0.5px solid white",
+              }}
+            />
+          ))}
+
           {/* {players.map((player, i) => (
             <div key={player.id}>
               <Draggable
