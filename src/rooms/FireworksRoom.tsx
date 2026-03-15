@@ -4,6 +4,7 @@ import {
   Deck,
   Dice,
   Draggable,
+  GridBoard,
   PlayField,
   RemoteCursor,
   ScoreBoard,
@@ -26,7 +27,7 @@ const SERVER_URL =
 const BASE_WIDTH = 1600;
 const BASE_HEIGHT = 900;
 
-const Z_INDEX_SMOKE = 1000;
+// const Z_INDEX_SMOKE = 1000;
 const Z_INDEX_CARD = 2000;
 const Z_INDEX_PLAYER = 3000;
 
@@ -228,7 +229,7 @@ export default function FireworksRoom() {
         <FireWorksRule isOpen={showRules} onClose={() => setShowRules(false)} />
 
         {/* 煙Draggable 10個 - 右下にスタック配置 */}
-        {[...Array(10)].map((_, i) => (
+        {/* {[...Array(10)].map((_, i) => (
           <Draggable
             draggableId={`smoke-${i}`}
             socket={socket}
@@ -248,7 +249,7 @@ export default function FireworksRoom() {
               backdropFilter: "blur(1px)",
             }}
           ></Draggable>
-        ))}
+        ))} */}
 
         <main className={styles.fireworksMain}>
           <RemoteCursor
@@ -373,6 +374,15 @@ export default function FireworksRoom() {
               currentPlayerId={currentPlayerId}
               myPlayerId={myPlayerId}
               isDebug={true}
+            />
+            <GridBoard
+              socket={socket}
+              roomId={roomId}
+              boardId={"fireworksBoard"}
+              myPlayerId={myPlayerId}
+              renderCell={(_cellData, _row, _col) => null}
+              width={380}
+              height={240}
             />
           </div>
         </main>

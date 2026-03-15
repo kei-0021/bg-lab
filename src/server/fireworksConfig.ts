@@ -3,10 +3,15 @@
 import type { Card, GameParam, RoomState } from "react-game-ui";
 import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
 
+export const CELL_COUNTS = {
+  SIMPLE: 9,
+};
+
 export const fireworksConfig: RoomConfig = {
   gameId: "fireworks",
   dataFiles: {
     cards: "../public/data/fireworks/fireworksCards.json",
+    fireworksCells: "../public/data/fireworks/fireworksCells.json"
   },
   // サーバー側でロードしたデータを setup に渡す
   setup: async (loadedData: Record<string, any>): Promise<GameParam> => {
@@ -23,6 +28,8 @@ export const fireworksConfig: RoomConfig = {
       helper.initializeCards(helper.assertCards(loadedData.cards), defaults),
       3,
     );
+
+    const fireworksBoard = helper.createGridBoardLayout(loadedData.fireworksCells, CELL_COUNTS, 3, 3, false);
 
     return {
       gameId: "fireworks",
@@ -42,7 +49,7 @@ export const fireworksConfig: RoomConfig = {
         },
       ],
       initialHand: { deckId: "firework", count: 5 },
-      initialBoard: [],
+      initialBoard: { fireworksBoard: fireworksBoard },
       checkGameEnd: (state: RoomState) =>
         // 終了条件: 10ラウンド終了 (10ラウンド目の最後 かつ 最後のプレイヤーの手番時)
         state.currentRoundIndex >= 9 &&

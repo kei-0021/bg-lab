@@ -78,7 +78,6 @@ async function startServer(): Promise<void> {
     initialLogCategories: {
       connection: false,
       deck: true,
-      cell: false,
       custom_event: false,
     },
     onServerStart: (url: string) => console.log(`🎮 Server running at: ${url}`),
