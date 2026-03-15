@@ -1,11 +1,29 @@
 [
   {
-    "templateId": "SIMPLE",
-    "name": "SIMPLE",
+    "templateId": "EMPTY",
+    "name": "EMPTY",
     "shapeType": "square",
     "backgroundColor": "#5d4037",
     "content": "",
     "changedContent": "",
-    "changedColor": "#8b7355"
+    "changedColor": "#4b0082"
+  },
+  {
+    "templateId": "CARD",
+    "name": "CARD",
+    "shapeType": "square",
+    "backgroundColor": "#a67c00",
+    "content": "花火カード",
+    "changedContent": "",
+    "changedColor": "#4b0082"
+  },
+  {
+    "templateId": "FILM",
+    "name": "FILM",
+    "shapeType": "square",
+    "backgroundColor": "#0d47a1",
+    "content": "花火フィルム",
+    "changedContent": "",
+    "changedColor": "#4b0082"
   }
 ]

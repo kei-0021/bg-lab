@@ -4,7 +4,9 @@ import type { Card, GameParam, RoomState } from "react-game-ui";
 import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
 
 export const CELL_COUNTS = {
-  SIMPLE: 9,
+  EMPTY: 4,
+  CARD: 3,
+  FILM: 2,
 };
 
 export const fireworksConfig: RoomConfig = {
@@ -29,7 +31,7 @@ export const fireworksConfig: RoomConfig = {
       3,
     );
 
-    const fireworksBoard = helper.createGridBoardLayout(loadedData.fireworksCells, CELL_COUNTS, 3, 3, false);
+    const fireworksBoard = helper.createGridBoardLayout(loadedData.fireworksCells, CELL_COUNTS, 3, 3, true);
 
     return {
       gameId: "fireworks",

@@ -12,6 +12,7 @@ import {
 } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
+import { FireworksCellRenderer } from "../components/FireworksCellRenderer";
 import { FireWorksRule } from "../components/FireworksRule";
 import { LaunchArea } from "../components/LaunchArea";
 import { RoundProgressTracker } from "../components/RoundProgressTracker";
@@ -27,8 +28,8 @@ const SERVER_URL =
 const BASE_WIDTH = 1600;
 const BASE_HEIGHT = 900;
 
-const Z_INDEX_FILM = 1000;
-const Z_INDEX_CARD = 2000;
+const Z_INDEX_CARD = 1000;
+const Z_INDEX_FILM = 2000;
 // const Z_INDEX_PLAYER = 3000;
 
 export default function FireworksRoom() {
@@ -44,8 +45,10 @@ export default function FireworksRoom() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
   const [currentRound, setCurrentRound] = useState<number>(1);
+
   const [showRules, setShowRules] = useState<boolean>(false);
   const [gameResult, setGameResult] = useState<any>(null);
+
   const [scale, setScale] = useState<number>(1);
   const [fieldClassName, setFieldClassName] = useState<string>(
     "fireworksRequtangleField",
@@ -264,7 +267,6 @@ export default function FireworksRoom() {
                   border: "0.5px solid white",
                   borderRadius: "0.2px",
                 }}
-                isDebug={true}
               />
             ))}
 
@@ -307,17 +309,7 @@ export default function FireworksRoom() {
                 />
               </div>
 
-              <div className={styles.diceWrapper}>
-                <Dice
-                  sides={4}
-                  socket={socket}
-                  diceId="move2"
-                  roomId={roomId}
-                  title="4面ダイス"
-                />
-              </div>
-
-              <div className={styles.diceWrapper}>
+              {/* <div className={styles.diceWrapper}>
                 <Dice
                   sides={4}
                   socket={socket}
@@ -348,7 +340,7 @@ export default function FireworksRoom() {
                     />,
                   ]}
                 />
-              </div>
+              </div> */}
             </div>
           </aside>
 
@@ -384,7 +376,9 @@ export default function FireworksRoom() {
               players={players}
               myPlayerId={myPlayerId}
               allowPieceDrag={true}
-              renderCell={(_cellData, _row, _col) => null}
+              renderCell={(cellData) => (
+                <FireworksCellRenderer cellData={cellData} />
+              )}
               width={380}
               height={240}
             />
