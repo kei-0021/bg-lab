@@ -3,7 +3,6 @@ import type { GameTurnUpdateData, Player, RoomJoinData } from "react-game-ui";
 import {
   Deck,
   Dice,
-  Draggable,
   GridBoard,
   PlayField,
   RemoteCursor,
@@ -266,7 +265,7 @@ export default function FireworksRoom() {
             visible={true}
             isRelative={false}
           />
-          {players.map((player, i) => (
+          {/* {players.map((player, i) => (
             <div key={player.id}>
               <Draggable
                 image="/images/fireworks/hanabishi.svg"
@@ -281,7 +280,7 @@ export default function FireworksRoom() {
                 containerRef={containerRef}
               />
             </div>
-          ))}
+          ))} */}
 
           {/* 左サイドバー */}
           <aside className={styles.sidebarLeft}>
