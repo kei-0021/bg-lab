@@ -304,7 +304,7 @@ export default function FireworksⅡRoom() {
               players={players}
               myPlayerId={myPlayerId}
               layoutMode="grid"
-              baseZIndex={Z_INDEX_CARD}
+              zIndex={Z_INDEX_CARD}
             />
           </div>
 

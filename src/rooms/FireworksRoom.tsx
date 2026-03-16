@@ -29,7 +29,6 @@ const BASE_WIDTH = 1600;
 const BASE_HEIGHT = 900;
 
 const Z_INDEX_CARD = 1000;
-const Z_INDEX_FILM = 2000;
 // const Z_INDEX_PLAYER = 3000;
 
 export default function FireworksRoom() {
@@ -252,7 +251,7 @@ export default function FireworksRoom() {
               .map((_, i) => ({ id: i, sort: Math.random() }))
               .sort((a, b) => a.sort - b.sort);
 
-            return leftData.map(({ id }, index) => (
+            return leftData.map(({ id }, _) => (
               <Draggable
                 key={`film-left-${id}`}
                 image={`/images/fireworks/clear/film_${id + 1}.png`}
@@ -260,8 +259,6 @@ export default function FireworksRoom() {
                 socket={socket}
                 roomId={roomId}
                 color="transparent"
-                initialXY={{ x: 1350 + index * 5, y: 850 + index * 5 }}
-                zIndex={Z_INDEX_FILM + index}
                 containerRef={containerRef}
                 size={{ width: 360, height: 120 }}
                 style={{
@@ -278,7 +275,7 @@ export default function FireworksRoom() {
               .map((_, i) => ({ id: i, sort: Math.random() }))
               .sort((a, b) => a.sort - b.sort);
 
-            return rightData.map(({ id }, index) => (
+            return rightData.map(({ id }, _) => (
               <Draggable
                 key={`film-right-${id}`}
                 image={`/images/fireworks/clear/film_${id + 1}.png`}
@@ -286,8 +283,6 @@ export default function FireworksRoom() {
                 socket={socket}
                 roomId={roomId}
                 color="transparent"
-                initialXY={{ x: 950 + index * 5, y: 850 + index * 5 }}
-                zIndex={Z_INDEX_FILM + index + 4}
                 containerRef={containerRef}
                 size={{ width: 360, height: 120 }}
                 style={{
@@ -383,7 +378,7 @@ export default function FireworksRoom() {
               players={players}
               myPlayerId={myPlayerId}
               layoutMode="free"
-              baseZIndex={Z_INDEX_CARD}
+              zIndex={Z_INDEX_CARD}
             />
             {fieldClassName !== "fireworksCircleField" && <LaunchArea />}
           </div>

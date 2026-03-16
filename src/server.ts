@@ -28,7 +28,9 @@ async function startServer(): Promise<void> {
     console.error(`Directory not found: ${serverDirPath}`);
   }
 
-  const configFiles = files.filter(f => f.endsWith("Config.ts") || f.endsWith("Config.js"));
+  const configFiles = files.filter(
+    (f) => f.endsWith("Config.ts") || f.endsWith("Config.js"),
+  );
 
   for (const file of configFiles) {
     // コンパイル後の .js を読み込むための相対パス
@@ -50,7 +52,7 @@ async function startServer(): Promise<void> {
           rootDir,
           isProduction ? "dist" : "public",
           "data",
-          dataPath
+          dataPath,
         );
 
         loadedData[key] = await loadJsonAssert(

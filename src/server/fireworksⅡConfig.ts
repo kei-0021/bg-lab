@@ -6,7 +6,7 @@ import type {
   GameParam,
   Player,
   RoomManager,
-  RoomState
+  RoomState,
 } from "react-game-ui";
 import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
 import { FireworksⅡPhase } from "../types/phase.js";
@@ -93,12 +93,9 @@ export const fireworksⅡConfig: RoomConfig = {
           manager.emitSystemMessage("カードを3枚まで選んでください", 0, true);
         }
       },
-      onAllPlayersCardHold: async (
-        state: RoomState,
-        manager: RoomManager,
-      ) => {
+      onAllPlayersCardHold: async (state: RoomState, manager: RoomManager) => {
         // ホールド状態を解除
-        manager.unholdCards()
+        manager.unholdCards();
         await manager.sleep(500);
 
         // 評価フェーズへ
@@ -134,11 +131,19 @@ export const fireworksⅡConfig: RoomConfig = {
             }
           }
         } else {
-          await manager.emitSystemMessage("演目カードが提示されていません。", 1500, true);
+          await manager.emitSystemMessage(
+            "演目カードが提示されていません。",
+            1500,
+            true,
+          );
         }
 
         // 2. カラー賞の発表
-        await manager.emitSystemMessage("続いて【カラー賞】の発表です...", 1500, true);
+        await manager.emitSystemMessage(
+          "続いて【カラー賞】の発表です...",
+          1500,
+          true,
+        );
 
         if (discardColorStack.length > 0) {
           const lastCard = discardColorStack.at(-1);
@@ -173,7 +178,11 @@ export const fireworksⅡConfig: RoomConfig = {
             }
           }
         } else {
-          await manager.emitSystemMessage("カラーカードが提示されていません。", 1500, true);
+          await manager.emitSystemMessage(
+            "カラーカードが提示されていません。",
+            1500,
+            true,
+          );
         }
 
         manager.emitSystemMessage(
@@ -188,7 +197,8 @@ export const fireworksⅡConfig: RoomConfig = {
       onNextRound: async (state: RoomState, manager: RoomManager) => {
         manager.updatePhase(FireworksⅡPhase.PLANNING);
         await manager.emitSystemMessage(
-          `第 ${state.currentRoundIndex + 1} 演目（ラウンド）開始！`, 1500
+          `第 ${state.currentRoundIndex + 1} 演目（ラウンド）開始！`,
+          1500,
         );
         // 場のカードを捨て札に移動する
         const cardsInField = [...(state.playFieldCards["firework"] ?? [])];

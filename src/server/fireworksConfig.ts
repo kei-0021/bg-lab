@@ -1,6 +1,12 @@
 // src/server/fireworksConfig.ts
 
-import type { Card, GameParam, RoomState } from "react-game-ui";
+import type {
+  Card,
+  DraggableData,
+  DraggableId,
+  GameParam,
+  RoomState,
+} from "react-game-ui";
 import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
 
 export const CELL_COUNTS = {
@@ -9,11 +15,13 @@ export const CELL_COUNTS = {
   FILM: 2,
 };
 
+const Z_INDEX_FILM = 2000;
+
 export const fireworksConfig: RoomConfig = {
   gameId: "fireworks",
   dataFiles: {
     cards: "../public/data/fireworks/fireworksCards.json",
-    fireworksCells: "../public/data/fireworks/fireworksCells.json"
+    fireworksCells: "../public/data/fireworks/fireworksCells.json",
   },
   // サーバー側でロードしたデータを setup に渡す
   setup: async (loadedData: Record<string, any>): Promise<GameParam> => {
@@ -31,7 +39,31 @@ export const fireworksConfig: RoomConfig = {
       3,
     );
 
-    const fireworksBoard = helper.createGridBoardLayout(loadedData.fireworksCells, CELL_COUNTS, 3, 3, true);
+    const fireworksBoard = helper.createGridBoardLayout(
+      loadedData.fireworksCells,
+      CELL_COUNTS,
+      3,
+      3,
+      true,
+    );
+
+    const draggables: Record<DraggableId, DraggableData> = {};
+    for (let i = 0; i < 4; i++) {
+      const id = `film-${i}`;
+      draggables[id] = helper.createDraggable(
+        id,
+        { x: 950 + i * 5, y: 850 + i * 5 },
+        Z_INDEX_FILM + i,
+      );
+    }
+    for (let i = 0; i < 4; i++) {
+      const id = `film-${i + 4}`;
+      draggables[id] = helper.createDraggable(
+        id + 4,
+        { x: 1350 + i * 5, y: 850 + i * 5 },
+        Z_INDEX_FILM + i,
+      );
+    }
 
     return {
       gameId: "fireworks",
@@ -47,12 +79,18 @@ export const fireworksConfig: RoomConfig = {
         {
           tokenStoreId: "goldfish",
           name: "金魚",
-          tokens: helper.createTokenStore([{ id: "goldfish", name: "金魚" }], 30, "/images/fireworks/goldfish.png", "#ffffff7c",),
+          tokens: helper.createTokenStore(
+            [{ id: "goldfish", name: "金魚" }],
+            30,
+            "/images/fireworks/goldfish.png",
+            "#ffffff7c",
+          ),
         },
       ],
       initialHand: { deckId: "firework", count: 5 },
       initialBoard: { fireworksBoard: fireworksBoard },
       pieceImage: "/images/fireworks/hanabishi.svg",
+      draggable: draggables,
       checkGameEnd: (state: RoomState) =>
         // 終了条件: 10ラウンド終了 (10ラウンド目の最後 かつ 最後のプレイヤーの手番時)
         state.currentRoundIndex >= 9 &&
