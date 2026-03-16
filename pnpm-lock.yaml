@@ -23,7 +23,7 @@ importers:
         version: 18.3.1(react@18.3.1)
       react-game-ui:
         specifier: github:kei-0021/react-game-ui#issue-21
-        version: https://codeload.github.com/kei-0021/react-game-ui/tar.gz/35d734ad3214d0afc2717cbedd09e10c4f9632d2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: https://codeload.github.com/kei-0021/react-game-ui/tar.gz/56c1afbd2a87473393af5b56e790f5853a3d9691(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-router-dom:
         specifier: ^7.13.1
         version: 7.13.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -138,12 +138,12 @@ packages:
     resolution: {integrity: sha512-YvjJow9FxbhFFKDSuFnVCe2WxXk1zWc22fFePVNEaWJEu8IrZVlda6N0uHwzZrUM1il7NC9Mlp4MaJYbYd9JSg==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/helpers@7.28.6':
-    resolution: {integrity: sha512-xOBvwq86HHdB7WUDTfKfT/Vuxh7gElQ+Sfti2Cy6yIWNW05P8iUslOVcZ4/sKbE+/jQaukQAdz/gf3724kYdqw==}
+  '@babel/helpers@7.29.2':
+    resolution: {integrity: sha512-HoGuUs4sCZNezVEKdVcwqmZN8GoHirLUcLaYVNBK2J0DadGtdcqgr3BCbvH8+XUo4NGjNl3VOtSjEKNzqfFgKw==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/parser@7.29.0':
-    resolution: {integrity: sha512-IyDgFV5GeDUVX4YdF/3CPULtVGSXXMLh1xVIgdCgxApktqnQV0r7/8Nqthg+8YLGaAtdyIlo2qIdZrbCv4+7ww==}
+  '@babel/parser@7.29.2':
+    resolution: {integrity: sha512-4GgRzy/+fsBa72/RZVJmGKPmZu9Byn8o4MoLpmNe1m8ZfYnz5emHLQz3U4gLud6Zwl0RZIcgiLD7Uq7ySFuDLA==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -1454,8 +1454,8 @@ packages:
     peerDependencies:
       react: 18.3.1
 
-  react-game-ui@https://codeload.github.com/kei-0021/react-game-ui/tar.gz/35d734ad3214d0afc2717cbedd09e10c4f9632d2:
-    resolution: {tarball: https://codeload.github.com/kei-0021/react-game-ui/tar.gz/35d734ad3214d0afc2717cbedd09e10c4f9632d2}
+  react-game-ui@https://codeload.github.com/kei-0021/react-game-ui/tar.gz/56c1afbd2a87473393af5b56e790f5853a3d9691:
+    resolution: {tarball: https://codeload.github.com/kei-0021/react-game-ui/tar.gz/56c1afbd2a87473393af5b56e790f5853a3d9691}
     version: 1.0.0
     peerDependencies:
       react: 18.3.1
@@ -1872,8 +1872,8 @@ snapshots:
       '@babel/generator': 7.29.1
       '@babel/helper-compilation-targets': 7.28.6
       '@babel/helper-module-transforms': 7.28.6(@babel/core@7.29.0)
-      '@babel/helpers': 7.28.6
-      '@babel/parser': 7.29.0
+      '@babel/helpers': 7.29.2
+      '@babel/parser': 7.29.2
       '@babel/template': 7.28.6
       '@babel/traverse': 7.29.0
       '@babel/types': 7.29.0
@@ -1888,7 +1888,7 @@ snapshots:
 
   '@babel/generator@7.29.1':
     dependencies:
-      '@babel/parser': 7.29.0
+      '@babel/parser': 7.29.2
       '@babel/types': 7.29.0
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/trace-mapping': 0.3.31
@@ -1928,12 +1928,12 @@ snapshots:
 
   '@babel/helper-validator-option@7.27.1': {}
 
-  '@babel/helpers@7.28.6':
+  '@babel/helpers@7.29.2':
     dependencies:
       '@babel/template': 7.28.6
       '@babel/types': 7.29.0
 
-  '@babel/parser@7.29.0':
+  '@babel/parser@7.29.2':
     dependencies:
       '@babel/types': 7.29.0
 
@@ -1950,7 +1950,7 @@ snapshots:
   '@babel/template@7.28.6':
     dependencies:
       '@babel/code-frame': 7.29.0
-      '@babel/parser': 7.29.0
+      '@babel/parser': 7.29.2
       '@babel/types': 7.29.0
 
   '@babel/traverse@7.29.0':
@@ -1958,7 +1958,7 @@ snapshots:
       '@babel/code-frame': 7.29.0
       '@babel/generator': 7.29.1
       '@babel/helper-globals': 7.28.0
-      '@babel/parser': 7.29.0
+      '@babel/parser': 7.29.2
       '@babel/template': 7.28.6
       '@babel/types': 7.29.0
       debug: 4.4.3
@@ -2235,7 +2235,7 @@ snapshots:
 
   '@types/babel__core@7.20.5':
     dependencies:
-      '@babel/parser': 7.29.0
+      '@babel/parser': 7.29.2
       '@babel/types': 7.29.0
       '@types/babel__generator': 7.27.0
       '@types/babel__template': 7.4.4
@@ -2247,7 +2247,7 @@ snapshots:
 
   '@types/babel__template@7.4.4':
     dependencies:
-      '@babel/parser': 7.29.0
+      '@babel/parser': 7.29.2
       '@babel/types': 7.29.0
 
   '@types/babel__traverse@7.28.0':
@@ -3204,7 +3204,7 @@ snapshots:
       react: 18.3.1
       scheduler: 0.23.2
 
-  react-game-ui@https://codeload.github.com/kei-0021/react-game-ui/tar.gz/35d734ad3214d0afc2717cbedd09e10c4f9632d2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  react-game-ui@https://codeload.github.com/kei-0021/react-game-ui/tar.gz/56c1afbd2a87473393af5b56e790f5853a3d9691(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       express: 5.2.1
       react: 18.3.1
