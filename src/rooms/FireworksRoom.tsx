@@ -45,6 +45,8 @@ export default function FireworksRoom() {
   const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
   const [currentRound, setCurrentRound] = useState<number>(1);
 
+  const [currentDiceValue, setCurrentDiceValue] = useState<number>(1);
+
   const [showRules, setShowRules] = useState<boolean>(false);
   const [gameResult, setGameResult] = useState<any>(null);
 
@@ -329,6 +331,7 @@ export default function FireworksRoom() {
                   diceId="move"
                   roomId={roomId}
                   title="3面ダイス"
+                  onRoll={setCurrentDiceValue}
                 />
               </div>
 
@@ -404,6 +407,7 @@ export default function FireworksRoom() {
               )}
               width={380}
               height={240}
+              moveRange={currentDiceValue}
             />
           </div>
         </main>
