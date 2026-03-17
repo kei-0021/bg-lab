@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 const gameName = process.argv[2];
+const gameIcon = process.argv[3] || "🎲";
 
 if (!gameName) {
   console.error('ゲーム名を指定してください（例: npx tsx scripts/generate-game.ts Poker）');
@@ -53,4 +54,24 @@ const paths = {
 fs.writeFileSync(paths.config, configTemplate);
 fs.writeFileSync(paths.room, roomTemplate);
 
-console.log(`✅ 生成完了:\n  - ${paths.config}\n  - ${paths.room}`);
+// games.ts の更新処理
+const registryPath = path.join(process.cwd(), 'src/constants/games.ts');
+
+if (fs.existsSync(registryPath)) {
+  let content = fs.readFileSync(registryPath, 'utf-8');
+
+  // 重複チェック
+  if (content.includes(`id: "${gameName.toLowerCase()}"`)) {
+    console.warn(`${gameName} は既に Registry に存在します`);
+  } else {
+    const newEntry = `  { id: "${gameName.toLowerCase()}", name: "${gameName}", icon: "${gameIcon}" }, \n]; `;
+    content = content.replace(/];\s*$/, newEntry);
+
+    fs.writeFileSync(registryPath, content);
+    console.log(`Registry 更新: ${registryPath} `);
+  }
+} else {
+  console.error(`Registry ファイルが見つかりませんでした: ${registryPath} `);
+}
+
+console.log(`生成完了: \n - ${paths.config} \n - ${paths.room} `);

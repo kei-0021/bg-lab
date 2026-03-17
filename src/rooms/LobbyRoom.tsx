@@ -1,7 +1,9 @@
+// src/rooms/LobbyRoom.tsx
 import { useEffect, useState } from "react";
 import type { RoomMeta } from "react-game-ui";
 import { useNavigate } from "react-router-dom";
 import io, { Socket } from "socket.io-client";
+import { GAME_LIST } from "../constants/games";
 import "./LobbyRoom.css";
 
 const SERVER_URL =
@@ -9,20 +11,11 @@ const SERVER_URL =
     ? "http://localhost:4000"
     : "https://bg-lab.onrender.com";
 
-const GAME_DISPLAY_NAMES: Record<string, string> = {
-  fireworks: "FireWorks",
-  fireworksⅡ: "FireWorksⅡ",
-  amanogawa: "Amanogawa",
-  uberninja: "UberNinja",
-};
-
-// アイコン用のマッピング
-const GAME_ICONS: Record<string, string> = {
-  fireworks: "🎆",
-  fireworksⅡ: "🎆",
-  amanogawa: "🌟",
-  uberninja: "🥷",
-};
+// GAME_LIST から動的に生成する
+const GAME_DISPLAY_NAMES = Object.fromEntries(
+  GAME_LIST.map((g) => [g.id, g.name]),
+);
+const GAME_ICONS = Object.fromEntries(GAME_LIST.map((g) => [g.id, g.icon]));
 
 export default function RoomLobby() {
   const [rooms, setRooms] = useState<RoomMeta[]>([]);
@@ -76,17 +69,17 @@ export default function RoomLobby() {
       <div className="section create-room-section">
         <h2 className="section-title">新しいゲームを始める</h2>
         <div className="button-group">
-          {Object.entries(GAME_DISPLAY_NAMES).map(([id, name]) => (
+          {GAME_LIST.map((game) => (
             <button
-              key={id}
-              onClick={() => handleCreateRoom(id)}
+              key={game.id}
+              onClick={() => handleCreateRoom(game.id)}
               className="button primary-button"
               disabled={!socket?.connected}
             >
               <span style={{ fontSize: "24px", marginBottom: "8px" }}>
-                {GAME_ICONS[id]}
+                {game.icon}
               </span>
-              {name}
+              {game.name}
             </button>
           ))}
         </div>
