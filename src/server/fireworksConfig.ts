@@ -47,21 +47,31 @@ export const fireworksConfig: RoomConfig = {
       3,
     );
 
+    // フィルムの並び替え
     const draggables: Record<DraggableId, DraggableData> = {};
+    const indices = [0, 1, 2, 3, 4, 5, 6, 7];
+    for (let i = indices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+
     for (let i = 0; i < 4; i++) {
-      const id = `film-${i}`;
+      const shuffleIdx = indices[i];
+      const id = `film-${shuffleIdx}`;
       draggables[id] = helper.createDraggable(
         id,
-        { x: 950 + i * 5, y: 850 + i * 5 },
-        Z_INDEX_FILM + i,
+        { x: 950 + i * 5, y: 1050 + i * 5 },
+        Z_INDEX_FILM + shuffleIdx
       );
     }
+
     for (let i = 0; i < 4; i++) {
-      const id = `film-${i + 4}`;
+      const shuffleIdx = indices[i + 4];
+      const id = `film-${shuffleIdx}`;
       draggables[id] = helper.createDraggable(
-        id + 4,
-        { x: 1350 + i * 5, y: 850 + i * 5 },
-        Z_INDEX_FILM + i,
+        id,
+        { x: 1350 + i * 5, y: 1050 + i * 5 },
+        Z_INDEX_FILM + shuffleIdx
       );
     }
 
@@ -87,7 +97,7 @@ export const fireworksConfig: RoomConfig = {
           ),
         },
       ],
-      initialHand: { deckId: "firework", count: 5 },
+      initialHand: { deckId: "firework", count: 3 },
       initialBoard: { fireworksBoard: fireworksBoard },
       shuffleAndReconnectBoard: { "fireworksBoard": cellShuffleAndReconnector },
       pieceImage: "/images/fireworks/hanabishi.svg",

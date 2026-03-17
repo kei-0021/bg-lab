@@ -248,52 +248,40 @@ export default function FireworksRoom() {
             isRelative={false}
           />
           {/* 左側のセット用シャッフルデータ */}
-          {(() => {
-            const leftData = [...Array(4)]
-              .map((_, i) => ({ id: i, sort: Math.random() }))
-              .sort((a, b) => a.sort - b.sort);
-
-            return leftData.map(({ id }, _) => (
-              <Draggable
-                key={`film-left-${id}`}
-                image={`/images/fireworks/clear/film_${id + 1}.png`}
-                draggableId={`film-${id}`}
-                socket={socket}
-                roomId={roomId}
-                color="transparent"
-                containerRef={containerRef}
-                size={{ width: 360, height: 120 }}
-                style={{
-                  border: "0.5px solid white",
-                  borderRadius: "0.2px",
-                }}
-              />
-            ));
-          })()}
+          {[0, 1, 2, 3].map((i) => (
+            <Draggable
+              key={`film-left-${i}`}
+              image={`/images/fireworks/clear/film_${i + 1}.png`}
+              draggableId={`film-${i}`}
+              socket={socket}
+              roomId={roomId}
+              color="transparent"
+              containerRef={containerRef}
+              size={{ width: 360, height: 120 }}
+              style={{
+                border: "0.5px solid white",
+                borderRadius: "0.2px",
+              }}
+            />
+          ))}
 
           {/* 右側のセット用シャッフルデータ */}
-          {(() => {
-            const rightData = [...Array(4)]
-              .map((_, i) => ({ id: i, sort: Math.random() }))
-              .sort((a, b) => a.sort - b.sort);
-
-            return rightData.map(({ id }, _) => (
-              <Draggable
-                key={`film-right-${id}`}
-                image={`/images/fireworks/clear/film_${id + 1}.png`}
-                draggableId={`film-${id + 4}`}
-                socket={socket}
-                roomId={roomId}
-                color="transparent"
-                containerRef={containerRef}
-                size={{ width: 360, height: 120 }}
-                style={{
-                  border: "0.5px solid white",
-                  borderRadius: "0.2px",
-                }}
-              />
-            ));
-          })()}
+          {[4, 5, 6, 7].map((i) => (
+            <Draggable
+              key={`film-right-${i}`}
+              image={`/images/fireworks/clear/film_${i - 3}.png`}
+              draggableId={`film-${i}`}
+              socket={socket}
+              roomId={roomId}
+              color="transparent"
+              containerRef={containerRef}
+              size={{ width: 360, height: 120 }}
+              style={{
+                border: "0.5px solid white",
+                borderRadius: "0.2px",
+              }}
+            />
+          ))}
 
           {/* {players.map((player, i) => (
             <div key={player.id}>
