@@ -8,6 +8,7 @@ import type {
   RoomState,
 } from "react-game-ui";
 import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
+import { cellShuffleAndReconnector } from "./shuffleAndReconnector";
 
 export const CELL_COUNTS = {
   EMPTY: 4,
@@ -44,7 +45,6 @@ export const fireworksConfig: RoomConfig = {
       CELL_COUNTS,
       3,
       3,
-      true,
     );
 
     const draggables: Record<DraggableId, DraggableData> = {};
@@ -89,6 +89,7 @@ export const fireworksConfig: RoomConfig = {
       ],
       initialHand: { deckId: "firework", count: 5 },
       initialBoard: { fireworksBoard: fireworksBoard },
+      shuffleAndReconnectBoard: { "fireworksBoard": cellShuffleAndReconnector },
       pieceImage: "/images/fireworks/hanabishi.svg",
       draggable: draggables,
       checkGameEnd: (state: RoomState) =>
