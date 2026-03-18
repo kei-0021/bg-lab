@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "server": "tsx src/server.ts",
     "dev:multi": "concurrently \"npm run server\" \"npm run dev\"",
-    "gen": "tsx src/scripts/generate-new-game.ts"
+    "gen": "tsx src/scripts/generate-new-game.ts",
+    "del": "tsx src/scripts/delete-game.ts"
   },
   "devDependencies": {
     "@rollup/plugin-replace": "^6.0.3",
