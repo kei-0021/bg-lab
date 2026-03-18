@@ -1,24 +1,27 @@
 import fs from 'fs';
 import path from 'path';
 
-const gameName = process.argv[2];
+const rawName = process.argv[2];
 
-if (!gameName) {
-    console.error('削除するゲーム名を指定してください（例: npx tsx scripts/delete-game.ts Poker）');
+if (!rawName) {
+    console.error('削除するゲーム名を指定してください');
     process.exit(1);
 }
 
+// 生成時と同じロジックで英数字のみ抽出
+const gameName = rawName.replace(/[^\w]/g, '');
 const lowerName = gameName.toLowerCase();
 const pascalName = gameName.charAt(0).toUpperCase() + gameName.slice(1);
 
 const paths = {
     config: path.join(process.cwd(), 'src/server', `${pascalName}Config.ts`),
-    room: path.join(process.cwd(), 'src/rooms', `${pascalName}Room.tsx`),
+    room: path.join(process.cwd(), 'src/rooms', `${gameName}Room.tsx`),
+    style: path.join(process.cwd(), 'src/rooms', `${gameName}Room.module.css`),
     registry: path.join(process.cwd(), 'src/constants/games.ts'),
 };
 
 // ファイルの削除
-[paths.config, paths.room].forEach(filePath => {
+[paths.config, paths.room, paths.style].forEach(filePath => {
     if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
         console.log(`Deleted: ${path.basename(filePath)}`);
@@ -30,8 +33,6 @@ const paths = {
 // Registry (games.ts) からの削除
 if (fs.existsSync(paths.registry)) {
     const content = fs.readFileSync(paths.registry, 'utf-8');
-
-    // 指定した id を含む行を正規表現でピンポイントに削除
     const lines = content.split('\n');
     const filteredLines = lines.filter(line => !line.includes(`id: "${lowerName}"`));
 
@@ -43,4 +44,4 @@ if (fs.existsSync(paths.registry)) {
     }
 }
 
-console.log(`Cleanup complete: ${pascalName}`);
+console.log(`Cleanup complete: ${gameName}`);

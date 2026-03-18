@@ -13,6 +13,63 @@ if (!gameName) {
 const lowerName = gameName.toLowerCase();
 const pascalName = gameName.charAt(0).toUpperCase() + gameName.slice(1);
 
+// --- CSS Module Template ---
+const cssModuleTemplate = `/* src/rooms/${gameName}Room.module.css */
+.gameContainer {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #222;
+}
+
+.gameCanvas {
+  width: 1600px;
+  height: 900px;
+  position: relative;
+  background: #333;
+  transform-origin: top left;
+}
+
+.gameHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  color: white;
+  border-bottom: 1px solid #444;
+}
+
+.gameMain {
+  display: flex;
+  height: calc(100% - 60px);
+}
+
+.sidebarLeft {
+  width: 250px;
+  padding: 10px;
+  border-right: 1px solid #444;
+}
+
+.sidebarRight {
+  width: 300px;
+  padding: 10px;
+  border-left: 1px solid #444;
+}
+
+.playFieldContainer {
+  flex: 1;
+  position: relative;
+}
+
+.joinScreen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #1a1a1a;
+  color: white;
+}
+`;
+
 // --- Server Config Template ---
 const configTemplate = `import type { GameParam } from "react-game-ui";
 import { type RoomConfig } from "react-game-ui/server-io-utils";
@@ -55,6 +112,7 @@ import {
   TokenStore,
 } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
+import styles from "./${gameName}Room.module.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSocket } from "../hooks/useSocket.js";
 
@@ -135,16 +193,17 @@ export default function ${lowerName}Room() {
 
   if (!hasJoined) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#1a1a1a', color: 'white' }}>
+      <div className={styles.joinScreen}>
         <div style={{ textAlign: 'center' }}>
           <h2>${gameName} 入場</h2>
           <input
             type="text"
+            autoFocus
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
             placeholder="お名前"
             onKeyDown={(e) => e.key === "Enter" && handleJoinRoom()}
-            style={{ padding: '8px', borderRadius: '4px', border: 'none' }}
+            style={{ padding: '8px', borderRadius: '4px', border: 'none', color: '#000' }}
           />
           <button onClick={handleJoinRoom} disabled={isJoining} style={{ marginLeft: '8px', padding: '8px 16px', cursor: 'pointer' }}>
             {isJoining ? "入場中" : "入場"}
@@ -155,40 +214,33 @@ export default function ${lowerName}Room() {
   }
 
   return (
-    <div style={{ width: '100vw', height: '100vh', overflow: 'hidden', background: '#222' }}>
+    <div className={styles.gameContainer}>
       <div
         ref={containerRef}
+        className={styles.gameCanvas}
         style={{
-          width: \`\${BASE_WIDTH}px\`,
-          height: \`\${BASE_HEIGHT}px\`,
-          transform: \`scale(\${scale})\`,
-          transformOrigin: 'top left',
-          position: 'relative',
-          background: '#333'
+          transform: \`scale(\${scale})\`
         }}
       >
-        <header style={{ display: 'flex', justifyContent: 'space-between', padding: '10px', color: 'white', borderBottom: '1px solid #444' }}>
+        <header className={styles.gameHeader}>
           <h1>${gameIcon} ${gameName}</h1>
           <div>Round: {currentRound}</div>
           <button onClick={() => navigate("/")}>ロビーへ</button>
         </header>
 
-        <main style={{ display: 'flex', height: 'calc(100% - 60px)' }}>
-          {/* 左サイド: デッキ & ダイス */}
-          <aside style={{ width: '250px', padding: '10px', borderRight: '1px solid #444' }}>
+        <main className={styles.gameMain}>
+          <aside className={styles.sidebarLeft}>
             <Deck socket={socket!} roomId={roomId} deckId="main" title="山札" currentPlayerId={currentPlayerId} myPlayerId={myPlayerId} />
             <Dice sides={6} socket={socket} diceId="move" roomId={roomId} onRoll={setCurrentDiceValue} />
           </aside>
 
-          {/* 中央: プレイフィールド & ドラッグ可能オブジェクト */}
-          <div style={{ flex: 1, position: 'relative' }}>
+          <div className={styles.playFieldContainer}>
              <RemoteCursor socket={socket!} roomId={roomId} myPlayerId={myPlayerId} players={players.map(p => ({ name: p.name, socketId: String(p.id), color: p.color }))} scale={scale} fixedContainerRef={containerRef} visible={true} isRelative={false} />
              <PlayField socket={socket} roomId={roomId} deckId="main" players={players} myPlayerId={myPlayerId} layoutMode="free" />
              <Draggable socket={socket} roomId={roomId} draggableId="piece" containerRef={containerRef}/>
           </div>
 
-          {/* 右サイド: スコア */}
-          <aside style={{ width: '300px', padding: '10px', borderLeft: '1px solid #444' }}>
+          <aside className={styles.sidebarRight}>
             <ScoreBoard socket={socket!} roomId={roomId} players={players} currentPlayerId={currentPlayerId} myPlayerId={myPlayerId} />
           </aside>
         </main>
@@ -201,8 +253,9 @@ export default function ${lowerName}Room() {
 `;
 
 const paths = {
-  config: path.join(process.cwd(), 'src/server', `${gameName}Config.ts`),
+  config: path.join(process.cwd(), 'src/server', `${pascalName}Config.ts`),
   room: path.join(process.cwd(), 'src/rooms', `${gameName}Room.tsx`),
+  css: path.join(process.cwd(), 'src/rooms', `${gameName}Room.module.css`), // 拡張子変更
   registry: path.join(process.cwd(), 'src/constants/games.config.ts'),
 };
 
@@ -214,25 +267,17 @@ const paths = {
 // 各ファイル書き出し
 fs.writeFileSync(paths.config, configTemplate);
 fs.writeFileSync(paths.room, roomTemplate);
+fs.writeFileSync(paths.css, cssModuleTemplate);
 
-// games.ts の更新処理
+// games.ts の更新
 const registryPath = path.join(process.cwd(), 'src/constants/games.ts');
-
 if (fs.existsSync(registryPath)) {
   let content = fs.readFileSync(registryPath, 'utf-8');
-
-  // 重複チェック
-  if (content.includes(`id: "${lowerName}"`)) {
-    console.warn(`${gameName} は既に Registry に存在します`);
-  } else {
+  if (!content.includes(`id: "${lowerName}"`)) {
     const newEntry = `  { id: "${lowerName}", name: "${gameName}", icon: "${gameIcon}" }, \n]; `;
     content = content.replace(/];\s*$/, newEntry);
-
     fs.writeFileSync(registryPath, content);
-    console.log(`Registry 更新: ${registryPath} `);
   }
-} else {
-  console.error(`Registry ファイルが見つかりませんでした: ${registryPath} `);
 }
 
-console.log(`✅ 生成完了: ${gameName}`);
+console.log(`✅ 生成完了: ${gameName} (CSS Modules)`);
