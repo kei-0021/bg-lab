@@ -82,7 +82,6 @@ async function startServer(): Promise<void> {
       deck: true,
       custom_event: false,
     },
-    onServerStart: (url: string) => console.log(`🎮 Server running at: ${url}`),
   };
 
   const demoServer = new GameServer(options);
