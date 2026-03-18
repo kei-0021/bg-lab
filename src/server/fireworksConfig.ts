@@ -8,7 +8,7 @@ import type {
   RoomState,
 } from "react-game-ui";
 import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
-import { cellShuffleAndReconnector } from "./shuffleAndReconnector";
+import { cellShuffleAndReconnector } from "./shuffleAndReconnector.js";
 
 export const CELL_COUNTS = {
   EMPTY: 4,
