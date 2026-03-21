@@ -1,6 +1,10 @@
 // src/rooms/LobbyRoom.tsx
 import { useEffect, useState } from "react";
-import { ControlPanel, type RoomMeta } from "react-game-ui";
+import {
+  ControlPanel,
+  type LobbyRoomsList,
+  type RoomMeta,
+} from "react-game-ui";
 import { useNavigate } from "react-router-dom";
 import io, { Socket } from "socket.io-client";
 import { GAME_LIST } from "../constants/games";
@@ -19,6 +23,7 @@ const GAME_ICONS = Object.fromEntries(GAME_LIST.map((g) => [g.id, g.icon]));
 
 export default function RoomLobby() {
   const [rooms, setRooms] = useState<RoomMeta[]>([]);
+  const [availableIds, setAvailableIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [socket, setSocket] = useState<Socket | null>(null);
 
@@ -34,9 +39,16 @@ export default function RoomLobby() {
       lobbySocket.emit("lobby:get-rooms");
     });
 
-    lobbySocket.on("lobby:rooms-list", (fetchedRooms: RoomMeta[]) => {
-      fetchedRooms.sort((a, b) => b.createdAt - a.createdAt);
-      setRooms(fetchedRooms);
+    // ルームリスト受信
+    lobbySocket.on("lobby:rooms-list", (data: LobbyRoomsList) => {
+      const roomArray = Array.isArray(data) ? data : data.rooms || [];
+      roomArray.sort((a, b) => b.createdAt - a.createdAt);
+      setRooms(roomArray);
+
+      if (!Array.isArray(data) && data.availableGameIds) {
+        setAvailableIds(data.availableGameIds);
+      }
+
       setIsLoading(false);
     });
 
@@ -150,9 +162,7 @@ export default function RoomLobby() {
       </div>
 
       <div className={`control-panel-wrapper ${isPanelOpen ? "open" : ""}`}>
-        {socket && (
-          <ControlPanel socket={socket} gameIds={["fireworks", "fireworksⅡ"]} />
-        )}
+        {socket && <ControlPanel socket={socket} gameIds={availableIds} />}
       </div>
     </div>
   );
