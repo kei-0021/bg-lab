@@ -1,6 +1,6 @@
 // src/rooms/LobbyRoom.tsx
 import { useEffect, useState } from "react";
-import type { RoomMeta } from "react-game-ui";
+import { ControlPanel, type RoomMeta } from "react-game-ui";
 import { useNavigate } from "react-router-dom";
 import io, { Socket } from "socket.io-client";
 import { GAME_LIST } from "../constants/games";
@@ -21,6 +21,9 @@ export default function RoomLobby() {
   const [rooms, setRooms] = useState<RoomMeta[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [socket, setSocket] = useState<Socket | null>(null);
+
+  const [isPanelOpen, _setIsPanelOpen] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -143,6 +146,12 @@ export default function RoomLobby() {
               );
             })}
           </ul>
+        )}
+      </div>
+
+      <div className={`control-panel-wrapper ${isPanelOpen ? "open" : ""}`}>
+        {socket && (
+          <ControlPanel socket={socket} gameIds={["fireworks", "fireworksⅡ"]} />
         )}
       </div>
     </div>
