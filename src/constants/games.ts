@@ -9,4 +9,4 @@ export const GAME_LIST: GameEntry[] = [
   { id: "fireworksⅡ", name: "FireWorksⅡ", icon: "🎆" },
   { id: "amanogawa", name: "Amanogawa", icon: "🌟" },
   { id: "uberninja", name: "UberNinja", icon: "🥷" },
-]; 
+];

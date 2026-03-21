@@ -61,7 +61,7 @@ export const fireworksConfig: RoomConfig = {
       draggables[id] = helper.createDraggable(
         id,
         { x: 950 + i * 5, y: 1050 + i * 5 },
-        Z_INDEX_FILM + shuffleIdx
+        Z_INDEX_FILM + shuffleIdx,
       );
     }
 
@@ -71,7 +71,7 @@ export const fireworksConfig: RoomConfig = {
       draggables[id] = helper.createDraggable(
         id,
         { x: 1350 + i * 5, y: 1050 + i * 5 },
-        Z_INDEX_FILM + shuffleIdx
+        Z_INDEX_FILM + shuffleIdx,
       );
     }
 
@@ -99,7 +99,7 @@ export const fireworksConfig: RoomConfig = {
       ],
       initialHand: { deckId: "firework", count: 3 },
       initialBoard: { fireworksBoard: fireworksBoard },
-      shuffleAndReconnectBoard: { "fireworksBoard": cellShuffleAndReconnector },
+      shuffleAndReconnectBoard: { fireworksBoard: cellShuffleAndReconnector },
       pieceImage: "/images/fireworks/hanabishi.svg",
       draggable: draggables,
       checkGameEnd: (state: RoomState) =>

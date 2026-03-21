@@ -1,5 +1,5 @@
 // src/server.ts
-import chokidar from 'chokidar';
+import chokidar from "chokidar";
 import fs from "fs";
 import path from "path";
 import { GameServer, type GameServerOptions } from "react-game-ui/server";
@@ -92,15 +92,15 @@ async function startServer(): Promise<void> {
   const gameServer = new GameServer(options);
   gameServer.start();
 
-  const configDir = path.resolve(__dirname, 'server');
-  chokidar.watch(configDir).on('change', async (filePath) => {
+  const configDir = path.resolve(__dirname, "server");
+  chokidar.watch(configDir).on("change", async (filePath) => {
     try {
       const fileUrl = `file://${filePath}?update=${Date.now()}`;
       const module = await import(fileUrl);
 
       // 設定ファイルから config を取得
       const newConfig = Object.values(module).find(
-        (val: any) => val && typeof val.setup === 'function' && val.gameId,
+        (val: any) => val && typeof val.setup === "function" && val.gameId,
       ) as any;
 
       if (newConfig && allLoadedData.has(newConfig.gameId)) {
@@ -111,10 +111,12 @@ async function startServer(): Promise<void> {
         const updatedParam = await newConfig.setup(targetData);
 
         gameServer.updateGameParam(newConfig.gameId, updatedParam);
-        console.log(`[Watcher] ✅ ${newConfig.gameId} のホットスワップに成功しました`);
+        console.log(
+          `[Watcher] ✅ ${newConfig.gameId} のホットスワップに成功しました`,
+        );
       }
     } catch (err) {
-      console.error('[Watcher] ❌ 再読み込み失敗:', err);
+      console.error("[Watcher] ❌ 再読み込み失敗:", err);
     }
   });
 }
