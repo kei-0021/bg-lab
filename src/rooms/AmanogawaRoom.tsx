@@ -23,7 +23,7 @@ export function AmanogawaRoom() {
   const [userName, setUserName] = useState<string>("");
   const [isJoining, setIsJoining] = useState<boolean>(false);
   const [hasJoined, setHasJoined] = useState<boolean>(false);
-  const [resetCount, setResetCount] = useState(0);
+  const [resetCount, _setResetCount] = useState(0);
   const [myPlayerId, setMyPlayerId] = useState<string | null>(null);
   const [players, setPlayers] = useState<any[]>([]);
   const [showRemoteCursors, setShowRemoteCursors] = useState(true);
@@ -63,7 +63,9 @@ export function AmanogawaRoom() {
     socket.on("player:assign-id", handleAssignId);
     socket.on("client:ready-to-sync", onClientReady);
     socket.on("players:update", handlePlayersUpdate);
-    socket.on("reset:draggable");
+    socket.on("reset:draggable", () => {
+      console.log("サーバーからの指示でドラッグ状態をリセットしました");
+    });
 
     return () => {
       socket.off("player:assign-id", handleAssignId);
@@ -97,15 +99,12 @@ export function AmanogawaRoom() {
   const { pieces, playerPiece } = useMemo(() => {
     const tilePieces = Array.from({ length: 25 }).map((_, i) => {
       const isTransparent = i >= 16;
-      const initialX = (0.05 + (i % 4) * 0.04) * GAME_WIDTH;
-      const initialY = (0.4 + Math.floor(i / 4) * 0.04) * GAME_HEIGHT;
 
       return (
         <Draggable
           draggableId={`piece-${i}`}
           socket={socket}
           roomId={roomId}
-          initialXY={{ x: initialX, y: initialY }}
           color={i < 8 ? "#0a192f" : " #94ceee"}
           isTransparent={isTransparent}
           gridBounds={gridBounds}
@@ -151,7 +150,6 @@ export function AmanogawaRoom() {
         draggableId={`player`}
         socket={socket}
         roomId={roomId}
-        initialXY={{ x: 0.5 * GAME_WIDTH, y: 0.8 * GAME_HEIGHT }}
         color="white"
         size={80}
         style={{

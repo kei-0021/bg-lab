@@ -339,11 +339,17 @@
 .sidebarRight :global([class*="activePlayer"]) {
   transform: translateX(0) !important;
 }
+.sidebarRight :global([class*="contentWrapper"]) {
+  width: 32px !important;
+  height: 32px !important;
+  font-size: 0.8em !important;
+  flex-shrink: 0;
+}
 .sidebarRight :global([class*="tokenBadge"]) {
-  width: 24px !important;
-  height: 24px !important;
-  font-size: 0.6em !important;
-  box-shadow: none !important;
+  width: 32px !important;
+  height: 32px !important;
+  font-size: 0.8em !important;
+  flex-shrink: 0;
 }
 .sidebarRight :global([class*="cardBase"]) {
   width: 64px !important;

@@ -4,7 +4,6 @@ import type { GameTurnUpdateData, Player, RoomJoinData } from "react-game-ui";
 import {
   Deck,
   Dice,
-  Draggable,
   RemoteCursor,
   ScoreBoard,
   TokenStore,
@@ -12,9 +11,9 @@ import {
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
 import GridDeliverRoad from "../components/GridDeliverRoad.js";
+import UberNinjaRoomRule from "../components/UberNinjaRoomRule.js";
 import { useSocket } from "../hooks/useSocket.js";
 import styles from "./UberNinjaRoom.module.css";
-import UberNinjaRoomRule from "./UberNinjaRoomRule.js";
 
 const SERVER_URL =
   import.meta.env.MODE === "development"
@@ -272,7 +271,7 @@ export function UberNinjaRoom() {
           <GridDeliverRoad rows={8} cols={8} />
         </div>
 
-        {players.map((player, i) => (
+        {/* {players.map((player, i) => (
           <div key={player.id} className={styles.draggableSaturated}>
             <Draggable
               image="/images/uberninja/ninja.svg"
@@ -292,7 +291,6 @@ export function UberNinjaRoom() {
               draggableId={`${player.id}_scooter`}
               socket={socket}
               roomId={roomId}
-              initialXY={{ x: 100 + i * 130, y: 720 }}
               color={player.color}
               size={140}
               containerRef={containerRef}
@@ -312,10 +310,10 @@ export function UberNinjaRoom() {
               />
             ))}
           </div>
-        ))}
+        ))} */}
 
         {/* 共通の荷物 */}
-        {[...Array(8)].map((_, j) => (
+        {/* {[...Array(8)].map((_, j) => (
           <div key={`order_${j}`} className={styles.draggableSaturated}>
             <Draggable
               draggableId={`white_card_${j}`}
@@ -328,7 +326,7 @@ export function UberNinjaRoom() {
               scale={scale}
             />
           </div>
-        ))}
+        ))} */}
 
         {/* 右サイドバー */}
         <aside className={styles.sidebarRight}>

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --host",
     "clean": "rm -rf dist node_modules/.cache",
-    "build": "pnpm --filter react-game-ui run build && vite build && tsc src/server.ts --outDir dist --rootDir . --module NodeNext --target ESNext --moduleResolution NodeNext --allowJs --skipLibCheck --esModuleInterop",
+    "build": "pnpm --filter react-game-ui run build && vite build && tsc src/server.ts src/server/*.ts --outDir dist --rootDir . --module NodeNext --target ESNext --moduleResolution NodeNext --allowJs --skipLibCheck --esModuleInterop",
     "preview": "vite preview",
     "server": "tsx src/server.ts",
     "dev:multi": "concurrently \"npm run server\" \"npm run dev\""
@@ -32,9 +32,10 @@
   },
   "dependencies": {
     "@types/react-router-dom": "^5.3.3",
+    "chokidar": "^5.0.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-game-ui": "github:kei-0021/react-game-ui#issue-18",
+    "react-game-ui": "github:kei-0021/react-game-ui#issue-21",
     "react-router-dom": "^7.13.1",
     "socket.io": "^4.8.3",
     "socket.io-client": "^4.8.3"

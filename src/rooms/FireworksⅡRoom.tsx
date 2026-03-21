@@ -1,19 +1,24 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { GameTurnUpdateData, Player, RoomJoinData } from "react-game-ui";
 import {
   Deck,
+  Phase,
   PlayField,
   RemoteCursor,
   ScoreBoard,
   SystemMessageWindow,
+  type GamePhaseUpdateData,
+  type GameTurnUpdateData,
+  type Player,
+  type RoomJoinData,
 } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
+import { FireWorksⅡRule } from "../components/FireworksⅡRule";
 import { RoundProgressTracker } from "../components/RoundProgressTracker";
 import { useSocket } from "../hooks/useSocket.js";
+import { FireworksⅡPhase } from "../types/phase";
 import styles from "./FireworksRoom.module.css";
 import fieldStyles from "./FireworksRoomField.module.css";
-import { FireWorksRuleⅡ } from "./FireworksRuleⅡ";
 
 const SERVER_URL =
   import.meta.env.MODE === "development"
@@ -24,7 +29,7 @@ const BASE_WIDTH = 1600;
 const BASE_HEIGHT = 900;
 const Z_INDEX_CARD = 2000;
 
-export default function FireworksRoomⅡ() {
+export default function FireworksⅡRoom() {
   const { roomId } = useParams<{ roomId: string }>();
   const socket = useSocket(SERVER_URL);
   const navigate = useNavigate();
@@ -35,8 +40,11 @@ export default function FireworksRoomⅡ() {
   const [hasJoined, setHasJoined] = useState<boolean>(false);
   const [myPlayerId, setMyPlayerId] = useState<string | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
-  const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
 
+  const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
+  const [currentPhase, setCurrentPhase] = useState<Phase>(
+    FireworksⅡPhase.PLANNING,
+  );
   const [currentRound, setCurrentRound] = useState<number>(1);
 
   const [showRules, setShowRules] = useState<boolean>(false);
@@ -79,6 +87,11 @@ export default function FireworksRoomⅡ() {
     [],
   );
 
+  const handlePhase = useCallback((data: GamePhaseUpdateData) => {
+    console.log("フェーズが更新されたよ。", data.newPhase.name);
+    setCurrentPhase(data.newPhase);
+  }, []);
+
   const handleGameTurn = useCallback(
     (data: GameTurnUpdateData) => {
       const nextRound = data.currentRoundIndex + 1;
@@ -99,12 +112,14 @@ export default function FireworksRoomⅡ() {
     socket.on("player:assign-id", handleAssignId);
     socket.on("client:ready-to-sync", onClientReady);
     socket.on("players:update", handlePlayersUpdate);
+    socket.on("game:phase:update", handlePhase);
     socket.on("game:turn", handleGameTurn);
     socket.on("game:end", handleGameEnd);
     return () => {
       socket.off("player:assign-id", handleAssignId);
       socket.off("client:ready-to-sync", onClientReady);
       socket.off("players:update", handlePlayersUpdate);
+      socket.off("game:phase:update", handlePhase);
       socket.off("game:turn", handleGameTurn);
       socket.off("game:end", handleGameEnd);
     };
@@ -216,7 +231,7 @@ export default function FireworksRoomⅡ() {
           </div>
         </header>
 
-        <FireWorksRuleⅡ
+        <FireWorksⅡRule
           isOpen={showRules}
           onClose={() => setShowRules(false)}
         />
@@ -254,6 +269,7 @@ export default function FireworksRoomⅡ() {
               currentPlayerId={currentPlayerId}
               myPlayerId={myPlayerId}
               alwaysDraw={true}
+              enabled={false}
             />
             <Deck
               socket={socket!}
@@ -263,6 +279,7 @@ export default function FireworksRoomⅡ() {
               currentPlayerId={currentPlayerId}
               myPlayerId={myPlayerId}
               alwaysDraw={true}
+              enabled={currentPhase.name === FireworksⅡPhase.PLANNING.name}
             />
             <Deck
               socket={socket!}
@@ -272,6 +289,7 @@ export default function FireworksRoomⅡ() {
               currentPlayerId={currentPlayerId}
               myPlayerId={myPlayerId}
               alwaysDraw={true}
+              enabled={currentPhase.name === FireworksⅡPhase.PLANNING.name}
             />
           </aside>
 
@@ -286,7 +304,7 @@ export default function FireworksRoomⅡ() {
               players={players}
               myPlayerId={myPlayerId}
               layoutMode="grid"
-              baseZIndex={Z_INDEX_CARD}
+              zIndex={Z_INDEX_CARD}
             />
           </div>
 
@@ -298,7 +316,18 @@ export default function FireworksRoomⅡ() {
               currentPlayerId={currentPlayerId}
               myPlayerId={myPlayerId}
               playCardLimit={3}
-              roundSkipbutton={true}
+              playCardButton={[false, true]}
+              holdButton={[true, true]}
+              roundSkipButton={[
+                true,
+                [FireworksⅡPhase.WAITINGFORNEXTROUND.name].includes(
+                  currentPhase.name,
+                ),
+              ]}
+              enabled={[
+                FireworksⅡPhase.SETUP.name,
+                FireworksⅡPhase.EVALUATION.name,
+              ].includes(currentPhase.name)}
             />
           </div>
         </main>

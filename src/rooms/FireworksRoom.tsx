@@ -4,18 +4,21 @@ import {
   Deck,
   Dice,
   Draggable,
+  GridBoard,
   PlayField,
   RemoteCursor,
   ScoreBoard,
+  TokenStore,
 } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
+import { FireworksCellRenderer } from "../components/FireworksCellRenderer";
+import { FireWorksRule } from "../components/FireworksRule";
 import { LaunchArea } from "../components/LaunchArea";
 import { RoundProgressTracker } from "../components/RoundProgressTracker";
 import { useSocket } from "../hooks/useSocket.js";
 import styles from "./FireworksRoom.module.css";
 import fieldStyles from "./FireworksRoomField.module.css";
-import { FireWorksRule } from "./FireworksRule";
 
 const SERVER_URL =
   import.meta.env.MODE === "development"
@@ -25,9 +28,8 @@ const SERVER_URL =
 const BASE_WIDTH = 1600;
 const BASE_HEIGHT = 900;
 
-const Z_INDEX_SMOKE = 1000;
-const Z_INDEX_CARD = 2000;
-const Z_INDEX_PLAYER = 3000;
+const Z_INDEX_CARD = 1000;
+// const Z_INDEX_PLAYER = 3000;
 
 export default function FireworksRoom() {
   const { roomId } = useParams<{ roomId: string }>();
@@ -42,8 +44,12 @@ export default function FireworksRoom() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
   const [currentRound, setCurrentRound] = useState<number>(1);
+
+  const [currentDiceValue, setCurrentDiceValue] = useState<number>(1);
+
   const [showRules, setShowRules] = useState<boolean>(false);
   const [gameResult, setGameResult] = useState<any>(null);
+
   const [scale, setScale] = useState<number>(1);
   const [fieldClassName, setFieldClassName] = useState<string>(
     "fireworksRequtangleField",
@@ -226,29 +232,6 @@ export default function FireworksRoom() {
 
         <FireWorksRule isOpen={showRules} onClose={() => setShowRules(false)} />
 
-        {/* 煙Draggable 10個 - 右下にスタック配置 */}
-        {[...Array(10)].map((_, i) => (
-          <Draggable
-            draggableId={`smoke-${i}`}
-            socket={socket}
-            roomId={roomId}
-            initialXY={{ x: 1350 + i * 5, y: 700 + i * 5 }}
-            size={{ width: 360, height: 120 }}
-            zIndex={Z_INDEX_SMOKE}
-            containerRef={containerRef}
-            scale={scale}
-            isTransparent={true}
-            style={{
-              // 枠線を白の 50% 透明にする
-              border: "1px solid rgba(255, 255, 255, 0.5)",
-
-              // もし背景も半透明にするなら（例：黒の 30%）
-              background: "rgba(0, 0, 0, 0.4)",
-              backdropFilter: "blur(1px)",
-            }}
-          ></Draggable>
-        ))}
-
         <main className={styles.fireworksMain}>
           <RemoteCursor
             socket={socket!}
@@ -264,7 +247,43 @@ export default function FireworksRoom() {
             visible={true}
             isRelative={false}
           />
-          {players.map((player, i) => (
+          {/* 左側のセット用シャッフルデータ */}
+          {[0, 1, 2, 3].map((i) => (
+            <Draggable
+              key={`film-left-${i}`}
+              image={`/images/fireworks/clear/film_${i + 1}.png`}
+              draggableId={`film-${i}`}
+              socket={socket}
+              roomId={roomId}
+              color="transparent"
+              containerRef={containerRef}
+              size={{ width: 360, height: 120 }}
+              style={{
+                border: "0.5px solid white",
+                borderRadius: "0.2px",
+              }}
+            />
+          ))}
+
+          {/* 右側のセット用シャッフルデータ */}
+          {[4, 5, 6, 7].map((i) => (
+            <Draggable
+              key={`film-right-${i}`}
+              image={`/images/fireworks/clear/film_${i - 3}.png`}
+              draggableId={`film-${i}`}
+              socket={socket}
+              roomId={roomId}
+              color="transparent"
+              containerRef={containerRef}
+              size={{ width: 360, height: 120 }}
+              style={{
+                border: "0.5px solid white",
+                borderRadius: "0.2px",
+              }}
+            />
+          ))}
+
+          {/* {players.map((player, i) => (
             <div key={player.id}>
               <Draggable
                 image="/images/fireworks/hanabishi.svg"
@@ -279,7 +298,7 @@ export default function FireworksRoom() {
                 containerRef={containerRef}
               />
             </div>
-          ))}
+          ))} */}
 
           {/* 左サイドバー */}
           <aside className={styles.sidebarLeft}>
@@ -300,20 +319,11 @@ export default function FireworksRoom() {
                   diceId="move"
                   roomId={roomId}
                   title="3面ダイス"
+                  onRoll={setCurrentDiceValue}
                 />
               </div>
 
-              <div className={styles.diceWrapper}>
-                <Dice
-                  sides={4}
-                  socket={socket}
-                  diceId="move2"
-                  roomId={roomId}
-                  title="4面ダイス"
-                />
-              </div>
-
-              <div className={styles.diceWrapper}>
+              {/* <div className={styles.diceWrapper}>
                 <Dice
                   sides={4}
                   socket={socket}
@@ -324,27 +334,27 @@ export default function FireworksRoom() {
                   customFaces={[
                     <img
                       key="f1"
-                      src="/images/fireworks/weather_sunny.png"
+                      src="/images/fireworks/weather/sunny.png"
                       className={styles.diceCustomFace}
                     />,
                     <img
                       key="f2"
-                      src="/images/fireworks/weather_cloud.png"
+                      src="/images/fireworks/weather/cloud.png"
                       className={styles.diceCustomFace}
                     />,
                     <img
                       key="f3"
-                      src="/images/fireworks/weather_wind.png"
+                      src="/images/fireworks/weather/wind.png"
                       className={styles.diceCustomFace}
                     />,
                     <img
                       key="f4"
-                      src="/images/fireworks/weather_rain.png"
+                      src="/images/fireworks/weather/rain.png"
                       className={styles.diceCustomFace}
                     />,
                   ]}
                 />
-              </div>
+              </div> */}
             </div>
           </aside>
 
@@ -359,7 +369,7 @@ export default function FireworksRoom() {
               players={players}
               myPlayerId={myPlayerId}
               layoutMode="free"
-              baseZIndex={Z_INDEX_CARD}
+              zIndex={Z_INDEX_CARD}
             />
             {fieldClassName !== "fireworksCircleField" && <LaunchArea />}
           </div>
@@ -373,8 +383,28 @@ export default function FireworksRoom() {
               myPlayerId={myPlayerId}
               isDebug={true}
             />
+            <GridBoard
+              socket={socket}
+              roomId={roomId}
+              boardId={"fireworksBoard"}
+              players={players}
+              myPlayerId={myPlayerId}
+              allowPieceDrag={true}
+              renderCell={(cellData) => (
+                <FireworksCellRenderer cellData={cellData} />
+              )}
+              width={380}
+              height={240}
+              moveRange={currentDiceValue}
+            />
           </div>
         </main>
+        <TokenStore
+          socket={socket}
+          roomId={roomId}
+          tokenStoreId="goldfish"
+          title="金魚トークン"
+        />
       </div>
     </div>
   );

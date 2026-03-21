@@ -1,12 +1,28 @@
 // src/server/fireworksConfig.ts
 
-import type { Card, GameParam, RoomState } from "react-game-ui";
+import type {
+  Card,
+  DraggableData,
+  DraggableId,
+  GameParam,
+  RoomState,
+} from "react-game-ui";
 import { SetupHelper, type RoomConfig } from "react-game-ui/server-io-utils";
+import { cellShuffleAndReconnector } from "./shuffleAndReconnector.js";
+
+export const CELL_COUNTS = {
+  EMPTY: 4,
+  CARD: 3,
+  FILM: 2,
+};
+
+const Z_INDEX_FILM = 2000;
 
 export const fireworksConfig: RoomConfig = {
   gameId: "fireworks",
   dataFiles: {
-    cards: "../public/data/fireworksCards.json",
+    cards: "../public/data/fireworks/fireworksCards.json",
+    fireworksCells: "../public/data/fireworks/fireworksCells.json",
   },
   // サーバー側でロードしたデータを setup に渡す
   setup: async (loadedData: Record<string, any>): Promise<GameParam> => {
@@ -24,6 +40,41 @@ export const fireworksConfig: RoomConfig = {
       3,
     );
 
+    const fireworksBoard = helper.createGridBoardLayout(
+      loadedData.fireworksCells,
+      CELL_COUNTS,
+      3,
+      3,
+    );
+
+    // フィルムの並び替え
+    const draggables: Record<DraggableId, DraggableData> = {};
+    const indices = [0, 1, 2, 3, 4, 5, 6, 7];
+    for (let i = indices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+
+    for (let i = 0; i < 4; i++) {
+      const shuffleIdx = indices[i];
+      const id = `film-${shuffleIdx}`;
+      draggables[id] = helper.createDraggable(
+        id,
+        { x: 950 + i * 5, y: 1050 + i * 5 },
+        Z_INDEX_FILM + shuffleIdx,
+      );
+    }
+
+    for (let i = 0; i < 4; i++) {
+      const shuffleIdx = indices[i + 4];
+      const id = `film-${shuffleIdx}`;
+      draggables[id] = helper.createDraggable(
+        id,
+        { x: 1350 + i * 5, y: 1050 + i * 5 },
+        Z_INDEX_FILM + shuffleIdx,
+      );
+    }
+
     return {
       gameId: "fireworks",
       initialDecks: [
@@ -36,21 +87,21 @@ export const fireworksConfig: RoomConfig = {
       ],
       initialTokenStores: [
         {
-          tokenStoreId: "STAR_PARTS",
-          name: "秘伝玉",
-          tokens: [
-            {
-              id: "STAR_PART-1",
-              name: "秘伝玉",
-              color: "#FFD700",
-              count: 10,
-              imageSrc: "",
-            },
-          ],
+          tokenStoreId: "goldfish",
+          name: "金魚",
+          tokens: helper.createTokenStore(
+            [{ id: "goldfish", name: "金魚" }],
+            30,
+            "/images/fireworks/goldfish.png",
+            "#ffffff7c",
+          ),
         },
       ],
-      initialHand: { deckId: "firework", count: 5 },
-      initialBoard: [],
+      initialHand: { deckId: "firework", count: 3 },
+      initialBoard: { fireworksBoard: fireworksBoard },
+      shuffleAndReconnectBoard: { fireworksBoard: cellShuffleAndReconnector },
+      pieceImage: "/images/fireworks/hanabishi.svg",
+      draggable: draggables,
       checkGameEnd: (state: RoomState) =>
         // 終了条件: 10ラウンド終了 (10ラウンド目の最後 かつ 最後のプレイヤーの手番時)
         state.currentRoundIndex >= 9 &&
