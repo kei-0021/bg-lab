@@ -14,6 +14,7 @@ export const uberNinjaConfig: RoomConfig = {
 
     return {
       gameId: "uberninja",
+      gameIcon: "🥷",
       initialDecks: [
         {
           deckId: "order",

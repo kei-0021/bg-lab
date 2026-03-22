@@ -77,6 +77,7 @@ export const fireworksConfig: RoomConfig = {
 
     return {
       gameId: "fireworks",
+      gameIcon: "🎆",
       initialDecks: [
         {
           deckId: "firework",
