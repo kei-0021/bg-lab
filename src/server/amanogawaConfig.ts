@@ -37,6 +37,7 @@ export const amanogawaConfig: RoomConfig = {
       initialDecks: [],
       draggable: draggables,
       maxPlayers: 2,
+      components: []
     };
   },
 };

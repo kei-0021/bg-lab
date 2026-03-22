@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import {
   ControlPanel,
   type GameMeta,
-  type LobbyList,
+  type LobbyGameList,
+  type LobbyRoomList,
   type RoomMeta,
 } from "react-game-ui";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +22,7 @@ export default function RoomLobby() {
   const [isLoading, setIsLoading] = useState(true);
   const [socket, setSocket] = useState<Socket | null>(null);
 
-  const [isPanelOpen, _setIsPanelOpen] = useState(false);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -33,16 +34,18 @@ export default function RoomLobby() {
       lobbySocket.emit("lobby:get-rooms");
     });
 
-    // ロビーリスト受信
-    lobbySocket.on("lobby:list", (data: LobbyList) => {
-      const roomArray = Array.isArray(data) ? data : data.rooms || [];
-      roomArray.sort((a, b) => b.createdAt - a.createdAt);
-      setRooms(roomArray);
-
+    // ゲームリスト受信
+    lobbySocket.on("lobby:game-list", (data: LobbyGameList) => {
       if (!Array.isArray(data) && data.games) {
         setGames(data.games);
       }
+    });
 
+    // ルームリスト受信
+    lobbySocket.on("lobby:room-list", (data: LobbyRoomList) => {
+      const roomArray = Array.isArray(data) ? data : data.rooms || [];
+      roomArray.sort((a, b) => b.createdAt - a.createdAt);
+      setRooms(roomArray);
       setIsLoading(false);
     });
 
@@ -156,7 +159,9 @@ export default function RoomLobby() {
         {socket && (
           <ControlPanel
             socket={socket}
-            gameIds={games.map((game) => game.gameId)}
+            gameMeta={games}
+            isOpen={isPanelOpen}
+            onToggle={() => setIsPanelOpen(!isPanelOpen)}
           />
         )}
       </div>

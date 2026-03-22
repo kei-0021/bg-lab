@@ -84,7 +84,7 @@ export const fireworksⅡConfig: RoomConfig = {
           backColor: "#ffffff",
         },
       ],
-      initialHand: { deckId: "firework", count: 5 },
+      initialHand: { "firework": 5 },
       onDeckDraw: (
         _state: RoomState,
         manager: RoomManager,
@@ -245,6 +245,7 @@ export const fireworksⅡConfig: RoomConfig = {
           finalRound: state.currentRoundIndex,
         };
       },
+      components: []
     };
   },
 };

@@ -98,7 +98,7 @@ export const fireworksConfig: RoomConfig = {
           ),
         },
       ],
-      initialHand: { deckId: "firework", count: 3 },
+      initialHand: { "firework": 3 },
       initialBoard: { fireworksBoard: fireworksBoard },
       shuffleAndReconnectBoard: { fireworksBoard: cellShuffleAndReconnector },
       pieceImage: "/images/fireworks/hanabishi.svg",
@@ -121,6 +121,7 @@ export const fireworksConfig: RoomConfig = {
           finalRound: state.currentRoundIndex,
         };
       },
+      components: []
     };
   },
 };

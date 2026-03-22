@@ -23,6 +23,7 @@ export const uberNinjaConfig: RoomConfig = {
           backColor: "rgb(11, 108, 26)",
         },
       ],
+      components: []
     };
   },
 };
