@@ -9,6 +9,7 @@ import {
   type GamePhaseUpdateData,
   type GameTurnUpdateData,
   type Player,
+  type PlayerId,
   type RoomJoinData,
 } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
@@ -72,14 +73,11 @@ export default function FireworksⅡRoom() {
     } as RoomJoinData);
   }, [socket, roomId, userName, isJoining]);
 
-  const handleAssignId = useCallback((id: Player["id"]) => {
+  const onClientReady = (id: PlayerId) => {
+    socket.emit("client:ready", roomId);
     setMyPlayerId(id);
     setHasJoined(true);
     setIsJoining(false);
-  }, []);
-
-  const onClientReady = () => {
-    socket.emit("client:ready", roomId);
   };
 
   const handlePlayersUpdate = useCallback(
@@ -109,27 +107,19 @@ export default function FireworksⅡRoom() {
 
   useEffect(() => {
     if (!socket) return;
-    socket.on("player:assign-id", handleAssignId);
     socket.on("client:ready-to-sync", onClientReady);
     socket.on("players:update", handlePlayersUpdate);
     socket.on("game:phase:update", handlePhase);
     socket.on("game:turn", handleGameTurn);
     socket.on("game:end", handleGameEnd);
     return () => {
-      socket.off("player:assign-id", handleAssignId);
       socket.off("client:ready-to-sync", onClientReady);
       socket.off("players:update", handlePlayersUpdate);
       socket.off("game:phase:update", handlePhase);
       socket.off("game:turn", handleGameTurn);
       socket.off("game:end", handleGameEnd);
     };
-  }, [
-    socket,
-    handleAssignId,
-    handlePlayersUpdate,
-    handleGameTurn,
-    handleGameEnd,
-  ]);
+  }, [socket, handlePlayersUpdate, handleGameTurn, handleGameEnd]);
 
   if (!roomId) return null;
 

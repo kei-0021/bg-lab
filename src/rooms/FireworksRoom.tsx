@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { GameTurnUpdateData, Player, RoomJoinData } from "react-game-ui";
+import type {
+  GameTurnUpdateData,
+  Player,
+  PlayerId,
+  RoomJoinData,
+} from "react-game-ui";
 import {
   Deck,
   Dice,
@@ -84,14 +89,11 @@ export default function FireworksRoom() {
   useEffect(() => {
     if (!socket) return;
 
-    const handleAssignId = (id: Player["id"]) => {
+    const onClientReady = (id: PlayerId) => {
+      socket.emit("client:ready", roomId);
       setMyPlayerId(id);
       setHasJoined(true);
       setIsJoining(false);
-    };
-
-    const onClientReady = () => {
-      socket.emit("client:ready", roomId);
     };
 
     const handlePlayersUpdate = (updatedPlayers: Player[]) =>
@@ -112,7 +114,6 @@ export default function FireworksRoom() {
       );
     };
 
-    socket.on("player:assign-id", handleAssignId);
     socket.on("client:ready-to-sync", onClientReady);
     socket.on("players:update", handlePlayersUpdate);
     socket.on("game:turn", handleGameTurn);
@@ -120,7 +121,6 @@ export default function FireworksRoom() {
     socket.on("playfield:switch", handleFieldSwitch);
 
     return () => {
-      socket.off("player:assign-id", handleAssignId);
       socket.off("players:update", handlePlayersUpdate);
       socket.off("game:turn", handleGameTurn);
       socket.off("game:end", handleGameEnd);

@@ -1,6 +1,11 @@
 // src/components/UberNinjaRoom.tsx
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { GameTurnUpdateData, Player, RoomJoinData } from "react-game-ui";
+import type {
+  GameTurnUpdateData,
+  Player,
+  PlayerId,
+  RoomJoinData,
+} from "react-game-ui";
 import {
   Deck,
   Dice,
@@ -62,13 +67,11 @@ export function UberNinjaRoom() {
 
   useEffect(() => {
     if (!socket) return;
-    const handleAssignId = (id: Player["id"]) => {
+    const onClientReady = (id: PlayerId) => {
+      socket.emit("client:ready", roomId);
       setMyPlayerId(id);
       setHasJoined(true);
       setIsJoining(false);
-    };
-    const onClientReady = () => {
-      socket.emit("client:ready", roomId);
     };
     const handlePlayersUpdate = (updatedPlayers: Player[]) =>
       setPlayers(updatedPlayers);
@@ -77,14 +80,12 @@ export function UberNinjaRoom() {
     };
     const handleGameEnd = (result: any) => setGameResult(result);
 
-    socket.on("player:assign-id", handleAssignId);
     socket.on("client:ready-to-sync", onClientReady);
     socket.on("players:update", handlePlayersUpdate);
     socket.on("game:turn", handleGameTurn);
     socket.on("game:end", handleGameEnd);
 
     return () => {
-      socket.off("player:assign-id", handleAssignId);
       socket.off("client:ready-to-sync", onClientReady);
       socket.off("players:update", handlePlayersUpdate);
       socket.off("game:turn", handleGameTurn);

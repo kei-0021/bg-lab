@@ -35,7 +35,7 @@
     "chokidar": "^5.0.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-game-ui": "github:kei-0021/react-game-ui#issue-23",
+    "react-game-ui": "github:kei-0021/react-game-ui#issue-25",
     "react-router-dom": "^7.13.1",
     "socket.io": "^4.8.3",
     "socket.io-client": "^4.8.3"

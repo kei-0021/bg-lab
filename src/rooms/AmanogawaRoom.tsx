@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { Player, RoomJoinData } from "react-game-ui";
+import type { Player, PlayerId, RoomJoinData } from "react-game-ui";
 import { Draggable, RemoteCursor } from "react-game-ui";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSocket } from "../hooks/useSocket";
@@ -47,20 +47,16 @@ export function AmanogawaRoom() {
   useEffect(() => {
     if (!socket || !roomId) return;
 
-    const handleAssignId = (id: Player["id"]) => {
+    const onClientReady = (id: PlayerId) => {
+      socket.emit("client:ready", roomId);
       setMyPlayerId(id);
       setHasJoined(true);
       setIsJoining(false);
     };
 
-    const onClientReady = () => {
-      socket.emit("client:ready", roomId);
-    };
-
     const handlePlayersUpdate = (updatedPlayers: Player[]) =>
       setPlayers(updatedPlayers);
 
-    socket.on("player:assign-id", handleAssignId);
     socket.on("client:ready-to-sync", onClientReady);
     socket.on("players:update", handlePlayersUpdate);
     socket.on("reset:draggable", () => {
@@ -68,7 +64,6 @@ export function AmanogawaRoom() {
     });
 
     return () => {
-      socket.off("player:assign-id", handleAssignId);
       socket.off("client:ready-to-sync", onClientReady);
       socket.off("players:update", handlePlayersUpdate);
       socket.off("reset:draggable");

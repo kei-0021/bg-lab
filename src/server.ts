@@ -2,7 +2,8 @@
 import chokidar from "chokidar";
 import fs from "fs";
 import path from "path";
-import { GameServer, type GameServerOptions } from "react-game-ui/server";
+import { LiveGameServer } from "react-game-ui/live-server";
+import type { GameServerOptions } from "react-game-ui/server";
 import { loadJsonAssert, type RoomConfig } from "react-game-ui/server-io-utils";
 import { fileURLToPath } from "url";
 
@@ -89,7 +90,7 @@ async function startServer(): Promise<void> {
     },
   };
 
-  const gameServer = new GameServer(options);
+  const gameServer = new LiveGameServer(options);
   gameServer.start();
 
   const configDir = path.resolve(__dirname, "server");

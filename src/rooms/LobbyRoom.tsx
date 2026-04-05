@@ -1,7 +1,7 @@
 // src/rooms/LobbyRoom.tsx
 import { useEffect, useState } from "react";
 import {
-  ControlPanel,
+  type GameId,
   type GameMeta,
   type LobbyGameList,
   type LobbyRoomList,
@@ -22,8 +22,6 @@ export default function RoomLobby() {
   const [isLoading, setIsLoading] = useState(true);
   const [socket, setSocket] = useState<Socket | null>(null);
 
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,7 +29,7 @@ export default function RoomLobby() {
     setSocket(lobbySocket);
 
     lobbySocket.on("connect", () => {
-      lobbySocket.emit("lobby:get-rooms");
+      lobbySocket.emit("lobby:get-info");
     });
 
     // ゲームリスト受信
@@ -68,7 +66,7 @@ export default function RoomLobby() {
     navigate(`/${room.gameId || "unknown"}/${room.id.trim()}`);
   };
 
-  const handleCreateRoom = (gameId: string) => {
+  const handleCreateRoom = (gameId: GameId) => {
     const newRoomId = Math.random().toString(36).substring(2, 8);
     navigate(`/${gameId}/${newRoomId}`);
   };
@@ -152,17 +150,6 @@ export default function RoomLobby() {
               );
             })}
           </ul>
-        )}
-      </div>
-
-      <div className={`control-panel-wrapper ${isPanelOpen ? "open" : ""}`}>
-        {socket && (
-          <ControlPanel
-            socket={socket}
-            gameMeta={games}
-            isOpen={isPanelOpen}
-            onToggle={() => setIsPanelOpen(!isPanelOpen)}
-          />
         )}
       </div>
     </div>

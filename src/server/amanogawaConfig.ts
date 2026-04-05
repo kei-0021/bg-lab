@@ -35,7 +35,7 @@ export const amanogawaConfig: RoomConfig = {
       gameId: "amanogawa",
       gameIcon: "⭐️",
       initialDecks: [],
-      draggable: draggables,
+      draggables: draggables,
       maxPlayers: 2,
       components: []
     };
