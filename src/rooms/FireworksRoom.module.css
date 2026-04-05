@@ -157,7 +157,7 @@
 .sidebarLeft {
   flex: 0.7;
   min-width: 180px;
-  max-width: 250px;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
   gap: 20px;

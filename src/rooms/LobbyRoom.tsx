@@ -1,13 +1,14 @@
 // src/rooms/LobbyRoom.tsx
 import { useEffect, useState } from "react";
 import {
-  ControlPanel,
-  type LobbyRoomsList,
+  type GameId,
+  type GameMeta,
+  type LobbyGameList,
+  type LobbyRoomList,
   type RoomMeta,
 } from "react-game-ui";
 import { useNavigate } from "react-router-dom";
 import io, { Socket } from "socket.io-client";
-import { GAME_LIST } from "../constants/games";
 import "./LobbyRoom.css";
 
 const SERVER_URL =
@@ -15,19 +16,11 @@ const SERVER_URL =
     ? "http://localhost:4000"
     : "https://bg-lab.onrender.com";
 
-// GAME_LIST から動的に生成する
-const GAME_DISPLAY_NAMES = Object.fromEntries(
-  GAME_LIST.map((g) => [g.id, g.name]),
-);
-const GAME_ICONS = Object.fromEntries(GAME_LIST.map((g) => [g.id, g.icon]));
-
 export default function RoomLobby() {
+  const [games, setGames] = useState<GameMeta[]>([]);
   const [rooms, setRooms] = useState<RoomMeta[]>([]);
-  const [availableIds, setAvailableIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [socket, setSocket] = useState<Socket | null>(null);
-
-  const [isPanelOpen, _setIsPanelOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -36,19 +29,21 @@ export default function RoomLobby() {
     setSocket(lobbySocket);
 
     lobbySocket.on("connect", () => {
-      lobbySocket.emit("lobby:get-rooms");
+      lobbySocket.emit("lobby:get-info");
+    });
+
+    // ゲームリスト受信
+    lobbySocket.on("lobby:game-list", (data: LobbyGameList) => {
+      if (!Array.isArray(data) && data.games) {
+        setGames(data.games);
+      }
     });
 
     // ルームリスト受信
-    lobbySocket.on("lobby:rooms-list", (data: LobbyRoomsList) => {
+    lobbySocket.on("lobby:room-list", (data: LobbyRoomList) => {
       const roomArray = Array.isArray(data) ? data : data.rooms || [];
       roomArray.sort((a, b) => b.createdAt - a.createdAt);
       setRooms(roomArray);
-
-      if (!Array.isArray(data) && data.availableGameIds) {
-        setAvailableIds(data.availableGameIds);
-      }
-
       setIsLoading(false);
     });
 
@@ -71,7 +66,7 @@ export default function RoomLobby() {
     navigate(`/${room.gameId || "unknown"}/${room.id.trim()}`);
   };
 
-  const handleCreateRoom = (gameId: string) => {
+  const handleCreateRoom = (gameId: GameId) => {
     const newRoomId = Math.random().toString(36).substring(2, 8);
     navigate(`/${gameId}/${newRoomId}`);
   };
@@ -84,17 +79,17 @@ export default function RoomLobby() {
       <div className="section create-room-section">
         <h2 className="section-title">新しいゲームを始める</h2>
         <div className="button-group">
-          {GAME_LIST.map((game) => (
+          {games.map((gameMeta) => (
             <button
-              key={game.id}
-              onClick={() => handleCreateRoom(game.id)}
+              key={gameMeta.gameId}
+              onClick={() => handleCreateRoom(gameMeta.gameId)}
               className="button primary-button"
               disabled={!socket?.connected}
             >
               <span style={{ fontSize: "24px", marginBottom: "8px" }}>
-                {game.icon}
+                {gameMeta.gameIcon}
               </span>
-              {game.name}
+              {gameMeta.gameId}
             </button>
           ))}
         </div>
@@ -125,10 +120,7 @@ export default function RoomLobby() {
                   onClick={() => !isFull && handleJoinRoom(room)}
                 >
                   {/* 左側：背表紙ラベル */}
-                  <div className="room-game-label">
-                    {GAME_ICONS[room.gameId] || "🎲"}{" "}
-                    {GAME_DISPLAY_NAMES[room.gameId] || room.id}
-                  </div>
+                  <div className="room-game-label">{room.gameId || ""} </div>
 
                   {/* 右側：メインコンテンツ */}
                   <div className="room-info-content">
@@ -159,10 +151,6 @@ export default function RoomLobby() {
             })}
           </ul>
         )}
-      </div>
-
-      <div className={`control-panel-wrapper ${isPanelOpen ? "open" : ""}`}>
-        {socket && <ControlPanel socket={socket} gameIds={availableIds} />}
       </div>
     </div>
   );

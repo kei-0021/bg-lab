@@ -77,6 +77,7 @@ export const fireworksConfig: RoomConfig = {
 
     return {
       gameId: "fireworks",
+      gameIcon: "🎆",
       initialDecks: [
         {
           deckId: "firework",
@@ -97,11 +98,11 @@ export const fireworksConfig: RoomConfig = {
           ),
         },
       ],
-      initialHand: { deckId: "firework", count: 3 },
+      initialHand: { firework: 3 },
       initialBoard: { fireworksBoard: fireworksBoard },
       shuffleAndReconnectBoard: { fireworksBoard: cellShuffleAndReconnector },
       pieceImage: "/images/fireworks/hanabishi.svg",
-      draggable: draggables,
+      draggables: draggables,
       checkGameEnd: (state: RoomState) =>
         // 終了条件: 10ラウンド終了 (10ラウンド目の最後 かつ 最後のプレイヤーの手番時)
         state.currentRoundIndex >= 9 &&
@@ -120,6 +121,7 @@ export const fireworksConfig: RoomConfig = {
           finalRound: state.currentRoundIndex,
         };
       },
+      components: [],
     };
   },
 };

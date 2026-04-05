@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { GameTurnUpdateData, Player, RoomJoinData } from "react-game-ui";
+import type {
+  GameTurnUpdateData,
+  Player,
+  PlayerId,
+  RoomJoinData,
+} from "react-game-ui";
 import {
   Deck,
   Dice,
@@ -84,14 +89,11 @@ export default function FireworksRoom() {
   useEffect(() => {
     if (!socket) return;
 
-    const handleAssignId = (id: Player["id"]) => {
+    const onClientReady = (id: PlayerId) => {
+      socket.emit("client:ready", roomId);
       setMyPlayerId(id);
       setHasJoined(true);
       setIsJoining(false);
-    };
-
-    const onClientReady = () => {
-      socket.emit("client:ready", roomId);
     };
 
     const handlePlayersUpdate = (updatedPlayers: Player[]) =>
@@ -112,7 +114,6 @@ export default function FireworksRoom() {
       );
     };
 
-    socket.on("player:assign-id", handleAssignId);
     socket.on("client:ready-to-sync", onClientReady);
     socket.on("players:update", handlePlayersUpdate);
     socket.on("game:turn", handleGameTurn);
@@ -120,7 +121,6 @@ export default function FireworksRoom() {
     socket.on("playfield:switch", handleFieldSwitch);
 
     return () => {
-      socket.off("player:assign-id", handleAssignId);
       socket.off("players:update", handlePlayersUpdate);
       socket.off("game:turn", handleGameTurn);
       socket.off("game:end", handleGameEnd);
@@ -283,23 +283,6 @@ export default function FireworksRoom() {
             />
           ))}
 
-          {/* {players.map((player, i) => (
-            <div key={player.id}>
-              <Draggable
-                image="/images/fireworks/hanabishi.svg"
-                mask={true}
-                draggableId={player.id}
-                socket={socket}
-                roomId={roomId}
-                initialXY={{ x: 100 + i * 110, y: 750 }}
-                color={player.color}
-                zIndex={Z_INDEX_PLAYER}
-                size={80}
-                containerRef={containerRef}
-              />
-            </div>
-          ))} */}
-
           {/* 左サイドバー */}
           <aside className={styles.sidebarLeft}>
             <Deck
@@ -322,39 +305,6 @@ export default function FireworksRoom() {
                   onRoll={setCurrentDiceValue}
                 />
               </div>
-
-              {/* <div className={styles.diceWrapper}>
-                <Dice
-                  sides={4}
-                  socket={socket}
-                  diceId="weather"
-                  roomId={roomId}
-                  title="天候ダイス"
-                  tooltipText="快晴・曇り・風・雨"
-                  customFaces={[
-                    <img
-                      key="f1"
-                      src="/images/fireworks/weather/sunny.png"
-                      className={styles.diceCustomFace}
-                    />,
-                    <img
-                      key="f2"
-                      src="/images/fireworks/weather/cloud.png"
-                      className={styles.diceCustomFace}
-                    />,
-                    <img
-                      key="f3"
-                      src="/images/fireworks/weather/wind.png"
-                      className={styles.diceCustomFace}
-                    />,
-                    <img
-                      key="f4"
-                      src="/images/fireworks/weather/rain.png"
-                      className={styles.diceCustomFace}
-                    />,
-                  ]}
-                />
-              </div> */}
             </div>
           </aside>
 
@@ -369,6 +319,8 @@ export default function FireworksRoom() {
               players={players}
               myPlayerId={myPlayerId}
               layoutMode="free"
+              width={800}
+              height={400}
               zIndex={Z_INDEX_CARD}
             />
             {fieldClassName !== "fireworksCircleField" && <LaunchArea />}
