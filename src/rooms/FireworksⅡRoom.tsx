@@ -294,6 +294,8 @@ export default function FireworksⅡRoom() {
               players={players}
               myPlayerId={myPlayerId}
               layoutMode="grid"
+              width={700}
+              height={400}
               zIndex={Z_INDEX_CARD}
             />
           </div>
