@@ -6,8 +6,8 @@ import {
   RemoteCursor,
   ScoreBoard,
   SystemMessageWindow,
-  type GamePhaseUpdateData,
   type GameTurnUpdateData,
+  type PhaseUpdateData,
   type Player,
   type PlayerId,
   type RoomJoinData,
@@ -85,8 +85,7 @@ export default function FireworksⅡRoom() {
     [],
   );
 
-  const handlePhase = useCallback((data: GamePhaseUpdateData) => {
-    console.log("フェーズが更新されたよ。", data.newPhase.name);
+  const handlePhase = useCallback((data: PhaseUpdateData) => {
     setCurrentPhase(data.newPhase);
   }, []);
 
@@ -109,13 +108,13 @@ export default function FireworksⅡRoom() {
     if (!socket) return;
     socket.on("client:ready-to-sync", onClientReady);
     socket.on("players:update", handlePlayersUpdate);
-    socket.on("game:phase:update", handlePhase);
+    socket.on("phase:update", handlePhase);
     socket.on("game:turn", handleGameTurn);
     socket.on("game:end", handleGameEnd);
     return () => {
       socket.off("client:ready-to-sync", onClientReady);
       socket.off("players:update", handlePlayersUpdate);
-      socket.off("game:phase:update", handlePhase);
+      socket.off("phase:update", handlePhase);
       socket.off("game:turn", handleGameTurn);
       socket.off("game:end", handleGameEnd);
     };
