@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import {
   type GameId,
-  type GameMeta,
+  type GameParam,
   type LobbyGameList,
   type LobbyRoomList,
   type RoomMeta,
@@ -17,7 +17,7 @@ const SERVER_URL =
     : "https://bg-lab.onrender.com";
 
 export default function RoomLobby() {
-  const [games, setGames] = useState<GameMeta[]>([]);
+  const [games, setGames] = useState<GameParam[]>([]);
   const [rooms, setRooms] = useState<RoomMeta[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [socket, setSocket] = useState<Socket | null>(null);

@@ -26,7 +26,7 @@ importers:
         version: 18.3.1(react@18.3.1)
       react-game-ui:
         specifier: github:kei-0021/react-game-ui#issue-25
-        version: https://codeload.github.com/kei-0021/react-game-ui/tar.gz/78c45b5022e138554f7de4381881d004ac0e4357(@types/node@25.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@7.3.2(@types/node@25.5.2)(tsx@4.21.0))
+        version: https://codeload.github.com/kei-0021/react-game-ui/tar.gz/3c5afc4f299a783608391c18c8252c03760ed701(@types/node@25.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@7.3.2(@types/node@25.5.2)(tsx@4.21.0))
       react-router-dom:
         specifier: ^7.14.0
         version: 7.14.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1523,8 +1523,8 @@ packages:
     peerDependencies:
       react: 18.3.1
 
-  react-game-ui@https://codeload.github.com/kei-0021/react-game-ui/tar.gz/78c45b5022e138554f7de4381881d004ac0e4357:
-    resolution: {tarball: https://codeload.github.com/kei-0021/react-game-ui/tar.gz/78c45b5022e138554f7de4381881d004ac0e4357}
+  react-game-ui@https://codeload.github.com/kei-0021/react-game-ui/tar.gz/3c5afc4f299a783608391c18c8252c03760ed701:
+    resolution: {tarball: https://codeload.github.com/kei-0021/react-game-ui/tar.gz/3c5afc4f299a783608391c18c8252c03760ed701}
     version: 1.0.0
     hasBin: true
     peerDependencies:
@@ -3414,7 +3414,7 @@ snapshots:
       react: 18.3.1
       scheduler: 0.23.2
 
-  react-game-ui@https://codeload.github.com/kei-0021/react-game-ui/tar.gz/78c45b5022e138554f7de4381881d004ac0e4357(@types/node@25.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@7.3.2(@types/node@25.5.2)(tsx@4.21.0)):
+  react-game-ui@https://codeload.github.com/kei-0021/react-game-ui/tar.gz/3c5afc4f299a783608391c18c8252c03760ed701(@types/node@25.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@7.3.2(@types/node@25.5.2)(tsx@4.21.0)):
     dependencies:
       chokidar: 5.0.0
       express: 5.2.1
