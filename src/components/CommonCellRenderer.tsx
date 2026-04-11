@@ -1,8 +1,8 @@
-// src/components/FireworksCellRenderer.tsx
+// src/components/CommonCellRenderer.tsx
 
 import type { CellData } from "react-game-ui";
 
-export const FireworksCellRenderer = ({ cellData }: { cellData: CellData }) => {
+export const CommonCellRenderer = ({ cellData }: { cellData: CellData }) => {
   const content = cellData.content;
   if (!content) return null;
 

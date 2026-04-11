@@ -1,0 +1,11 @@
+[
+  {
+    "templateId": "SIMPLE",
+    "name": "SIMPLE",
+    "shapeType": "square",
+    "backgroundColor": "#666666",
+    "content": "",
+    "changedContent": "",
+    "changedColor": "#4b0082"
+  }
+]

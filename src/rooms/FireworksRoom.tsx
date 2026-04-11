@@ -17,7 +17,7 @@ import {
 } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { FireworksCellRenderer } from "../components/FireworksCellRenderer";
+import { CommonCellRenderer } from "../components/CommonCellRenderer";
 import { FireWorksRule } from "../components/FireworksRule";
 import { LaunchArea } from "../components/LaunchArea";
 import { RoundProgressTracker } from "../components/RoundProgressTracker";
@@ -343,7 +343,7 @@ export default function FireworksRoom() {
               myPlayerId={myPlayerId}
               allowPieceDrag={true}
               renderCell={(cellData) => (
-                <FireworksCellRenderer cellData={cellData} />
+                <CommonCellRenderer cellData={cellData} />
               )}
               width={380}
               height={240}

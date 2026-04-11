@@ -9,13 +9,14 @@ import type {
 import {
   Deck,
   Dice,
+  GridBoard,
   RemoteCursor,
   ScoreBoard,
   TokenStore,
 } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
-import GridDeliverRoad from "../components/GridDeliverRoad.js";
+import { CommonCellRenderer } from "../components/CommonCellRenderer.js";
 import UberNinjaRoomRule from "../components/UberNinjaRoomRule.js";
 import { useSocket } from "../hooks/useSocket.js";
 import styles from "./UberNinjaRoom.module.css";
@@ -269,7 +270,19 @@ export function UberNinjaRoom() {
 
         {/* 中央：配達グリッドボード */}
         <div className={styles.centerBoard}>
-          <GridDeliverRoad rows={8} cols={8} />
+          <GridBoard
+            socket={socket}
+            roomId={roomId}
+            boardId="deliver"
+            players={players}
+            myPlayerId={myPlayerId}
+            allowPieceDrag={true}
+            renderCell={(cellData) => (
+              <CommonCellRenderer cellData={cellData} />
+            )}
+            width={620}
+            height={620}
+          />
         </div>
 
         {/* {players.map((player, i) => (
