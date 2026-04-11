@@ -17,7 +17,29 @@ export const uberNinjaConfig: RoomConfig = {
     const helper = new SetupHelper();
     const uberNinjaOrderCards = helper.assertCards(loadedData.orderCards);
 
-    const deliverBoard = helper.createGridBoardLayout(loadedData.deliverBoard, CELL_COUNTS, 8, 8)
+    const deliverBoard = helper.createGridBoardLayout(loadedData.deliverBoard, CELL_COUNTS, 8, 8);
+
+    // 撒菱（まきびし）を5個、盤面のランダムな位置に生成
+    const makibishis = Object.fromEntries(
+      Array.from({ length: 5 }).map((_, i) => {
+        const id = `makibishi-${i + 1}`;
+        return [
+          id,
+          {
+            id,
+            name: '撒菱',
+            ownerId: null,
+            color: '#ff4444',
+            position: {
+              row: Math.floor(Math.random() * 8),
+              col: Math.floor(Math.random() * 8)
+            },
+            movableCells: [],
+            image: "/images/uberninja/makibishi.svg"
+          }
+        ];
+      })
+    );
 
     return {
       gameId: "uberninja",
@@ -31,21 +53,27 @@ export const uberNinjaConfig: RoomConfig = {
         },
       ],
       initialBoard: { "deliver": deliverBoard },
-      pieceImage: "/images/uberninja/ninja.svg",
-      extraPieces: {
-        'makibishi-01': {
-          id: 'makibishi-01',
-          name: 'makibishi',
+      initialPieces: {
+        ...makibishis,
+        // プレイヤー入室時に複製される忍者本体テンプレート
+        'ninja': {
+          id: 'ninja',
+          name: 'ninja',
+          ownerId: "player",
           color: '#ff4444',
-          location: { row: 2, col: 3 },
-          image: "/images/uberninja/makibishi.svg"
+          position: { row: 0, col: 3 },
+          movableCells: [],
+          image: "/images/uberninja/ninja.svg"
         },
-        'makibishi-02': {
-          id: 'makibishi-02',
-          name: 'makibishi',
+        // プレイヤー入室時に複製されるスクーターテンプレート
+        'scooter': {
+          id: 'scooter',
+          name: 'scooter',
+          ownerId: "player",
           color: '#ff4444',
-          location: { row: 5, col: 5 },
-          image: "/images/uberninja/makibishi.svg"
+          position: { row: 0, col: 4 },
+          movableCells: [],
+          image: "/images/uberninja/scooter.svg"
         },
       },
       components: [],
