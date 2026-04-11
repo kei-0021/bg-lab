@@ -96,7 +96,7 @@
 /* --- サイドバー --- */
 .sidebarLeft,
 .sidebarRight {
-  width: 350px;
+  width: 400px;
   background: rgba(0, 5, 0, 0.85);
   backdrop-filter: blur(10px);
   border: 1px solid #3a6332;
