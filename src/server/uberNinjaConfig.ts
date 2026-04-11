@@ -65,6 +65,15 @@ export const uberNinjaConfig: RoomConfig = {
           movableCells: [],
           image: "/images/uberninja/ninja.svg"
         },
+        'ninja-potato': {
+          id: 'ninja-potato',
+          name: 'ninja-potato',
+          ownerId: null,
+          color: "white",
+          position: { row: 4, col: 0 },
+          movableCells: [],
+          image: "/images/uberninja/ninja-potato.png"
+        },
         // プレイヤー入室時に複製されるスクーターテンプレート
         'scooter': {
           id: 'scooter',

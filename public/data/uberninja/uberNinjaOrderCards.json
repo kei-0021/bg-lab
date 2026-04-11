@@ -1,11 +1,12 @@
 [
   {
-    "id": "card-A-01",
-    "name": "北1",
+    "id": "ninja-potato-bag",
+    "name": "ninja-potato-bag",
     "location": "deck",
     "drawCondition": ["hand", "face"],
     "playLocation": "field",
-    "fieldBackConditon": "discard"
+    "fieldBackConditon": "discard",
+    "frontImage": "/images/uberninja/ninja-potato-bag.png"
   },
   {
     "id": "card-A-02",
