@@ -53,7 +53,7 @@ export const uberNinjaConfig: RoomConfig = {
         },
       ],
       initialBoard: { "deliver": deliverBoard },
-      initialPieces: {
+      initialTokensOnBoard: {
         ...makibishis,
         // プレイヤー入室時に複製される忍者本体テンプレート
         'ninja': {
