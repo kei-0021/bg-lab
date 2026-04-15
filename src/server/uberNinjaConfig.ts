@@ -19,28 +19,6 @@ export const uberNinjaConfig: RoomConfig = {
 
     const deliverBoard = helper.createGridBoardLayout(loadedData.deliverBoard, CELL_COUNTS, 8, 8);
 
-    // 撒菱（まきびし）を5個、盤面のランダムな位置に生成
-    const makibishis = Object.fromEntries(
-      Array.from({ length: 5 }).map((_, i) => {
-        const id = `makibishi-${i + 1}`;
-        return [
-          id,
-          {
-            id,
-            name: '撒菱',
-            ownerId: null,
-            color: '#ff4444',
-            position: {
-              row: Math.floor(Math.random() * 8),
-              col: Math.floor(Math.random() * 8)
-            },
-            movableCells: [],
-            image: "/images/uberninja/makibishi.svg"
-          }
-        ];
-      })
-    );
-
     return {
       gameId: "uberninja",
       gameIcon: "🥷",
@@ -53,10 +31,21 @@ export const uberNinjaConfig: RoomConfig = {
         },
       ],
       initialBoard: { "deliver": deliverBoard },
+      initialTokenStores: [
+        {
+          tokenStoreId: 'makibishi',
+          name: '撒菱',
+          tokens: helper.createTokenStore(
+            [{ id: '撒菱', name: '撒菱', ownerId: null, position: null, movableCells: [] }],
+            10,
+            "/images/uberninja/makibishi.svg",
+            '#d43737',
+          ),
+        }],
+      initialTokens: { makibishi: 5 },
       initialTokensOnBoard: {
-        ...makibishis,
         // プレイヤー入室時に複製される忍者本体テンプレート
-        'ninja': {
+        'ninja': [{
           id: 'ninja',
           name: 'ninja',
           ownerId: "player",
@@ -64,8 +53,8 @@ export const uberNinjaConfig: RoomConfig = {
           position: { row: 0, col: 3 },
           movableCells: [],
           image: "/images/uberninja/ninja.svg"
-        },
-        'ninja-potato': {
+        }],
+        'ninja-potato': [{
           id: 'ninja-potato',
           name: 'ninja-potato',
           ownerId: null,
@@ -73,9 +62,9 @@ export const uberNinjaConfig: RoomConfig = {
           position: { row: 4, col: 0 },
           movableCells: [],
           image: "/images/uberninja/ninja-potato.png"
-        },
+        }],
         // プレイヤー入室時に複製されるスクーターテンプレート
-        'scooter': {
+        'scooter': [{
           id: 'scooter',
           name: 'scooter',
           ownerId: "player",
@@ -83,8 +72,9 @@ export const uberNinjaConfig: RoomConfig = {
           position: { row: 0, col: 4 },
           movableCells: [],
           image: "/images/uberninja/scooter.svg"
-        },
+        }],
       },
+
       components: [],
     };
   },
