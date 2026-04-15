@@ -47,6 +47,7 @@ export const uberNinjaConfig: RoomConfig = {
         // プレイヤー入室時に複製される忍者本体テンプレート
         'ninja': [{
           id: 'ninja',
+          tokenStoreId: "ninja",
           name: 'ninja',
           ownerId: "player",
           color: '#ff4444',
@@ -56,6 +57,7 @@ export const uberNinjaConfig: RoomConfig = {
         }],
         'ninja-potato': [{
           id: 'ninja-potato',
+          tokenStoreId: 'ninja-potato',
           name: 'ninja-potato',
           ownerId: null,
           color: "white",
@@ -66,6 +68,7 @@ export const uberNinjaConfig: RoomConfig = {
         // プレイヤー入室時に複製されるスクーターテンプレート
         'scooter': [{
           id: 'scooter',
+          tokenStoreId: "scooter",
           name: 'scooter',
           ownerId: "player",
           color: '#ff4444',

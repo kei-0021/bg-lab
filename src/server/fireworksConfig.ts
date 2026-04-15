@@ -101,7 +101,6 @@ export const fireworksConfig: RoomConfig = {
       initialHand: { firework: 3 },
       initialBoard: { fireworksBoard: fireworksBoard },
       shuffleAndReconnectBoard: { fireworksBoard: cellShuffleAndReconnector },
-      pieceImage: "/images/fireworks/hanabishi.svg",
       draggables: draggables,
       checkGameEnd: (state: RoomState) =>
         // 終了条件: 10ラウンド終了 (10ラウンド目の最後 かつ 最後のプレイヤーの手番時)
