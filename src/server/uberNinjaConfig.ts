@@ -55,16 +55,6 @@ export const uberNinjaConfig: RoomConfig = {
           movableCells: [],
           image: "/images/uberninja/ninja.svg"
         }],
-        'ninja-potato': [{
-          id: 'ninja-potato',
-          tokenStoreId: 'ninja-potato',
-          name: 'ninja-potato',
-          ownerId: null,
-          color: "white",
-          position: { row: 4, col: 0 },
-          movableCells: [],
-          image: "/images/uberninja/ninja-potato.png"
-        }],
         // プレイヤー入室時に複製されるスクーターテンプレート
         'scooter': [{
           id: 'scooter',
@@ -75,6 +65,26 @@ export const uberNinjaConfig: RoomConfig = {
           position: { row: 0, col: 4 },
           movableCells: [],
           image: "/images/uberninja/scooter.svg"
+        }],
+        'ninja-potato': [{
+          id: 'ninja-potato',
+          tokenStoreId: 'ninja-potato',
+          name: 'ninja-potato',
+          ownerId: null,
+          color: "white",
+          position: { row: 4, col: 0 },
+          movableCells: [],
+          image: "/images/uberninja/ninja-potato.png"
+        }],
+        'ninja-chicken': [{
+          id: 'ninja-chicken',
+          tokenStoreId: 'ninja-chicken',
+          name: 'ninja-chicken',
+          ownerId: null,
+          color: "white",
+          position: { row: 3, col: 7 },
+          movableCells: [],
+          image: "/images/uberninja/ninja-chicken.png"
         }],
       },
 
