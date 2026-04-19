@@ -17,7 +17,12 @@ export const uberNinjaConfig: RoomConfig = {
     const helper = new SetupHelper();
     const uberNinjaOrderCards = helper.assertCards(loadedData.orderCards);
 
-    const deliverBoard = helper.createGridBoardLayout(loadedData.deliverBoard, CELL_COUNTS, 8, 8);
+    const deliverBoard = helper.createGridBoardLayout(
+      loadedData.deliverBoard,
+      CELL_COUNTS,
+      8,
+      8,
+    );
 
     return {
       gameId: "uberninja",
@@ -30,62 +35,79 @@ export const uberNinjaConfig: RoomConfig = {
           backColor: "rgb(11, 108, 26)",
         },
       ],
-      initialBoard: { "deliver": deliverBoard },
+      initialBoard: { deliver: deliverBoard },
       initialTokenStores: [
         {
-          tokenStoreId: 'makibishi',
-          name: '撒菱',
+          tokenStoreId: "makibishi",
+          name: "撒菱",
           tokens: helper.createTokenStore(
-            [{ id: '撒菱', name: '撒菱', ownerId: null, position: null, movableCells: [] }],
+            [
+              {
+                id: "撒菱",
+                name: "撒菱",
+                ownerId: null,
+                position: null,
+                movableCells: [],
+              },
+            ],
             10,
             "/images/uberninja/makibishi.svg",
-            '#d43737',
+            "#d43737",
           ),
-        }],
+        },
+      ],
       initialTokens: { makibishi: 5 },
       initialTokensOnBoard: {
         // プレイヤー入室時に複製される忍者本体テンプレート
-        'ninja': [{
-          id: 'ninja',
-          tokenStoreId: "ninja",
-          name: 'ninja',
-          ownerId: "player",
-          color: '#ff4444',
-          position: { row: 0, col: 3 },
-          movableCells: [],
-          image: "/images/uberninja/ninja.svg"
-        }],
+        ninja: [
+          {
+            id: "ninja",
+            tokenStoreId: "ninja",
+            name: "ninja",
+            ownerId: "player",
+            color: "#ff4444",
+            position: { row: 0, col: 3 },
+            movableCells: [],
+            image: "/images/uberninja/ninja.svg",
+          },
+        ],
         // プレイヤー入室時に複製されるスクーターテンプレート
-        'scooter': [{
-          id: 'scooter',
-          tokenStoreId: "scooter",
-          name: 'scooter',
-          ownerId: "player",
-          color: '#ff4444',
-          position: { row: 0, col: 4 },
-          movableCells: [],
-          image: "/images/uberninja/scooter.svg"
-        }],
-        'ninja-potato': [{
-          id: 'ninja-potato',
-          tokenStoreId: 'ninja-potato',
-          name: 'ninja-potato',
-          ownerId: null,
-          color: "white",
-          position: { row: 4, col: 0 },
-          movableCells: [],
-          image: "/images/uberninja/ninja-potato.png"
-        }],
-        'ninja-chicken': [{
-          id: 'ninja-chicken',
-          tokenStoreId: 'ninja-chicken',
-          name: 'ninja-chicken',
-          ownerId: null,
-          color: "white",
-          position: { row: 3, col: 7 },
-          movableCells: [],
-          image: "/images/uberninja/ninja-chicken.png"
-        }],
+        scooter: [
+          {
+            id: "scooter",
+            tokenStoreId: "scooter",
+            name: "scooter",
+            ownerId: "player",
+            color: "#ff4444",
+            position: { row: 0, col: 4 },
+            movableCells: [],
+            image: "/images/uberninja/scooter.svg",
+          },
+        ],
+        "ninja-potato": [
+          {
+            id: "ninja-potato",
+            tokenStoreId: "ninja-potato",
+            name: "ninja-potato",
+            ownerId: null,
+            color: "white",
+            position: { row: 4, col: 0 },
+            movableCells: [],
+            image: "/images/uberninja/ninja-potato.png",
+          },
+        ],
+        "ninja-chicken": [
+          {
+            id: "ninja-chicken",
+            tokenStoreId: "ninja-chicken",
+            name: "ninja-chicken",
+            ownerId: null,
+            color: "white",
+            position: { row: 3, col: 7 },
+            movableCells: [],
+            image: "/images/uberninja/ninja-chicken.png",
+          },
+        ],
       },
 
       components: [],
