@@ -1,19 +1,21 @@
 [
   {
-    "id": "card-A-01",
-    "name": "北1",
+    "id": "ninja-potato-bag",
+    "name": "ninja-potato-bag",
     "location": "deck",
     "drawCondition": ["hand", "face"],
     "playLocation": "field",
-    "fieldBackConditon": "discard"
+    "fieldBackConditon": "discard",
+    "frontImage": "/images/uberninja/ninja-potato-bag.png"
   },
   {
-    "id": "card-A-02",
-    "name": "北2",
+    "id": "ninja-chicken-box",
+    "name": "ninja-chicken-box",
     "location": "deck",
     "drawCondition": ["hand", "face"],
     "playLocation": "field",
-    "fieldBackConditon": "discard"
+    "fieldBackConditon": "discard",
+    "frontImage": "/images/uberninja/ninja-chicken-box.png"
   },
   {
     "id": "card-B-01",

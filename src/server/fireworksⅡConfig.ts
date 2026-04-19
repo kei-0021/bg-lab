@@ -1,7 +1,7 @@
 // src/server/fireworksConfig.ts
 
 import type {
-  Card,
+  CardData,
   DeckDrawData,
   GameParam,
   Player,
@@ -27,14 +27,14 @@ export const fireworksⅡConfig: RoomConfig = {
   setup: async (loadedData: Record<string, any>): Promise<GameParam> => {
     const helper = new SetupHelper();
 
-    const defaults: Partial<Card> = {
+    const defaults: Partial<CardData> = {
       location: "deck",
       drawCondition: ["hand", "back"],
       playLocation: "field",
       fieldBackCondition: ["deck", "back"],
     };
 
-    const themeDefaults: Partial<Card> = {
+    const themeDefaults: Partial<CardData> = {
       location: "deck",
       drawCondition: ["discard", "face"],
     };

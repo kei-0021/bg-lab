@@ -9,13 +9,14 @@ import type {
 import {
   Deck,
   Dice,
+  GridBoard,
   RemoteCursor,
   ScoreBoard,
   TokenStore,
 } from "react-game-ui";
 import "react-game-ui/dist/react-game-ui.css";
 import { useNavigate, useParams } from "react-router-dom";
-import GridDeliverRoad from "../components/GridDeliverRoad.js";
+import { CommonCellRenderer } from "../components/CommonCellRenderer.js";
 import UberNinjaRoomRule from "../components/UberNinjaRoomRule.js";
 import { useSocket } from "../hooks/useSocket.js";
 import styles from "./UberNinjaRoom.module.css";
@@ -221,6 +222,7 @@ export function UberNinjaRoom() {
             title="[ 注文カード ]"
             currentPlayerId={currentPlayerId}
             myPlayerId={myPlayerId}
+            alwaysDraw={true}
           />
           <div className={styles.diceSection}>
             <div className={styles.diceWrapper}>
@@ -269,65 +271,20 @@ export function UberNinjaRoom() {
 
         {/* 中央：配達グリッドボード */}
         <div className={styles.centerBoard}>
-          <GridDeliverRoad rows={8} cols={8} />
+          <GridBoard
+            socket={socket}
+            roomId={roomId}
+            boardId="deliver"
+            players={players}
+            myPlayerId={myPlayerId}
+            allowTokenDrag={true}
+            renderCell={(cellData) => (
+              <CommonCellRenderer cellData={cellData} />
+            )}
+            width={620}
+            height={620}
+          />
         </div>
-
-        {/* {players.map((player, i) => (
-          <div key={player.id} className={styles.draggableSaturated}>
-            <Draggable
-              image="/images/uberninja/ninja.svg"
-              mask={true}
-              draggableId={`${player.id}_ninja`}
-              socket={socket}
-              roomId={roomId}
-              initialXY={{ x: 100 + i * 130, y: 660 }}
-              color={player.color}
-              size={140}
-              containerRef={containerRef}
-              scale={scale}
-            />
-            <Draggable
-              image="/images/uberninja/scooter.svg"
-              mask={true}
-              draggableId={`${player.id}_scooter`}
-              socket={socket}
-              roomId={roomId}
-              color={player.color}
-              size={140}
-              containerRef={containerRef}
-              scale={scale}
-            />
-            {[...Array(8)].map((_, j) => (
-              <Draggable
-                image="/images/uberninja/makibishi.svg"
-                draggableId={`${player.id}_makibishi_${j}`}
-                socket={socket}
-                roomId={roomId}
-                initialXY={{ x: 1250 + i * 150 + j * 4, y: 650 + j * 4 }}
-                color={player.color}
-                size={65}
-                containerRef={containerRef}
-                scale={scale}
-              />
-            ))}
-          </div>
-        ))} */}
-
-        {/* 共通の荷物 */}
-        {/* {[...Array(8)].map((_, j) => (
-          <div key={`order_${j}`} className={styles.draggableSaturated}>
-            <Draggable
-              draggableId={`white_card_${j}`}
-              socket={socket}
-              roomId={roomId}
-              initialXY={{ x: 800 + j * 5, y: 750 + j * 2 }}
-              color="#ffffff"
-              size={65}
-              containerRef={containerRef}
-              scale={scale}
-            />
-          </div>
-        ))} */}
 
         {/* 右サイドバー */}
         <aside className={styles.sidebarRight}>

@@ -1,7 +1,7 @@
 // src/server/fireworksConfig.ts
 
 import type {
-  Card,
+  CardData,
   DraggableData,
   DraggableId,
   GameParam,
@@ -28,7 +28,7 @@ export const fireworksConfig: RoomConfig = {
   setup: async (loadedData: Record<string, any>): Promise<GameParam> => {
     const helper = new SetupHelper();
 
-    const defaults: Partial<Card> = {
+    const defaults: Partial<CardData> = {
       location: "deck",
       drawCondition: ["hand", "face"],
       playLocation: "field",
@@ -101,7 +101,6 @@ export const fireworksConfig: RoomConfig = {
       initialHand: { firework: 3 },
       initialBoard: { fireworksBoard: fireworksBoard },
       shuffleAndReconnectBoard: { fireworksBoard: cellShuffleAndReconnector },
-      pieceImage: "/images/fireworks/hanabishi.svg",
       draggables: draggables,
       checkGameEnd: (state: RoomState) =>
         // 終了条件: 10ラウンド終了 (10ラウンド目の最後 かつ 最後のプレイヤーの手番時)
