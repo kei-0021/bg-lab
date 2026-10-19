@@ -27,8 +27,10 @@ import fieldStyles from "./FireworksRoomField.module.css";
 
 const SERVER_URL =
   import.meta.env.MODE === "development"
-    ? "http://localhost:4000"
-    : "https://bg-lab.onrender.com";
+    ? // この画面(フロント)を開いた時のIPアドレス(hostname)の4000番ポートを自動で指す
+      // (Macから開けばlocalhost:4000、スマホから開けばMacのIP:4000に化けるのでCORSや接続エラーを防げる)
+      `http://${window.location.hostname}:4000`
+    : "https://onrender.com";
 
 const BASE_WIDTH = 1600;
 const BASE_HEIGHT = 900;
